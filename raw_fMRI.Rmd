@@ -1,0 +1,149 @@
+---
+title: "raw_fMRI"
+author: "Wanjia Guo"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: journal
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r include = FALSE}
+library(tidyverse)
+library(fs)
+library(ggplot2)
+theme_set(theme_minimal(15))
+```
+
+
+# Reading and cleaning files
+
+```{r setup, include=FALSE}
+converting_read <- function(curr_path){
+  print(curr_path)
+  csv_file = read_csv(curr_path)
+  ind <- sapply(csv_file, is.numeric) # getting numeric columns
+  ind[1] = FALSE # excluding the TR column
+  csv_file[ind] <- lapply(csv_file[ind], scale)# calculate z-scores for each column
+  
+  csv_file
+}
+
+# Loading fMRI data
+
+#sub_dir = dir_ls(here::here("csv_files/raw_fMRI_values/"),  type = "directory")
+#hpc_voxels = map(sub_dir, dir_ls, regexp = '*hippocampus*') %>% unlist()
+
+#scan_batch = map(hpc_voxels, converting_read, .id="file")
+
+sub_dir = dir_ls(here::here("csv_files/raw_fMRI_values/sub-MONSTERA01/"),  glob = '*ppa_mni_2_epi*')
+
+scan_batch = map_dfr(sub_dir, converting_read, .id="file")
+
+scan_batch = scan_batch %>% mutate(
+  TR = `...1`,
+  sub = file %>% str_replace_all(
+        ".+/sub-MONSTERA(\\d\\d)/task-.+",
+        "\\1"
+    ),
+  round = file %>% str_replace_all(
+        ".+/task-(\\d\\d)_.+", 
+        "\\1"
+    ),
+  roi = file %>% str_replace_all(
+        ".+/task-\\d\\d_(.+).csv",
+        "\\1"
+    )
+)
+
+fmri_df = scan_batch %>% 
+  select(-c(file, `...1`, session)) 
+
+fmri_df = fmri_df %>% 
+  mutate(round = as.integer(round),
+         TR = as.integer(TR - 6))
+  
+```
+
+```{r}
+tmp_event = no_response_event %>% filter(sub == '01') 
+#tmp_fmri = fmri_df %>% select("TR", "sub", "round", "roi", 0:10)
+
+calculate_cor <- function(x){
+  cor(t(x[,-1]))[1,2]
+}
+
+s1 = full_join(fmri_df, tmp_event, by = c("TR", "sub", "round")) %>% 
+  fill(trial, pair, route, valid, segment, catch) %>% 
+  filter(catch != 1 & segment != 'lead in' & TR >= 0) %>% 
+  select(-catch) %>%
+  group_by(sub, round, roi, trial, pair, route, valid) %>% 
+  mutate(id = row_number()) %>% 
+  mutate(odd_even = ifelse(round %% 2 == 0, 'even', 'odd'))
+```
+
+```{r}
+tmp = s1 %>% mutate(type = ifelse(segment == 'fixation' | segment == 'cue', 'transition', 'image')) %>% group_by(type) %>% 
+  summarise(across(0:1125, mean))
+  
+tmp = data.frame(ID=tmp[,1], Means=rowMeans(tmp[,-1]))
+
+ggplot(tmp, aes(x = type, y = Means)) + geom_bar(stat = 'identity')
+```
+
+```{r}
+s2 = s1 %>% 
+  filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
+  group_by(sub, roi, pair, route, segment, valid, odd_even, id) %>% 
+  # hippocampus: 1776; ppa: 1125; evc: 1048
+  summarise(across(0:1048, mean)) %>% 
+  group_by(sub, roi, pair, route, segment, valid, id) %>% 
+  nest() %>% 
+  
+  
+  mutate(correlation = map_dbl(data, calculate_cor)) %>% 
+  mutate(timepoint = id - 4)
+
+s2$valid = as.factor(s2$valid)
+s2$segment = as.factor(s2$segment)
+
+s2_1 = s2 %>% group_by(segment, valid, timepoint) %>% 
+  summarise(m = mean(correlation))
+
+s3 = s2 %>% group_by(segment, valid) %>% 
+  summarise(m = mean(correlation))
+s3 <- s3 %>% 
+  mutate(segment = fct_relevel(segment, c("same", "overlapping", "non-overlapping")))
+
+s4 = s2 %>% group_by(segment) %>% 
+  summarise(m = mean(correlation),
+            sd = sd(correlation),
+            n = n())
+s4 <- s4 %>% 
+  mutate(segment = fct_relevel(segment, c("same", "overlapping", "non-overlapping")))
+
+
+ggplot(s2_1, aes(x = timepoint, y = m)) + geom_line()+
+  labs(y = 'mean correlation')
+
+ggplot(s2_1, aes(x = timepoint, y = m)) + 
+  geom_line(aes(color = valid)) +
+  theme(legend.position = 'top')+
+  labs(y = 'mean correlation')
+
+ggplot(s4, aes(x = segment, y = m)) + 
+  geom_bar(stat = 'identity') +
+  labs(y = 'mean correlation')
+
+ggplot(s3, aes(x = segment, y = m, fill = valid)) + 
+  geom_bar(stat = 'identity', position = 'dodge')+
+  theme(legend.position = 'top') +
+  labs(y = 'mean correlation')
+
+```
+
+

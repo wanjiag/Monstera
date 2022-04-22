@@ -1,3 +1,7 @@
+# data files
+csv_files/*
+!csv_files/README
+
 # History files
 .Rhistory
 .Rapp.history

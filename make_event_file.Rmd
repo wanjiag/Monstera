@@ -1,0 +1,114 @@
+---
+title: "Make_event_files"
+author: "Wanjia Guo"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: journal
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r include = FALSE}
+library(tidyverse)
+library(fs)
+theme_set(theme_minimal(15))
+```
+
+```{r setup, include=FALSE}
+
+converting_read2 <- function(curr_path){
+  print(curr_path)
+  read_csv(curr_path) %>% mutate(sub = as.character(sub))
+}
+
+# Loading behavioral data
+sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
+scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
+
+timing_batch = map_dfr(scan_timing, converting_read2)
+
+timing_batch = timing_batch %>% filter(sub != '03')
+
+```
+
+```{r}
+event_files = timing_batch %>% 
+  #  calculate TR. as.integer's default is flooring.
+  mutate(TR = as.integer(design_onset)) %>% 
+  # Remove _ from npic
+  separate(npic, 
+           into ='n_pic', 
+           sep = '_', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting name for pair and route
+    separate(condition, 
+           into =c('pair', 'route'), 
+           sep = '/', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting trial type (valid vs. invalid; catch vs. non-catch)
+    separate(route, 
+           into =c('route', 'valid', 'trial_type'), 
+           extra = 'drop', 
+           sep = ',',
+           remove = FALSE) %>%
+  mutate(pair = str_sub(pair, start = 3),
+         route = stringr::str_extract(route, "[a-z]+"),
+         catch = stringr::str_extract(trial_type, "[0-1]+")) %>% 
+  select(-c(trial_type, npic, condition)) %>% 
+  # Getting segment
+  mutate(int_pic = as.integer(n_pic)) %>% 
+  mutate(segment = ifelse(is.na(int_pic), n_pic,
+                    ifelse(int_pic <= 25, 'same',
+                            ifelse(int_pic >= 76, 'non-overlapping',
+                                   'overlapping')))) %>% 
+  select(-int_pic) %>% 
+  mutate(valid = as.integer((valid)),
+         catch = as.integer(catch))
+```
+
+
+str(event_files)
+
+event_files %>% filter(is.na(valid)) %>% View()
+event_files %>% filter(is.na(catch)) %>% View()
+event_files %>% filter(TR == -999 & catch == 0) %>% View()
+```
+
+
+# non-catch trials
+```{r}
+no_response_event = event_files %>% 
+filter(segment != 'conf' | segment != 'response') %>% 
+mutate(round = as.integer(round)) %>% 
+group_by(segment, sub, round, trial, pair, route, valid, catch) %>% 
+summarize(TR = min(design_onset) %>% round() %>% as.integer()) 
+
+```
+
+
+
+
+
+
+```{r}
+
+scanner_id = c('MONSTERA01', 'MONSTERA02')
+id = c('01', '02')
+
+id_ref_df = data_frame(scanner_id, id)
+
+event_files = event_files %>% 
+  full_join(id_ref_df, by = c("sub" = "id"))
+
+```
+event_files$onset <- format(event_files$onset, digits = 0)  
+event_files$duration <- format(event_files$duration, digits = 3)  
+
+event_files %>% 
+  group_by(scanner_id, scanner_round) %>% 
+  group_walk(~write_csv(.x, paste0('./event_files/sub-', .y$scanner_id, '_task-route_run-', .y$scanner_round, '_events.tsv')))

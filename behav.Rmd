@@ -1,0 +1,557 @@
+---
+title: "behav"
+author: "Wanjia Guo"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: journal
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
+library(gt)
+library(fs)
+library(purrr)
+library(tidyverse)
+theme_set(theme_minimal(15))
+```
+
+
+```{r setup, include=FALSE}
+
+converting_read <- function(curr_path){
+  print(curr_path)
+  read_csv(curr_path) %>% mutate(sub = as.character(sub))
+}
+
+converting_read2 <- function(curr_path){
+  print(curr_path)
+  read_csv(curr_path) %>% mutate(sub = as.character(sub),
+                                 resp_obj = as.character(resp_obj))
+}
+
+# Loading behavioral data
+sub_dir = dir_ls(here::here("./csv_files/behavior"))
+prescan_behav <- map(sub_dir, dir_ls, glob = '*prescan*_behav*.csv') %>% unlist()
+scan_behav <- map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_behav_.*') %>% unlist()
+postscan1_behav <- map(sub_dir, dir_ls, glob = '*postscan1*_behav*.csv') %>% unlist()
+postscan2_behav <- map(sub_dir, dir_ls, glob = '*postscan2*_behav*.csv') %>% unlist()
+
+prescan_batch <- map_dfr(prescan_behav, converting_read)
+scan_batch <- map_dfr(scan_behav, converting_read2)
+postscan1_batch <- map_dfr(postscan1_behav, converting_read)
+postscan2_batch <- map_dfr(postscan2_behav, converting_read)
+
+```
+
+
+## n = `r nrow(prescan_batch)/24`
+
+# QA
+
+```{r}
+scan_batch = scan_batch %>% 
+  mutate(
+  correct = ifelse(!is.na(resp_obj) & resp_obj == destination, 1, 0),
+  confidence = ifelse(!is.na(conf_resp) & conf_resp == 6, 1, 0),
+  cor_conf = ifelse(!is.na(resp_obj) & !is.na(conf_resp) & (resp_obj == destination & 
+                       conf_resp== 6), 1, 0))
+```
+
+### prescan
+
+```{r}
+prescan_batch = prescan_batch %>% 
+  mutate(
+  nquestion = rep(c(1, 2, 3), times = nrow(prescan_batch)/3),
+  correct = ifelse(!is.na(resp_obj) & resp_obj == destination, 1, 0),
+  confidence = ifelse(!is.na(conf_resp) & conf_resp == 6, 1, 0),
+  cor_conf = ifelse((!is.na(resp_obj) & !is.na(conf_resp) &
+                       resp_obj == destination & 
+                       conf_resp== 6), 1, 0))
+
+sub_plot = prescan_batch %>% 
+  mutate(round_text = paste0('Round',round)) %>% 
+  group_by(sub, nquestion, round_text, round) %>% 
+  summarise(m = mean(correct), conf = mean(confidence),
+            cor_conf = mean(cor_conf)) 
+
+sub_plot %>% group_by(sub) %>% 
+  summarise(correct = mean(m)) %>% 
+  inner_join(
+    sub_plot %>% group_by(sub) %>% 
+    summarise(conf = mean(conf)) %>% 
+    arrange(conf)) %>% 
+  inner_join(
+    sub_plot %>% group_by(sub) %>% 
+    summarise(conf_correct = mean(cor_conf))) %>%
+  gt() %>%
+  fmt_number(
+    columns = starts_with('co'),
+    decimals = 3)%>%
+  tab_header(title = "Prescan Performance") %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(correct),
+      rows = correct < 0.5
+    )
+  ) %>%
+  tab_footnote(
+    footnote = "accuracy < 0.5 are highlighted",
+    locations = cells_column_labels(
+      columns = vars(correct)
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(conf_correct),
+      rows = conf_correct < 0.25
+    )
+  ) %>%
+  tab_footnote(
+    footnote = "confidence correct < 0.25 are highlighted",
+    locations = cells_column_labels(
+      columns = vars(conf_correct)
+    )
+  )
+```
+
+### scan
+
+```{r}
+scan_batch %>% group_by(sub) %>% summarise(
+  correct = mean(correct, na.rm = TRUE),
+  conf = mean(confidence, na.rm = TRUE),
+  conf_correct = mean(cor_conf, na.rm = TRUE)
+) %>% gt() %>% 
+  tab_header(title = "Scan Performance") %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(correct),
+      rows = correct < 0.5
+    )
+  )%>%
+  tab_footnote(
+    footnote = "accuracy < 0.5 are highlighted",
+    locations = cells_column_labels(
+      columns = vars(correct)
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(conf_correct),
+      rows = conf_correct < 0.25
+    )
+  ) %>%
+  tab_footnote(
+    footnote = "confidence correct < 0.25 are highlighted",
+    locations = cells_column_labels(
+      columns = vars(conf_correct)
+    )
+  )
+```
+
+### postscan1
+
+```{r}
+
+postscan1_batch %>% 
+  mutate(
+  correct = ifelse(resp_obj == destination, 1, 0),
+  conf = abs(resp)) %>% 
+  group_by(sub, npic) %>% 
+  summarise(m = mean(correct),
+            conf = mean(conf)) %>% 
+  gt() %>% 
+  tab_header(title = "Postscan1 Performance",
+             subtitle = "confidence range from 0 - 2.")
+
+```
+
+### postscan2
+
+```{r}
+postscan2_batch = postscan2_batch %>% 
+  mutate(
+  correct = ifelse(!is.na(post_first_resp_obj) & post_first_resp_obj == destination, 1, 0))
+
+postscan2_batch %>% group_by(sub) %>% 
+  summarise(m = mean(correct)) %>% 
+  gt() %>%
+  tab_header(
+    title = "Post scan 2 mean accuracy per subject"
+  )%>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(m),
+      rows = m < 0.5
+    )
+  )%>%
+  tab_footnote(
+    footnote = "accuracy < 0.5 are highlighted",
+    locations = cells_column_labels(
+      columns = vars(m)
+    )
+  )
+```
+
+# Prescan analysis
+
+Participant were instructed to answer the expected destination for 3 times during the route: once at Same, once at Overlapping, and once at non-overlapping. They also indicated their confidence towards the choice (sure vs. unsure).
+
+### Figures
+
+```{r}
+curr_plot = sub_plot %>%
+  group_by(round_text, nquestion) %>% 
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            mean_conf = mean(conf),
+            conf_se = sd(conf)/sqrt(n()),
+            mean_cor_conf = mean(cor_conf),
+            cor_conf_se = sd(cor_conf)/sqrt(n()))
+
+
+ggplot(curr_plot, aes(x = nquestion, y = mean)) + 
+  geom_histogram(stat = "identity")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), color="red", width=0.1, size=0.5)+
+  facet_wrap(~round_text)+
+  labs(title = 'Accuracy for pre-scan')
+  
+ggplot(curr_plot, aes(x = nquestion, y = mean_conf)) + 
+  geom_histogram(stat = "identity")+
+  geom_errorbar(aes(ymin=mean_conf-conf_se, ymax=mean_conf+conf_se), color="red", width=0.1, size=0.5)+
+  facet_wrap(~round_text)+
+  labs(title = 'Confidence response for pre-scan')
+  #gt() %>% cols_align(align = 'left')
+
+ggplot(curr_plot, aes(x = nquestion, y = mean_cor_conf)) + 
+  geom_histogram(stat = "identity")+
+  geom_errorbar(aes(ymin=mean_cor_conf-cor_conf_se, ymax=mean_cor_conf+cor_conf_se), color="red", width=0.1, size=0.5)+
+  facet_wrap(~round_text)+
+  labs(title = 'Confident correct for pre-scan')
+
+sub_plot$round_text = factor(sub_plot$round_text)
+```
+
+```{r}
+
+route_df <- data.frame(route=rep(c('pair1_east', 
+                             'pair2_north', 
+                             'pair3_west', 
+                             'pair4_south'), each=2),
+                 destination=c('bench', 'bikerack', 
+                               'pole', 'window', 
+                               'bush', 'pergola', 
+                               'entrance', 'map'),
+                 competitor=c('bikerack','bench',
+                               'window', 'pole', 
+                               'pergola', 'bush', 
+                               'map', 'entrance'))
+
+prescan_batch_competitor = prescan_batch %>% 
+  inner_join(route_df, by = c('route', 'destination')) %>% 
+  mutate(type = ifelse(resp_obj == destination, 'target',
+                       ifelse(resp_obj == competitor, 'competitor',
+                              'non-competitor')
+                       ))
+
+prescan_batch_competitor %>% 
+  mutate(sub = as.factor(sub),
+         nquestion = as.factor(nquestion),
+         round = as.factor(round),
+         type = as.factor(type)) %>% 
+  count(sub, nquestion, round, type, .drop=FALSE) %>% 
+  mutate(percentage = n / 4) %>% 
+  group_by(nquestion, round, type) %>% 
+  summarise(m = mean(percentage),
+            se = sd(percentage)/sqrt(n()),
+            n = n()) %>% 
+  mutate(round_text = paste0('Round',round)) %>% 
+  ggplot(aes(x = nquestion, y = m, fill = type)) + 
+  geom_histogram(stat = "identity", position = 'dodge')+
+  geom_errorbar(aes(ymin=m-se, ymax=m+se), color="black", width=0.1, size=0.5,
+                position = position_dodge(0.9))+
+  facet_wrap(~round_text)+
+  theme(legend.position = 'bottom')+
+  labs(title = 'Correct for pre-scan,\nspearated by answer type',
+       y = 'percentage')+
+  colorblindr::scale_fill_OkabeIto()
+  
+```
+
+### Stats - None for now
+
+ANVOA for Accuracy:
+
+```{r eval=FALSE, include=FALSE}
+ez::ezANOVA(
+  data = sub_plot,
+  wid = sub,
+  within = .(round, nquestion),
+  dv = m
+)
+```
+
+ANVOA for Confidence:
+
+```{r eval=FALSE, include=FALSE}
+ez::ezANOVA(
+  data = sub_plot,
+  wid = sub,
+  within = .(round, nquestion),
+  dv = conf
+)
+```
+
+ANVOA for high confidence accuracy:
+
+```{r eval=FALSE, include=FALSE}
+ez::ezANOVA(
+  data = sub_plot,
+  wid = sub,
+  within = .(round, nquestion),
+  dv = cor_conf
+)
+```
+
+t-test for mean (overlapping segment):
+
+```{r eval=FALSE, include=FALSE}
+t.test(sub_plot %>% filter(round == 1 & nquestion == 1) %>% .$m,
+       sub_plot %>% filter(round == 2 & nquestion == 1) %>% .$m,
+       paired = TRUE)
+
+t.test(sub_plot %>% filter(round == 1 & nquestion == 2) %>% .$m,
+       sub_plot %>% filter(round == 2 & nquestion == 2) %>% .$m,
+       paired = TRUE)
+
+t.test(sub_plot %>% filter(round == 1 & nquestion == 3) %>% .$m,
+       sub_plot %>% filter(round == 2 & nquestion == 3) %>% .$m,
+       paired = TRUE)
+```
+
+t-test for confidence (overlapping segment):
+
+```{r eval=FALSE, include=FALSE}
+t.test(sub_plot %>% filter(round == 1 & nquestion == 1) %>% .$conf,
+       sub_plot %>% filter(round == 2 & nquestion == 1) %>% .$conf,
+       paired = TRUE)
+
+t.test(sub_plot %>% filter(round == 1 & nquestion == 2) %>% .$conf,
+       sub_plot %>% filter(round == 2 & nquestion == 2) %>% .$conf,
+       paired = TRUE)
+
+t.test(sub_plot %>% filter(round == 1 & nquestion == 3) %>% .$conf,
+       sub_plot %>% filter(round == 2 & nquestion == 3) %>% .$conf,
+       paired = TRUE)
+```
+
+t-test for high confidence accuracy (overlapping segment):
+
+```{r eval=FALSE, include=FALSE}
+t.test(sub_plot %>% filter(round == 1 & nquestion == 1) %>% .$cor_conf,
+       sub_plot %>% filter(round == 2 & nquestion == 1) %>% .$cor_conf,
+       paired = TRUE)
+
+t.test(sub_plot %>% filter(round == 1 & nquestion == 2) %>% .$cor_conf,
+       sub_plot %>% filter(round == 2 & nquestion == 2) %>% .$cor_conf,
+       paired = TRUE)
+
+t.test(sub_plot %>% filter(round == 1 & nquestion == 3) %>% .$cor_conf,
+       sub_plot %>% filter(round == 2 & nquestion == 3) %>% .$cor_conf,
+       paired = TRUE)
+```
+
+
+# Scan analysis
+
+Accuracy per round:
+
+```{r}
+
+scan_batch %>% mutate(pic_location = 
+                            ifelse(npic < 50, 'early', 'late')) %>% 
+  group_by(sub, pic_location) %>% 
+  summarise(m = mean(correct))
+
+scan_batch %>% mutate(pic_location = 
+                            ifelse(npic < 50, 'early', 'late')) %>% 
+  group_by(sub, pic_location) %>% 
+  summarise(m = mean(cor_conf))
+
+```
+
+
+```{r}
+
+curr_plot = scan_batch %>% group_by(round, sub) %>% summarise(
+  m_correct = mean(correct),
+  m_conf_correct = mean(cor_conf)
+) %>%
+  group_by(round) %>% summarise(
+  se_correct = sd(m_correct)/sqrt(n()),
+  m_correct = mean(m_correct),
+  se_conf_correct = sd(m_conf_correct)/sqrt(n()),
+  m_conf_correct = mean(m_conf_correct)) %>% 
+  pivot_longer(cols = starts_with('m_'),
+                   names_to = 'type',
+                   values_to = 'accuracy') %>% 
+  pivot_longer(cols = starts_with('se_'),
+                   names_to = 'se_type',
+                   values_to = 'se') %>% 
+  separate(type, c("A", "type", "C"), sep = '_') %>% 
+  mutate(type = ifelse(type == 'conf', 'conf_correct', type)) %>% 
+  select(-c(A, C)) %>% 
+  separate(se_type, c("A", "se_type", "C"), sep = '_') %>% 
+  mutate(se_type = ifelse(se_type == 'conf', 'conf_correct', se_type)) %>% 
+  select(-c(A, C)) %>% 
+  filter(type == se_type)
+
+ggplot(curr_plot, aes(x = round, y = accuracy, color = type)) +
+  geom_line(size = 1)+
+  geom_errorbar(aes(ymin=accuracy-se, ymax=ifelse(accuracy+se>1, 1, accuracy+se)), width=0.1, size=0.5)+
+  theme(legend.position = 'bottom')+
+  labs('')+
+  colorblindr::scale_color_OkabeIto()
+```
+
+Distribution of picture index:
+
+Grouped in 10:
+
+```{r fig.width=10, fig.height=12,eval=FALSE, include=FALSE}
+
+curr_plot = scan_batch %>% 
+  mutate(npic_10 = floor(npic/10)*10) %>% 
+  group_by(npic_10, route, destination) %>% summarise(
+  m_correct = mean(correct),
+  m_conf_correct = mean(cor_conf)) %>% 
+  mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
+         destination = factor(destination, levels = c('bench','bikerack','bush','pergola',
+                                   'pole','window','entrance','map')))
+
+ggplot(curr_plot, aes(x = npic_10, y = m_correct)) + 
+  geom_line()+
+  facet_wrap(destination~route, ncol = 2)+
+  labs(title = 'Accuracy over picture')
+
+ggplot(curr_plot, aes(x = npic_10, y = m_conf_correct)) + 
+  geom_line()+
+  facet_wrap(destination~route, ncol = 2)+
+  labs(title = 'High confidence accuracy over picture')
+
+```
+
+
+Grouped in 5:
+
+```{r fig.width=10, fig.height=12, eval=FALSE, include=FALSE}
+
+curr_plot = scan_batch %>% 
+  mutate(npic_5 = floor(npic/5)*5) %>% 
+  group_by(npic_5, route, destination) %>% summarise(
+  m_correct = mean(correct),
+  m_conf_correct = mean(cor_conf)) %>% 
+  mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
+         destination = factor(destination, levels = c('bench','bikerack','bush','pergola',
+                                   'pole','window','entrance','map')))
+
+ggplot(curr_plot, aes(x = npic_5, y = m_correct)) + 
+  geom_line()+
+  facet_wrap(destination~route, ncol = 2)+
+  labs(title = 'Accuracy over picture')
+
+ggplot(curr_plot, aes(x = npic_5, y = m_conf_correct)) + 
+  geom_line()+
+  facet_wrap(destination~route, ncol = 2)+
+  labs(title = 'High confidence accuracy over picture')
+
+```
+
+Every picture:
+
+```{r fig.width=10, fig.height=12, eval=FALSE, include=FALSE}
+
+curr_plot = scan_batch %>% 
+  group_by(npic, route, destination) %>% 
+  summarise(
+  m_correct = mean(correct),
+  m_conf_correct = mean(cor_conf)) %>% 
+  mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
+         destination = factor(destination, levels = c('bench','bikerack','bush','pergola',
+                                   'pole','window','entrance','map')))
+
+ggplot(curr_plot, aes(x = npic, y = m_correct)) + 
+  geom_line()+
+  facet_wrap(destination~route, ncol = 2)+
+  labs(title = 'Accuracy over picture')
+
+ggplot(curr_plot, aes(x = npic, y = m_conf_correct)) + 
+  geom_line()+
+  facet_wrap(destination~route, ncol = 2)+
+  labs(title = 'High confidence accuracy over picture')
+
+```
+
+# Postscan analysis
+
+```{r}
+avg = postscan2_batch %>% group_by(sub) %>% 
+  summarise(m = mean(correct)) %>% 
+  summarise(m = mean(m)) %>% .$m
+```
+
+Average accuracy = `r avg`
+
+```{r fig.width=16, fig.height=10}
+postscan2_batch %>%
+  filter(correct == 1) %>%
+  mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
+         destination = factor(destination, levels = c('bench','bikerack','shrub','pergola','pole','window','entrance','map'))) %>% 
+  ggplot(aes(x = npic, fill = sub)) +
+  geom_histogram() +
+  geom_vline(xintercept=25) +
+  geom_vline(xintercept=75) +
+  labs(title = 'Picture index for correct trials')+
+  facet_wrap(destination~route, ncol = 2)
+```
+
+
+```{r}
+postscan2_batch %>% 
+  filter(correct == 0 & resp != -999) %>%
+  mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
+         destination = factor(destination, levels = c('bench','bikerack','bush','pergola','pole','window','entrance','map'))) %>% 
+  ggplot(aes(x = npic, fill = sub)) +
+  geom_histogram() +
+  geom_vline(xintercept=25) +
+  geom_vline(xintercept=75) +
+  labs(title = 'Picture index for incorrect trials')+
+  facet_wrap(destination~route, ncol = 2)
+```
+
