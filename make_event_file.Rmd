@@ -19,7 +19,7 @@ theme_set(theme_minimal(15))
 
 ```{r setup, include=FALSE}
 
-converting_read2 <- function(curr_path){
+converting_read <- function(curr_path){
   print(curr_path)
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
@@ -27,10 +27,7 @@ converting_read2 <- function(curr_path){
 # Loading behavioral data
 sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
 scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
-
-timing_batch = map_dfr(scan_timing, converting_read2)
-
-timing_batch = timing_batch %>% filter(sub != '03')
+timing_batch = map_dfr(scan_timing, converting_read)
 
 ```
 
@@ -71,44 +68,16 @@ event_files = timing_batch %>%
          catch = as.integer(catch))
 ```
 
-
-str(event_files)
-
-event_files %>% filter(is.na(valid)) %>% View()
-event_files %>% filter(is.na(catch)) %>% View()
-event_files %>% filter(TR == -999 & catch == 0) %>% View()
-```
-
-
 # non-catch trials
 ```{r}
-no_response_event = event_files %>% 
-filter(segment != 'conf' | segment != 'response') %>% 
-mutate(round = as.integer(round)) %>% 
-group_by(segment, sub, round, trial, pair, route, valid, catch) %>% 
-summarize(TR = min(design_onset) %>% round() %>% as.integer()) 
+event = event_files %>% filter(catch == 0) %>% 
+  filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
+  mutate(round = as.integer(round)) %>%
+  group_by(sub, round, trial, pair, route, segment, valid, catch) %>% 
+  summarize(TR = min(design_onset) %>% round() %>% as.integer()) %>%
+  mutate(end_TR = ifelse((segment == 'same' | segment == 'non-overlapping'), TR+5, TR+11)) %>% 
+  mutate(all_TR = map2(TR, end_TR, ~ seq(from = .x, to = .y))) %>%
+  unnest(all_TR) 
 
 ```
 
-
-
-
-
-
-```{r}
-
-scanner_id = c('MONSTERA01', 'MONSTERA02')
-id = c('01', '02')
-
-id_ref_df = data_frame(scanner_id, id)
-
-event_files = event_files %>% 
-  full_join(id_ref_df, by = c("sub" = "id"))
-
-```
-event_files$onset <- format(event_files$onset, digits = 0)  
-event_files$duration <- format(event_files$duration, digits = 3)  
-
-event_files %>% 
-  group_by(scanner_id, scanner_round) %>% 
-  group_walk(~write_csv(.x, paste0('./event_files/sub-', .y$scanner_id, '_task-route_run-', .y$scanner_round, '_events.tsv')))

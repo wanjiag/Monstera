@@ -22,55 +22,47 @@ theme_set(theme_minimal(15))
 
 # Reading and cleaning files
 
-```{r setup, include=FALSE}
+```{r}
+
+rois= c('ashs/body/ca23dg-body_epi-space_thre_0.5',
+        'ashs/body/ca1-body_epi-space_thre_0.5',
+        'ashs/whole/ca23dg_epi-space_thre_0.5',
+        'ashs/whole/ca1_epi-space_thre_0.5', 
+        'angular_gyrus_2_epi_thre_0.5', 
+        'evc_2_epi_thr_0.5', 
+        'hippocampus_2_epi_thre_0.5', 
+        'ppa_mni_2_epi_thr_0.5')
+
+rois_names = c('ca23dg_body', 'ca1_body', 
+               'ca23dg', 'ca1',
+               'angular_gyrus', 'evc', 
+               'hippocampus', 'ppa')
+
 converting_read <- function(curr_path){
   print(curr_path)
-  csv_file = read_csv(curr_path)
-  ind <- sapply(csv_file, is.numeric) # getting numeric columns
-  ind[1] = FALSE # excluding the TR column
-  csv_file[ind] <- lapply(csv_file[ind], scale)# calculate z-scores for each column
-  
-  csv_file
+  read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
-# Loading fMRI data
+sub_dir = dir_ls(here::here("./csv_files/fMRI"))
+# Loading behavioral data
+for (i in c(1:length(rois))){
+  curr_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  curr_df <- map_dfr(curr_files, converting_read)%>% 
+    mutate(
+      TR = `X1`+1,
+      adjusted_TR = TR-6,
+      run = as.integer(stringr::str_extract(run, "\\d+")),
+      sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
+    select(-`X1`)
+  assign(rois_names[i], curr_df)
+}
 
-#sub_dir = dir_ls(here::here("csv_files/raw_fMRI_values/"),  type = "directory")
-#hpc_voxels = map(sub_dir, dir_ls, regexp = '*hippocampus*') %>% unlist()
-
-#scan_batch = map(hpc_voxels, converting_read, .id="file")
-
-sub_dir = dir_ls(here::here("csv_files/raw_fMRI_values/sub-MONSTERA01/"),  glob = '*ppa_mni_2_epi*')
-
-scan_batch = map_dfr(sub_dir, converting_read, .id="file")
-
-scan_batch = scan_batch %>% mutate(
-  TR = `...1`,
-  sub = file %>% str_replace_all(
-        ".+/sub-MONSTERA(\\d\\d)/task-.+",
-        "\\1"
-    ),
-  round = file %>% str_replace_all(
-        ".+/task-(\\d\\d)_.+", 
-        "\\1"
-    ),
-  roi = file %>% str_replace_all(
-        ".+/task-\\d\\d_(.+).csv",
-        "\\1"
-    )
-)
-
-fmri_df = scan_batch %>% 
-  select(-c(file, `...1`, session)) 
-
-fmri_df = fmri_df %>% 
-  mutate(round = as.integer(round),
-         TR = as.integer(TR - 6))
-  
 ```
 
+
+
 ```{r}
-tmp_event = no_response_event %>% filter(sub == '01') 
+event = event %>% filter(sub == '06') 
 #tmp_fmri = fmri_df %>% select("TR", "sub", "round", "roi", 0:10)
 
 calculate_cor <- function(x){
