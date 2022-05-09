@@ -17,6 +17,8 @@ library(tidyverse)
 library(fs)
 library(ggplot2)
 theme_set(theme_minimal(15))
+
+library(ezPurrr)
 ```
 
 
@@ -24,14 +26,14 @@ theme_set(theme_minimal(15))
 
 ```{r}
 
-rois= c('ashs/body/ca23dg-body_epi-space_thre_0.5',
-        'ashs/body/ca1-body_epi-space_thre_0.5',
-        'ashs/whole/ca23dg_epi-space_thre_0.5',
-        'ashs/whole/ca1_epi-space_thre_0.5', 
-        'angular_gyrus_2_epi_thre_0.5', 
-        'evc_2_epi_thr_0.5', 
-        'hippocampus_2_epi_thre_0.5', 
-        'ppa_mni_2_epi_thr_0.5')
+rois= c('ca23dg-body_thre_0.5_masked',
+        'ca1-body_thre_0.5_masked',
+        'ca23dg_thre_0.5_masked',
+        'ca1_thre_0.5_masked', 
+        'angular_gyrus_2_epi_thre_0.5_masked',
+        'evc_2_epi_thre_0.5_masked', 
+        'hippocampus_2_epi_thre_0.5_masked',
+        'ppa_mni_2_epi_thre_0.5_masked')
 
 rois_names = c('ca23dg_body', 'ca1_body', 
                'ca23dg', 'ca1',
@@ -44,16 +46,15 @@ converting_read <- function(curr_path){
 }
 
 sub_dir = dir_ls(here::here("./csv_files/fMRI"))
-# Loading behavioral data
+
 for (i in c(1:length(rois))){
   curr_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
-  curr_df <- map_dfr(curr_files, converting_read)%>% 
-    mutate(
-      TR = `X1`+1,
-      adjusted_TR = TR-6,
+  curr_df <- map_dfr(curr_files, converting_read)
+  colnames(curr_df)[1] <- 'TR'
+  curr_df <- curr_df %>% mutate(
       run = as.integer(stringr::str_extract(run, "\\d+")),
-      sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
-    select(-`X1`)
+      sub = as.factor(stringr::str_extract(sub, "\\d+")),
+      roi = rois_names[i])
   assign(rois_names[i], curr_df)
 }
 
@@ -62,80 +63,49 @@ for (i in c(1:length(rois))){
 
 
 ```{r}
-event = event %>% filter(sub == '06') 
-#tmp_fmri = fmri_df %>% select("TR", "sub", "round", "roi", 0:10)
+nest_df = left_join(event, evc, by = c('behav_TR' = 'TR',
+                                     'sub' = 'sub',
+                                     'round' = 'run')) %>% 
+  group_by(sub, pair, route, segment, valid, within_trial_TR, odd.even) %>% 
+  summarise_if(is.numeric, mean) %>% 
+  group_by(sub, pair, route, segment, valid, within_trial_TR) %>%
+  nest()
 
-calculate_cor <- function(x){
-  cor(t(x[,-1]))[1,2]
+row_corr <- function(data){
+  
+sample = data %>% 
+  select(-c(round, trial, behav_TR)) %>% 
+  pivot_longer(!odd.even,
+               values_to = 'v') %>% 
+  pivot_wider(names_from = odd.even,
+              values_from = v)
+
+  sample = sample[complete.cases(sample), ]
+
+  cor(sample$even, sample$odd)
 }
 
-s1 = full_join(fmri_df, tmp_event, by = c("TR", "sub", "round")) %>% 
-  fill(trial, pair, route, valid, segment, catch) %>% 
-  filter(catch != 1 & segment != 'lead in' & TR >= 0) %>% 
-  select(-catch) %>%
-  group_by(sub, round, roi, trial, pair, route, valid) %>% 
-  mutate(id = row_number()) %>% 
-  mutate(odd_even = ifelse(round %% 2 == 0, 'even', 'odd'))
-```
 
-```{r}
-tmp = s1 %>% mutate(type = ifelse(segment == 'fixation' | segment == 'cue', 'transition', 'image')) %>% group_by(type) %>% 
-  summarise(across(0:1125, mean))
-  
-tmp = data.frame(ID=tmp[,1], Means=rowMeans(tmp[,-1]))
+broadcasted_df = nest_df %>% 
+  broadcast(row_corr)
 
-ggplot(tmp, aes(x = type, y = Means)) + geom_bar(stat = 'identity')
-```
+broadcasted_df$corr = as.numeric(unlist(broadcasted_df$output))
 
-```{r}
-s2 = s1 %>% 
-  filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
-  group_by(sub, roi, pair, route, segment, valid, odd_even, id) %>% 
-  # hippocampus: 1776; ppa: 1125; evc: 1048
-  summarise(across(0:1048, mean)) %>% 
-  group_by(sub, roi, pair, route, segment, valid, id) %>% 
-  nest() %>% 
-  
-  
-  mutate(correlation = map_dbl(data, calculate_cor)) %>% 
-  mutate(timepoint = id - 4)
-
-s2$valid = as.factor(s2$valid)
-s2$segment = as.factor(s2$segment)
-
-s2_1 = s2 %>% group_by(segment, valid, timepoint) %>% 
-  summarise(m = mean(correlation))
-
-s3 = s2 %>% group_by(segment, valid) %>% 
-  summarise(m = mean(correlation))
-s3 <- s3 %>% 
-  mutate(segment = fct_relevel(segment, c("same", "overlapping", "non-overlapping")))
-
-s4 = s2 %>% group_by(segment) %>% 
-  summarise(m = mean(correlation),
-            sd = sd(correlation),
+sub_df = broadcasted_df %>% group_by(valid, within_trial_TR, segment, sub) %>% 
+  summarise(m = mean(corr)) %>% 
+  group_by(valid, within_trial_TR, segment) %>% 
+  summarise(m2 = mean(m),
+            se = sd(m)/sqrt(n()),
             n = n())
-s4 <- s4 %>% 
-  mutate(segment = fct_relevel(segment, c("same", "overlapping", "non-overlapping")))
 
+sub_df$valid = as.factor(sub_df$valid)
 
-ggplot(s2_1, aes(x = timepoint, y = m)) + geom_line()+
-  labs(y = 'mean correlation')
-
-ggplot(s2_1, aes(x = timepoint, y = m)) + 
-  geom_line(aes(color = valid)) +
-  theme(legend.position = 'top')+
-  labs(y = 'mean correlation')
-
-ggplot(s4, aes(x = segment, y = m)) + 
-  geom_bar(stat = 'identity') +
-  labs(y = 'mean correlation')
-
-ggplot(s3, aes(x = segment, y = m, fill = valid)) + 
-  geom_bar(stat = 'identity', position = 'dodge')+
-  theme(legend.position = 'top') +
-  labs(y = 'mean correlation')
+sub_df %>% 
+  ggplot(aes(x = within_trial_TR, y = m2, group = valid, color = valid)) + 
+  geom_errorbar(aes(ymin = m2-se, ymax = m2+se))+
+  geom_line()
 
 ```
+
 
 
