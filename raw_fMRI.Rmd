@@ -219,6 +219,18 @@ end_time - start_time
 
 save(ca23dg_body_correlation, file = "./csv_files/RData/ca23dg_body_correlation.RData")
 
+
+# https://rstudio-education.github.io/hopr/dataio.html
+
+a <- 1
+b <- 2
+c <- 3
+save(a, b, c, file = "stuff.RData")
+load("stuff.RData")
+
+saveRDS(a, file = "stuff.RDS") 
+a <- readRDS("stuff.RDS")
+
 tmp = ca23dg_body_correlation %>% select(-data) %>% unnest(cols = c(output)) %>% 
   mutate(wp_ap = within_pair - across_pair,
          segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
