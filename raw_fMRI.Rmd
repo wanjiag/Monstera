@@ -1,5 +1,5 @@
 ---
-title: "raw_fMRI"
+title: "fMRI correlation calculation"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -22,9 +22,155 @@ library(ezPurrr)
 ```
 
 
-# Reading and cleaning files
+```{r setup, include=FALSE}
 
-```{r}
+converting_read <- function(curr_path){
+  print(curr_path)
+  read_csv(curr_path) %>% mutate(sub = as.character(sub))
+}
+
+# Loading behavioral data
+sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
+scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
+timing_batch = map_dfr(scan_timing, converting_read)
+
+```
+
+# Behavior 
+
+## Cleaning timing file
+
+```{r timing files}
+event_files = timing_batch %>% 
+  #  calculate TR. as.integer's default is flooring.
+  mutate(TR = as.integer(design_onset)) %>% 
+  # Remove _ from npic
+  separate(npic, 
+           into ='n_pic', 
+           sep = '_', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting name for pair and route
+    separate(condition, 
+           into =c('pair', 'route'), 
+           sep = '/', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting trial type (valid vs. invalid; catch vs. non-catch)
+    separate(route, 
+           into =c('route', 'valid', 'trial_type'), 
+           extra = 'drop', 
+           sep = ',',
+           remove = FALSE) %>% 
+  mutate(pair = stringr::str_sub(pair, start = 3),
+         route = stringr::str_extract(route, "[a-z]+"),
+         catch = stringr::str_extract(trial_type, "[0-1]+")) %>% 
+  select(-c(trial_type, npic, condition)) %>% 
+  # Getting segment
+  mutate(int_pic = as.integer(n_pic)) %>% 
+  mutate(segment = ifelse(is.na(int_pic), n_pic,
+                    ifelse(int_pic <= 25, 'same',
+                            ifelse(int_pic >= 76, 'non-overlapping',
+                                   'overlapping')))) %>% 
+  select(-int_pic) %>% 
+  mutate(valid = as.integer((valid)),
+         catch = as.integer(catch))
+```
+
+## non-catch trials with only images displaying time points
+
+```{r event files}
+event = event_files %>% filter(catch == 0) %>% 
+  filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
+  mutate(round = as.integer(round)) %>%
+  group_by(sub, round, trial, pair, route, segment, valid, catch) %>% 
+  summarize(TR = min(design_onset) %>% round() %>% as.integer()) %>%
+  mutate(end_TR = ifelse((segment == 'same' | segment == 'non-overlapping'), TR+5, TR+11)) %>% 
+  mutate(behav_TR = map2(TR, end_TR, ~ seq(from = .x, to = .y))) %>%
+  unnest(behav_TR) %>% 
+  mutate(within_trial_TR = behav_TR - TR) %>% 
+  mutate(within_trial_TR = ifelse(segment == 'overlapping',
+         within_trial_TR+7, 
+         ifelse(segment == 'non-overlapping', 
+                within_trial_TR + 19,
+                within_trial_TR + 1)
+         ),
+         odd.even = ifelse(round %% 2 == 0, 'even', 'odd'),
+         valid = ifelse(valid == 0, 'valid', 'invalid')) %>% 
+  select(-c(TR, end_TR, catch))
+
+```
+
+# Supporting Functions
+
+```{r Supporting Functions}
+individual_cor <- function(df1, df2){
+  df1 <- df1[complete.cases(df1[ , 'value']), ] 
+  df2 <- df2[complete.cases(df2[ , 'value']), ] 
+  
+  cor(df1$value, df2$value)
+}
+
+summarise_type <- function(sample){
+  
+  remove('output_df')
+  
+  sample = sample %>% select(-roi)
+  
+  for (row1 in 1:nrow(sample)) {
+    
+    output_df_row = sample[row1, ] %>% select(-c(`0`:last_col()))
+    
+    curr_row = sample[row1, ] %>% 
+    pivot_longer(cols = c(`0`:last_col()),
+                 names_to = 'voxels',
+                 values_to = 'value'
+                 )
+    curr_df = sample %>% filter(round != unique(curr_row$round))
+    curr_df_nest = curr_df %>% 
+    pivot_longer(cols = c(`0`:last_col()),
+                 names_to = 'voxels',
+                 values_to = 'value'
+                 ) %>% 
+      group_by(round, trial, pair, route) %>% 
+      nest()
+    
+    curr_df_nest$r = map_dbl(.x = curr_df_nest$data,
+                             .f = ~individual_cor(df1 = curr_row, df2 = .x))
+    curr_df_nest = curr_df_nest %>% mutate(type = ifelse(pair != unique(curr_row$pair),
+                    'across_pair',
+                    ifelse(route == unique(curr_row$route),
+                           'within_item',
+                           'within_pair'))) 
+    curr_df_nest_summary = curr_df_nest %>% 
+      group_by(type) %>%
+      summarise(mean_r = mean(r)) %>% 
+      pivot_wider(names_from = type,
+                  values_from = mean_r)
+    
+    output_df_row = cbind(output_df_row, curr_df_nest_summary)
+    
+    if (exists('output_df')){
+      output_df = rbind(output_df, output_df_row)
+    } else(
+      output_df = output_df_row
+    )
+    
+  }
+  
+  output_df_summary = output_df %>% 
+    summarise(across_pair = mean(across_pair),
+              within_pair = mean(within_pair),
+              within_item = mean(within_item))
+  
+  output_df_summary
+  
+}
+```
+
+# fMRI files
+
+```{r ROI files}
 
 rois= c('ca23dg-body_thre_0.5_masked',
         'ca1-body_thre_0.5_masked',
@@ -39,11 +185,6 @@ rois_names = c('ca23dg_body', 'ca1_body',
                'ca23dg', 'ca1',
                'angular_gyrus', 'evc', 
                'hippocampus', 'ppa')
-
-converting_read <- function(curr_path){
-  print(curr_path)
-  read_csv(curr_path) %>% mutate(sub = as.character(sub))
-}
 
 sub_dir = dir_ls(here::here("./csv_files/fMRI"))
 
@@ -61,51 +202,62 @@ for (i in c(1:length(rois))){
 ```
 
 
-
 ```{r}
-nest_df = left_join(event, evc, by = c('behav_TR' = 'TR',
+nest_df = left_join(event, ca23dg_body, by = c('behav_TR' = 'TR',
                                      'sub' = 'sub',
-                                     'round' = 'run')) %>% 
-  group_by(sub, pair, route, segment, valid, within_trial_TR, odd.even) %>% 
-  summarise_if(is.numeric, mean) %>% 
-  group_by(sub, pair, route, segment, valid, within_trial_TR) %>%
-  nest()
+                                     'round' = 'run')) %>%
+  select(-c(behav_TR, odd.even)) %>% 
+  group_by(sub, segment, valid, within_trial_TR) %>% 
+    nest()
+nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
 
-row_corr <- function(data){
+start_time <- Sys.time()
+ca23dg_body_correlation = nest_df %>% broadcast(summarise_type)
+end_time <- Sys.time()
+
+end_time - start_time
+
+save(ca23dg_body_correlation, file = "./csv_files/RData/ca23dg_body_correlation.RData")
+
+tmp = ca23dg_body_correlation %>% select(-data) %>% unnest(cols = c(output)) %>% 
+  mutate(wp_ap = within_pair - across_pair,
+         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
+
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR) %>% 
+  summarise(across_pair_m = mean(across_pair),
+            across_pair_se = sd(across_pair)/sqrt(n()),
+            within_pair_m = mean(within_pair),
+            within_pair_se = sd(within_pair)/sqrt(n()),
+            within_item_m = mean(within_item),
+            within_item_se = sd(within_item)/sqrt(n()),
+            wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
+  geom_errorbar(aes(ymin = wp_ap_m-wp_ap_se, ymax = wp_ap_m+wp_ap_se)) +
+  geom_line()+
+  geom_vline(xintercept=6) +
+  geom_vline(xintercept=18)
+
+tmp2 = tmp %>% group_by(sub, segment, valid) %>% 
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+tmp2 %>% group_by(segment, valid) %>% 
+  summarise(m = mean(wp_ap_m),
+            se = sd(wp_ap_m)/sqrt(n()),
+            n = n()
+            ) %>% View()
+  ggplot(aes(x = segment, y = m, fill = valid)) +
+  geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+  geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+  geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = valid, group = valid), 
+              position=position_jitterdodge(
+                jitter.width = 0.2,
+                dodge.width = 0.75)) + 
+  labs(y = 'within_pair-across_pair')
   
-sample = data %>% 
-  select(-c(round, trial, behav_TR)) %>% 
-  pivot_longer(!odd.even,
-               values_to = 'v') %>% 
-  pivot_wider(names_from = odd.even,
-              values_from = v)
-
-  sample = sample[complete.cases(sample), ]
-
-  cor(sample$even, sample$odd)
-}
-
-
-broadcasted_df = nest_df %>% 
-  broadcast(row_corr)
-
-broadcasted_df$corr = as.numeric(unlist(broadcasted_df$output))
-
-sub_df = broadcasted_df %>% group_by(valid, within_trial_TR, segment, sub) %>% 
-  summarise(m = mean(corr)) %>% 
-  group_by(valid, within_trial_TR, segment) %>% 
-  summarise(m2 = mean(m),
-            se = sd(m)/sqrt(n()),
-            n = n())
-
-sub_df$valid = as.factor(sub_df$valid)
-
-sub_df %>% 
-  ggplot(aes(x = within_trial_TR, y = m2, group = valid, color = valid)) + 
-  geom_errorbar(aes(ymin = m2-se, ymax = m2+se))+
-  geom_line()
 
 ```
-
-
 
