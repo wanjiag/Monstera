@@ -115,8 +115,6 @@ summarise_type <- function(sample){
   
   remove('output_df')
   
-  sample = sample %>% select(-roi)
-  
   for (row1 in 1:nrow(sample)) {
     
     output_df_row = sample[row1, ] %>% select(-c(`0`:last_col()))
@@ -128,12 +126,12 @@ summarise_type <- function(sample){
                  )
     curr_df = sample %>% filter(round != unique(curr_row$round))
     curr_df_nest = curr_df %>% 
-    pivot_longer(cols = c(`0`:last_col()),
-                 names_to = 'voxels',
-                 values_to = 'value'
-                 ) %>% 
-      group_by(round, trial, pair, route) %>% 
-      nest()
+                  pivot_longer(cols = c(`0`:last_col()),
+                               names_to = 'voxels',
+                               values_to = 'value'
+                               ) %>% 
+                    group_by(round, trial, pair, route) %>% 
+                    nest()
     
     curr_df_nest$r = map_dbl(.x = curr_df_nest$data,
                              .f = ~individual_cor(df1 = curr_row, df2 = .x))
@@ -158,12 +156,35 @@ summarise_type <- function(sample){
     
   }
   
-  output_df_summary = output_df %>% 
-    summarise(across_pair = mean(across_pair),
-              within_pair = mean(within_pair),
-              within_item = mean(within_item))
+  #output_df_summary = output_df %>% 
+  #  summarise(across_pair = mean(across_pair),
+  #            within_pair = mean(within_pair),
+  #            within_item = mean(within_item))
+  #
+  #output_df_summary
   
-  output_df_summary
+  output_df
+  
+}
+
+calculating_rolling <- function(sample){
+  
+  #Filter(function(x)!all(is.na(x)), df)
+  
+  rolling_mean = sample %>% zoo::rollmean(k = 3)
+  
+  # First TR = (first + second) / 2
+  first_TR = colMeans(sample[1:2,]) %>% t() %>% as.tibble()
+  first_TR$TR = 0
+  
+  # Last TR = (last + second to last) / 2
+  last_TR = colMeans(sample[(nrow(sample)-1):nrow(sample),]) %>% t() %>% as.tibble()
+  last_TR$TR = nrow(sample)
+  
+  rolling_mean = rbind(rolling_mean, first_TR)
+  rolling_mean = rbind(rolling_mean, last_TR)
+  
+  rolling_mean[order(rolling_mean$TR),]
   
 }
 ```
@@ -181,41 +202,70 @@ rois= c('ca23dg-body_thre_0.5_masked',
         'hippocampus_2_epi_thre_0.5_masked',
         'ppa_mni_2_epi_thre_0.5_masked')
 
-rois_names = c('ca23dg_body', 'ca1_body', 
+rois_names = c('ca23dg-body', 'ca1-body', 
                'ca23dg', 'ca1',
                'angular_gyrus', 'evc', 
                'hippocampus', 'ppa')
 
 sub_dir = dir_ls(here::here("./csv_files/fMRI"))
+rdata_dir = here::here("./csv_files/RData")
+
+roi_dir = dir_ls(here::here("csv_files/RData/"),  type = "directory")
+processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
+  map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
+  unlist() %>% 
+  unique()
 
 for (i in c(1:length(rois))){
+  
+  print(paste0('-----------', rois[i], '-----------'))
+  
   curr_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
   curr_df <- map_dfr(curr_files, converting_read)
+  
   colnames(curr_df)[1] <- 'TR'
   curr_df <- curr_df %>% mutate(
       run = as.integer(stringr::str_extract(run, "\\d+")),
-      sub = as.factor(stringr::str_extract(sub, "\\d+")),
-      roi = rois_names[i])
-  assign(rois_names[i], curr_df)
+      sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
+    select(-roi)
+  curr_df = curr_df %>% filter(!sub %in% processed_sub_list)
+  
+  curr_df_nest = curr_df %>% 
+    group_by(sub, run) %>% 
+    nest()
+  
+  curr_df_nest = curr_df_nest %>% broadcast(calculating_rolling)
+  
+  curr_df = curr_df_nest %>% select(-data) %>% unnest(cols = c(output))
+  
+  nest_df = left_join(event, curr_df, by = c('behav_TR' = 'TR',
+                                     'sub' = 'sub',
+                                     'round' = 'run')) %>%
+  select(-c(behav_TR, odd.even)) %>% 
+  group_by(sub, segment, valid, within_trial_TR) %>% 
+    nest()
+  
+  #nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
+  
+  start_time <- Sys.time()
+  correlation_df = nest_df %>% broadcast(summarise_type)
+  end_time <- Sys.time()
+  
+  print(paste0(rois_names[i], ': ', end_time - start_time))
+  
+  output_path = file.path(rdata_dir, rois_names[i])
+  dir.create(output_path)
+  
+  correlation_df %>% 
+    group_by(sub) %>% 
+    group_walk(~ save(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RData")))
+
 }
 
 ```
 
 
 ```{r}
-nest_df = left_join(event, ca23dg_body, by = c('behav_TR' = 'TR',
-                                     'sub' = 'sub',
-                                     'round' = 'run')) %>%
-  select(-c(behav_TR, odd.even)) %>% 
-  group_by(sub, segment, valid, within_trial_TR) %>% 
-    nest()
-nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
-
-start_time <- Sys.time()
-ca23dg_body_correlation = nest_df %>% broadcast(summarise_type)
-end_time <- Sys.time()
-
-end_time - start_time
 
 save(ca23dg_body_correlation, file = "./csv_files/RData/ca23dg_body_correlation.RData")
 
