@@ -239,6 +239,8 @@ for (i in c(1:length(rois))){
   
   #nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
   
+  warning("This will take VERY long to run (~30min - 1h per ROI)")
+  
   start_time <- Sys.time()
   correlation_df = nest_df %>% broadcast(summarise_type)
   end_time <- Sys.time()

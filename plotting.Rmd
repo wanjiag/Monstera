@@ -13,6 +13,7 @@ library(fs)
 library(ggplot2)
 theme_set(theme_minimal(15))
 
+
 library(ezPurrr)
 ```
 
@@ -36,15 +37,17 @@ rois_names = c('ca23dg-body', 'ca1-body',
                'angular_gyrus', 'evc', 
                'hippocampus', 'ppa')
 
-rdata_dir = here::here("./csv_files/RData")
+rdata_dir = here::here("./csv_files/RDS")
 
-roi_dir = dir_ls(here::here("csv_files/RData/"),  type = "directory")
+roi_dir = dir_ls(here::here("csv_files/RDS/"),  type = "directory")
 processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
   map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
   unlist() %>% 
   unique()
 
 remove('huge_df')
+
+rois_names = c('ca23dg-body', 'ppa')
 
 for (roi in rois_names){
   for (sub in processed_sub_list){
@@ -70,12 +73,11 @@ for (roi in rois_names){
  
  
 ```{r}
-
 tmp = huge_df %>%
   mutate(wp_ap = within_pair - across_pair,
          segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
 
-tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR) %>% 
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>% 
   summarise(across_pair_m = mean(across_pair),
             across_pair_se = sd(across_pair)/sqrt(n()),
             within_pair_m = mean(within_pair),
@@ -94,18 +96,22 @@ tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
   labs(y = 'within_pair - across_pair',
        x = 'within trial timepoint') + 
   theme(legend.position="top",
-        legend.title = element_blank())
+        legend.title = element_blank()) + 
+  facet_wrap(~roi, ncol = 1)
+```
 
-tmp2 = tmp %>% group_by(sub, segment, valid) %>% 
+
+```{r}
+tmp2 = tmp %>% group_by(sub, segment, valid, roi) %>% 
   summarise(wp_ap_m = mean(wp_ap),
             wp_ap_se = sd(wp_ap)/sqrt(n())
             )
 
-tmp2 %>% group_by(segment, valid) %>% 
+tmp2 %>% group_by(segment, valid, roi) %>% 
   summarise(m = mean(wp_ap_m),
             se = sd(wp_ap_m)/sqrt(n()),
             n = n()
-            ) %>%
+            ) %>% 
   ggplot(aes(x = segment, y = m, fill = valid)) +
   geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
   geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
@@ -115,7 +121,8 @@ tmp2 %>% group_by(segment, valid) %>%
                 dodge.width = 0.75)) + 
   labs(y = 'within_pair - across_pair')+ 
   theme(legend.position="top",
-        legend.title = element_blank())
+        legend.title = element_blank()) + 
+  facet_wrap(~roi, ncol = 2)
   
 ```
 
