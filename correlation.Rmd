@@ -156,13 +156,6 @@ summarise_type <- function(sample){
     
   }
   
-  #output_df_summary = output_df %>% 
-  #  summarise(across_pair = mean(across_pair),
-  #            within_pair = mean(within_pair),
-  #            within_item = mean(within_item))
-  #
-  #output_df_summary
-  
   output_df
   
 }
@@ -199,18 +192,17 @@ rois= c('ca23dg-body_thre_0.5_masked',
         'ca1_thre_0.5_masked', 
         'angular_gyrus_2_epi_thre_0.5_masked',
         'evc_2_epi_thre_0.5_masked', 
-        'hippocampus_2_epi_thre_0.5_masked',
-        'ppa_mni_2_epi_thre_0.5_masked')
+        'hippocampus_2_epi_thre_0.5_masked')#,'ppa_mni_2_epi_thre_0.5_masked')
 
 rois_names = c('ca23dg-body', 'ca1-body', 
                'ca23dg', 'ca1',
                'angular_gyrus', 'evc', 
-               'hippocampus', 'ppa')
+               'hippocampus')#, 'ppa')
 
 sub_dir = dir_ls(here::here("./csv_files/fMRI"))
-rdata_dir = here::here("./csv_files/RData")
+rdata_dir = here::here("./csv_files/RDS")
 
-roi_dir = dir_ls(here::here("csv_files/RData/"),  type = "directory")
+roi_dir = dir_ls(here::here("csv_files/RDS/"),  type = "directory")
 processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
   map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
   unlist() %>% 
@@ -258,68 +250,9 @@ for (i in c(1:length(rois))){
   
   correlation_df %>% 
     group_by(sub) %>% 
-    group_walk(~ save(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RData")))
+    group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
 
 }
-
-```
-
-
-```{r}
-
-save(ca23dg_body_correlation, file = "./csv_files/RData/ca23dg_body_correlation.RData")
-
-
-# https://rstudio-education.github.io/hopr/dataio.html
-
-a <- 1
-b <- 2
-c <- 3
-save(a, b, c, file = "stuff.RData")
-load("stuff.RData")
-
-saveRDS(a, file = "stuff.RDS") 
-a <- readRDS("stuff.RDS")
-
-tmp = ca23dg_body_correlation %>% select(-data) %>% unnest(cols = c(output)) %>% 
-  mutate(wp_ap = within_pair - across_pair,
-         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
-
-tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR) %>% 
-  summarise(across_pair_m = mean(across_pair),
-            across_pair_se = sd(across_pair)/sqrt(n()),
-            within_pair_m = mean(within_pair),
-            within_pair_se = sd(within_pair)/sqrt(n()),
-            within_item_m = mean(within_item),
-            within_item_se = sd(within_item)/sqrt(n()),
-            wp_ap_m = mean(wp_ap),
-            wp_ap_se = sd(wp_ap)/sqrt(n())
-            )
-
-tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
-  geom_errorbar(aes(ymin = wp_ap_m-wp_ap_se, ymax = wp_ap_m+wp_ap_se)) +
-  geom_line()+
-  geom_vline(xintercept=6) +
-  geom_vline(xintercept=18)
-
-tmp2 = tmp %>% group_by(sub, segment, valid) %>% 
-  summarise(wp_ap_m = mean(wp_ap),
-            wp_ap_se = sd(wp_ap)/sqrt(n())
-            )
-tmp2 %>% group_by(segment, valid) %>% 
-  summarise(m = mean(wp_ap_m),
-            se = sd(wp_ap_m)/sqrt(n()),
-            n = n()
-            ) %>% View()
-  ggplot(aes(x = segment, y = m, fill = valid)) +
-  geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-  geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-  geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = valid, group = valid), 
-              position=position_jitterdodge(
-                jitter.width = 0.2,
-                dodge.width = 0.75)) + 
-  labs(y = 'within_pair-across_pair')
-  
 
 ```
 

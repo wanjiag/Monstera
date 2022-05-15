@@ -1,0 +1,121 @@
+---
+title: "plotting"
+author: "Wanjia Guo"
+date: "5/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
+
+library(tidyverse)
+library(fs)
+library(ggplot2)
+theme_set(theme_minimal(15))
+
+library(ezPurrr)
+```
+
+```{r}
+calculate_mean = function(sample){
+  
+  summary = sample %>% 
+    summarise(across_pair = mean(across_pair),
+              within_pair = mean(within_pair),
+              within_item = mean(within_item))
+  
+  summary
+}
+```
+
+
+
+```{r}
+rois_names = c('ca23dg-body', 'ca1-body', 
+               'ca23dg', 'ca1',
+               'angular_gyrus', 'evc', 
+               'hippocampus', 'ppa')
+
+rdata_dir = here::here("./csv_files/RData")
+
+roi_dir = dir_ls(here::here("csv_files/RData/"),  type = "directory")
+processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
+  map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
+  unlist() %>% 
+  unique()
+
+remove('huge_df')
+
+for (roi in rois_names){
+  for (sub in processed_sub_list){
+    curr_df = readRDS(file.path(rdata_dir, roi, paste0('sub-', sub, '_', roi, '.RDS')))
+    
+    curr_df = curr_df %>% 
+      mutate(data = output) %>% 
+      select(-output) %>% 
+      broadcast(calculate_mean) %>% 
+      select(-data) %>% 
+      unnest(cols = output)
+    
+    curr_df$sub = sub
+    curr_df$roi = roi
+    if (exists('huge_df')){
+      huge_df = rbind(huge_df, curr_df)
+    } else(
+      huge_df = curr_df
+    )
+  }
+}
+```
+ 
+ 
+```{r}
+
+tmp = huge_df %>%
+  mutate(wp_ap = within_pair - across_pair,
+         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
+
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR) %>% 
+  summarise(across_pair_m = mean(across_pair),
+            across_pair_se = sd(across_pair)/sqrt(n()),
+            within_pair_m = mean(within_pair),
+            within_pair_se = sd(within_pair)/sqrt(n()),
+            within_item_m = mean(within_item),
+            within_item_se = sd(within_item)/sqrt(n()),
+            wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
+  #geom_errorbar(aes(ymin = wp_ap_m-wp_ap_se, ymax = wp_ap_m+wp_ap_se)) +
+  geom_line()+
+  geom_vline(xintercept=6) +
+  geom_vline(xintercept=18) +
+  labs(y = 'within_pair - across_pair',
+       x = 'within trial timepoint') + 
+  theme(legend.position="top",
+        legend.title = element_blank())
+
+tmp2 = tmp %>% group_by(sub, segment, valid) %>% 
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp2 %>% group_by(segment, valid) %>% 
+  summarise(m = mean(wp_ap_m),
+            se = sd(wp_ap_m)/sqrt(n()),
+            n = n()
+            ) %>%
+  ggplot(aes(x = segment, y = m, fill = valid)) +
+  geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+  geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+  geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = valid, group = valid), 
+              position=position_jitterdodge(
+                jitter.width = 0.2,
+                dodge.width = 0.75)) + 
+  labs(y = 'within_pair - across_pair')+ 
+  theme(legend.position="top",
+        legend.title = element_blank())
+  
+```
+
