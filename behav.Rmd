@@ -1,5 +1,5 @@
 ---
-title: "behav"
+title: "Preliminary behavioral data"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:

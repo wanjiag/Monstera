@@ -1,8 +1,10 @@
 ---
-title: "plotting"
+title: "Preliminary fMRI data"
 author: "Wanjia Guo"
-date: "5/15/2022"
-output: html_document
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    theme: journal
 editor_options: 
   chunk_output_type: console
 ---
@@ -71,6 +73,8 @@ for (roi in rois_names){
 }
 ```
  
+ 
+## n = `r length(processed_sub_list)`
  
 ```{r, fig.dim=c(20, 16)}
 tmp = huge_df %>%
