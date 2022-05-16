@@ -3,6 +3,8 @@ title: "plotting"
 author: "Wanjia Guo"
 date: "5/15/2022"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +13,7 @@ knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
 library(tidyverse)
 library(fs)
 library(ggplot2)
-theme_set(theme_minimal(15))
+theme_set(theme_minimal(18))
 
 
 library(ezPurrr)
@@ -47,8 +49,6 @@ processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>%
 
 remove('huge_df')
 
-rois_names = c('ca23dg-body', 'ppa')
-
 for (roi in rois_names){
   for (sub in processed_sub_list){
     curr_df = readRDS(file.path(rdata_dir, roi, paste0('sub-', sub, '_', roi, '.RDS')))
@@ -72,7 +72,7 @@ for (roi in rois_names){
 ```
  
  
-```{r}
+```{r, fig.dim=c(20, 16)}
 tmp = huge_df %>%
   mutate(wp_ap = within_pair - across_pair,
          segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
@@ -88,20 +88,37 @@ tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>%
             wp_ap_se = sd(wp_ap)/sqrt(n())
             )
 
+tmp_sub$roi =  factor(tmp_sub$roi,
+                         levels = c('ca23dg-body', 'ca23dg',
+                                    'ca1-body', 'ca1',
+                                    'hippocampus', 'ppa',
+                                    'angular_gyrus', 'evc'))
+
 tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
-  #geom_errorbar(aes(ymin = wp_ap_m-wp_ap_se, ymax = wp_ap_m+wp_ap_se)) +
-  geom_line()+
   geom_vline(xintercept=6) +
   geom_vline(xintercept=18) +
+  geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                  ymax = wp_ap_m+wp_ap_se,
+                  fill = valid),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(size = 1)+
   labs(y = 'within_pair - across_pair',
        x = 'within trial timepoint') + 
-  theme(legend.position="top",
+  theme(legend.position="bottom",
         legend.title = element_blank()) + 
-  facet_wrap(~roi, ncol = 1)
+  facet_wrap(~roi, ncol = 2, scales = 'free_y')
 ```
 
 
-```{r}
+```{r, fig.dim=c(20, 16)}
+
+tmp$roi =  factor(tmp$roi,
+                  levels = c('ca23dg-body', 'ca23dg',
+                             'ca1-body', 'ca1',
+                             'hippocampus', 'ppa',
+                             'angular_gyrus', 'evc'))
+
 tmp2 = tmp %>% group_by(sub, segment, valid, roi) %>% 
   summarise(wp_ap_m = mean(wp_ap),
             wp_ap_se = sd(wp_ap)/sqrt(n())
@@ -120,9 +137,9 @@ tmp2 %>% group_by(segment, valid, roi) %>%
                 jitter.width = 0.2,
                 dodge.width = 0.75)) + 
   labs(y = 'within_pair - across_pair')+ 
-  theme(legend.position="top",
+  theme(legend.position="bottom",
         legend.title = element_blank()) + 
-  facet_wrap(~roi, ncol = 2)
+  facet_wrap(~roi, ncol = 2, scales = 'free_y')
   
 ```
 
