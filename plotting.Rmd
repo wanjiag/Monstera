@@ -147,3 +147,71 @@ tmp2 %>% group_by(segment, valid, roi) %>%
   
 ```
 
+## Valid only
+
+```{r}
+cbPalette <- c("#CC79A7","#009E73","#0072B2","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
+#pink, green, blue, yellow
+
+tmp_sub %>% 
+  filter(roi %in% c('ca23dg-body', 'ppa', 'evc') &
+         valid == 'valid') %>%
+  ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
+  geom_hline(yintercept=0, linetype="dashed", color = "darkgrey")+
+  geom_vline(xintercept=6, linetype="dashed", color = "darkgrey") +
+  geom_vline(xintercept=18, linetype="dashed", color = "darkgrey") +
+  geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                  ymax = wp_ap_m+wp_ap_se,
+                  fill = roi),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(size = 1)+
+  labs(y = 'within_pair - across_pair',
+       x = 'within trial timepoint') +
+  scale_colour_manual(values=cbPalette, name = "ROIs")+
+  guides(fill = FALSE) + 
+  theme_classic(20) +
+  theme(legend.position="bottom") + 
+  annotate("text", x=3, y=0.066, label= "same", size=5)+ 
+  annotate("text", x=12, y=0.066, label= "overlapping", size=5)+ 
+  annotate("text", x=22, y=0.066, label= "non-overlapping", size=5)
+```
+
+
+```{r, fig.dim=c(20, 16)}
+
+tmp$roi =  factor(tmp$roi,
+                  levels = c('ca23dg-body', 'ca23dg',
+                             'ca1-body', 'ca1',
+                             'hippocampus', 'ppa',
+                             'angular_gyrus', 'evc'))
+
+tmp2 = tmp %>% group_by(sub, segment, valid, roi) %>% 
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )  %>% 
+  filter(roi %in% c('ca23dg-body', 'ppa', 'evc') &
+         valid == 'valid')
+
+tmp2 %>% group_by(segment, valid, roi) %>% 
+  summarise(m = mean(wp_ap_m),
+            se = sd(wp_ap_m)/sqrt(n()),
+            n = n()
+            ) %>%
+  ggplot(aes(x = segment, y = m, fill = roi)) +
+  geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+  geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.2) +
+  geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = roi, group = roi), 
+             size = 2,
+              position=position_jitterdodge(
+                jitter.height = 0,
+                jitter.width = 0.75,
+                dodge.width = 0.75)) + 
+  labs(y = 'within_pair - across_pair')+ 
+  theme_classic(20)+
+  theme(legend.position="bottom",
+        legend.title = element_blank(),
+        strip.background = element_blank()) + 
+  facet_wrap(~roi, ncol = 3, scales = 'free_y') 
+  
+```
