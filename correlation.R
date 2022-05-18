@@ -1,7 +1,6 @@
 ## ----include = FALSE-----------------------------------------------------------------------------------
 library(tidyverse)
 library(fs)
-library(ggplot2)
 theme_set(theme_minimal(15))
 
 library(ezPurrr)
@@ -16,13 +15,13 @@ converting_read <- function(curr_path){
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
-on_cluster = FALSE
+on_cluster = TRUE
 
 # Loading behavioral data
 if (on_cluster){
-  sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
-} else{
   sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/"),  type = "directory")
+} else{
+  sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
 }
 
 scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
