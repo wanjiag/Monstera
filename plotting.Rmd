@@ -11,6 +11,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
+knitr::opts_chunk$set(fig.width=20, fig.height=16) 
 
 library(tidyverse)
 library(fs)
@@ -214,4 +215,187 @@ tmp2 %>% group_by(segment, valid, roi) %>%
         strip.background = element_blank()) + 
   facet_wrap(~roi, ncol = 3, scales = 'free_y') 
   
+```
+
+
+
+```{r, fig.dim=c(20, 16)}
+rois_names = c('ca23dg-body', 'ca1-body', 
+               'ca23dg', 'ca1',
+               'angular_gyrus', 'evc', 
+               'hippocampus', 'ppa')
+
+rdata_dir = here::here("./csv_files/RDS")
+
+roi_dir = dir_ls(here::here("csv_files/RDS/"),  type = "directory")
+processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
+  map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
+  unlist() %>% 
+  unique()
+
+remove('huge_df')
+
+for (roi in rois_names){
+  for (sub in processed_sub_list){
+    curr_df = readRDS(file.path(rdata_dir, roi, paste0('sub-', sub, '_', roi, '.RDS')))
+    
+    curr_df = curr_df %>% 
+      mutate(data = output) %>% 
+      unnest(cols = output) %>% 
+      select(-data)
+    
+    curr_df$sub = sub
+    curr_df$roi = roi
+    if (exists('huge_df')){
+      huge_df = rbind(huge_df, curr_df)
+    } else(
+      huge_df = curr_df
+    )
+  }
+}
+```
+
+### sub-09 + pair2_north and sub-10 + pair3_west
+
+```{r, fig.dim=c(20, 16)}
+
+late_df = huge_df %>% filter((sub == '09' & pair == 'pair2_north') |
+                               (sub == '10' & pair == 'pair3_west'))
+
+tmp = late_df %>% 
+  group_by(segment, valid, within_trial_TR, roi, sub) %>% 
+  nest() %>% 
+  broadcast(calculate_mean) %>%
+  select(-data) %>% 
+  unnest(cols = output)
+
+tmp = tmp %>%
+  mutate(wp_ap = within_pair - across_pair,
+         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
+
+tmp$roi =  factor(tmp$roi,
+                  levels = c('ca23dg-body', 'ca23dg',
+                             'ca1-body', 'ca1',
+                             'hippocampus', 'ppa',
+                             'angular_gyrus', 'evc'))
+
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>% 
+  summarise(across_pair_m = mean(across_pair),
+            across_pair_se = sd(across_pair)/sqrt(n()),
+            within_pair_m = mean(within_pair),
+            within_pair_se = sd(within_pair)/sqrt(n()),
+            within_item_m = mean(within_item),
+            within_item_se = sd(within_item)/sqrt(n()),
+            wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
+  geom_vline(xintercept=6) +
+  geom_vline(xintercept=18) +
+  geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                  ymax = wp_ap_m+wp_ap_se,
+                  fill = valid),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(size = 1)+
+  labs(y = 'within_pair - across_pair',
+       x = 'within trial timepoint') + 
+  theme(legend.position="bottom",
+        legend.title = element_blank()) + 
+  facet_wrap(~roi, ncol = 2, scales = 'free_y')
+
+tmp2 = tmp %>% group_by(sub, segment, valid, roi) %>% 
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp2 %>% group_by(segment, valid, roi) %>% 
+  summarise(m = mean(wp_ap_m),
+            se = sd(wp_ap_m)/sqrt(n()),
+            n = n()
+            ) %>% 
+  ggplot(aes(x = segment, y = m, fill = valid)) +
+  geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+  geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+  geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = valid, group = valid), 
+              position=position_jitterdodge(
+                jitter.width = 0.2,
+                dodge.width = 0.75)) + 
+  labs(y = 'within_pair - across_pair')+ 
+  theme(legend.position="bottom",
+        legend.title = element_blank()) + 
+  facet_wrap(~roi, ncol = 2, scales = 'free_y')
+```
+
+### everyone else
+
+```{r, fig.dim=c(20, 16)}
+early_df = huge_df %>% filter(!(sub == '09' & pair == 'pair2_north')) %>% 
+  filter(!(sub == '10' & pair == 'pair3_west'))
+
+tmp = early_df %>% 
+  group_by(segment, valid, within_trial_TR, roi, sub) %>% 
+  nest() %>% 
+  broadcast(calculate_mean) %>%
+  select(-data) %>% 
+  unnest(cols = output)
+
+tmp = tmp %>%
+  mutate(wp_ap = within_pair - across_pair,
+         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
+
+tmp$roi =  factor(tmp$roi,
+                  levels = c('ca23dg-body', 'ca23dg',
+                             'ca1-body', 'ca1',
+                             'hippocampus', 'ppa',
+                             'angular_gyrus', 'evc'))
+
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>% 
+  summarise(across_pair_m = mean(across_pair),
+            across_pair_se = sd(across_pair)/sqrt(n()),
+            within_pair_m = mean(within_pair),
+            within_pair_se = sd(within_pair)/sqrt(n()),
+            within_item_m = mean(within_item),
+            within_item_se = sd(within_item)/sqrt(n()),
+            wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
+  geom_vline(xintercept=6) +
+  geom_vline(xintercept=18) +
+  geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                  ymax = wp_ap_m+wp_ap_se,
+                  fill = valid),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(size = 1)+
+  labs(y = 'within_pair - across_pair',
+       x = 'within trial timepoint') + 
+  theme(legend.position="bottom",
+        legend.title = element_blank()) + 
+  facet_wrap(~roi, ncol = 2, scales = 'free_y')
+
+tmp2 = tmp %>% group_by(sub, segment, valid, roi) %>% 
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp2 %>% group_by(segment, valid, roi) %>% 
+  summarise(m = mean(wp_ap_m),
+            se = sd(wp_ap_m)/sqrt(n()),
+            n = n()
+            ) %>% 
+  ggplot(aes(x = segment, y = m, fill = valid)) +
+  geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+  geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+  geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = valid, group = valid), 
+              position=position_jitterdodge(
+                jitter.width = 0.2,
+                dodge.width = 0.75)) + 
+  labs(y = 'within_pair - across_pair')+ 
+  theme(legend.position="bottom",
+        legend.title = element_blank()) + 
+  facet_wrap(~roi, ncol = 2, scales = 'free_y')
 ```
