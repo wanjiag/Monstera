@@ -202,6 +202,72 @@ output[[1]]
 output[[2]]
 ```
 
+### each pair of routes
+
+pair1 east: 
+
+```{r}
+pair1_df = huge_df %>% filter(pair == 'pair1_east') %>% 
+  group_by(segment, valid, within_trial_TR, roi, sub) %>% 
+  nest() %>% 
+  broadcast(calculate_mean) %>%
+  select(-data) %>% 
+  unnest(cols = output)
+
+output = making_2_plots(pair1_df)
+
+output[[1]]
+output[[2]]
+```
+
+pair3 west:
+
+```{r}
+pair3_df = huge_df %>% filter(pair == 'pair3_west') %>% 
+  group_by(segment, valid, within_trial_TR, roi, sub) %>% 
+  nest() %>% 
+  broadcast(calculate_mean) %>%
+  select(-data) %>% 
+  unnest(cols = output)
+
+output = making_2_plots(pair3_df)
+
+output[[1]]
+output[[2]]
+```
+
+pair2 north:
+
+```{r}
+pair2_df = huge_df %>% filter(pair == 'pair2_north') %>% 
+  group_by(segment, valid, within_trial_TR, roi, sub) %>% 
+  nest() %>% 
+  broadcast(calculate_mean) %>%
+  select(-data) %>% 
+  unnest(cols = output)
+
+output = making_2_plots(pair2_df)
+
+output[[1]]
+output[[2]]
+```
+
+pair4 south
+
+```{r}
+pair4_df = huge_df %>% filter(pair == 'pair4_south') %>% 
+  group_by(segment, valid, within_trial_TR, roi, sub) %>% 
+  nest() %>% 
+  broadcast(calculate_mean) %>%
+  select(-data) %>% 
+  unnest(cols = output)
+
+output = making_2_plots(pair4_df)
+
+output[[1]]
+output[[2]]
+```
+
 
 ```{r Talk figures 1, eval=FALSE, include=FALSE}
 tmp_sub %>% 
