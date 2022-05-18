@@ -1,28 +1,13 @@
----
-title: "fMRI correlation calculation"
-author: "Wanjia Guo"
-date: '`r format(Sys.Date(), "%B %d, %Y")`'
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    theme: journal
-editor_options: 
-  chunk_output_type: console
----
-
-
-```{r include = FALSE}
+## ----include = FALSE-----------------------------------------------------------------------------------
 library(tidyverse)
 library(fs)
 library(ggplot2)
 theme_set(theme_minimal(15))
 
 library(ezPurrr)
-```
 
 
-```{r setup, include=FALSE}
+## ----setup, include=FALSE------------------------------------------------------------------------------
 
 converting_read <- function(curr_path){
   print(curr_path)
@@ -34,13 +19,9 @@ sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
 scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
 timing_batch = map_dfr(scan_timing, converting_read)
 
-```
 
-# Behavior 
 
-## Cleaning timing file
-
-```{r timing files}
+## ----timing files--------------------------------------------------------------------------------------
 event_files = timing_batch %>% 
   #  calculate TR. as.integer's default is flooring.
   mutate(TR = as.integer(design_onset)) %>% 
@@ -75,11 +56,9 @@ event_files = timing_batch %>%
   select(-int_pic) %>% 
   mutate(valid = as.integer((valid)),
          catch = as.integer(catch))
-```
 
-## non-catch trials with only images displaying time points
 
-```{r event files}
+## ----event files---------------------------------------------------------------------------------------
 event = event_files %>% filter(catch == 0) %>% 
   filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
   mutate(round = as.integer(round)) %>%
@@ -99,11 +78,9 @@ event = event_files %>% filter(catch == 0) %>%
          valid = ifelse(valid == 0, 'valid', 'invalid')) %>% 
   select(-c(TR, end_TR, catch))
 
-```
 
-# Supporting Functions
 
-```{r Supporting Functions}
+## ----Supporting Functions------------------------------------------------------------------------------
 individual_cor <- function(df1, df2){
   df1 <- df1[complete.cases(df1[ , 'value']), ] 
   df2 <- df2[complete.cases(df2[ , 'value']), ] 
@@ -186,11 +163,9 @@ calculating_rolling <- function(sample){
   rolling_mean[order(rolling_mean$TR),]
   
 }
-```
 
-# fMRI files
 
-```{r ROI files}
+## ----ROI files-----------------------------------------------------------------------------------------
 
 rois= c('ca23dg-body_thre_0.5_masked',
         'ca1-body_thre_0.5_masked',
@@ -264,5 +239,4 @@ for (i in c(1:length(rois))){
 
 }
 
-```
 

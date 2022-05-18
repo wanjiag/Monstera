@@ -34,6 +34,7 @@ calculate_mean = function(sample){
               within_item = mean(within_item))
   
   summary
+  
 }
 ```
 
