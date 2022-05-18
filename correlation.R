@@ -9,13 +9,22 @@ library(ezPurrr)
 
 ## ----setup, include=FALSE------------------------------------------------------------------------------
 
+#knitr::purl("correlation.Rmd")
+
 converting_read <- function(curr_path){
   print(curr_path)
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
+on_cluster = FALSE
+
 # Loading behavioral data
-sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
+if (on_cluster){
+  sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
+} else{
+  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/"),  type = "directory")
+}
+
 scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
 timing_batch = map_dfr(scan_timing, converting_read)
 
@@ -180,10 +189,17 @@ rois_names = c('ca23dg-body', 'ca1-body',
                'angular_gyrus', 'evc', 
                'hippocampus')#, 'ppa')
 
-sub_dir = dir_ls(here::here("./csv_files/fMRI"))
-rdata_dir = here::here("./csv_files/RDS")
+if (on_cluster){
+  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI"))
+  rdata_dir = here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/RDS")
+  roi_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/RDS/"),  
+                   type = "directory")
+}else{
+  sub_dir = dir_ls(here::here("./csv_files/fMRI"))
+  rdata_dir = here::here("./csv_files/RDS")
+  roi_dir = dir_ls(here::here("./csv_files/RDS/"),  type = "directory")
+}
 
-roi_dir = dir_ls(here::here("csv_files/RDS/"),  type = "directory")
 processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
   map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
   unlist() %>% 
@@ -238,5 +254,6 @@ for (i in c(1:length(rois))){
     group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
 
 }
+
 
 
