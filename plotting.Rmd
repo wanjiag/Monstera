@@ -46,6 +46,8 @@ rois_names = c('ca23dg-body', 'ca1-body',
                'angular_gyrus', 'evc', 
                'hippocampus', 'ppa')
 
+rois_names = c('ca23dg-body', 'ca1-body')
+
 rdata_dir = here::here("./csv_files/RDS")
 
 roi_dir = dir_ls(here::here("csv_files/RDS/"),  type = "directory")

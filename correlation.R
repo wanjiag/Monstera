@@ -8,7 +8,7 @@ library(ezPurrr)
 
 ## ----setup, include=FALSE------------------------------------------------------------------------------
 
-#knitr::purl("correlation.Rmd")
+knitr::purl("correlation.Rmd")
 
 converting_read <- function(curr_path){
   print(curr_path)

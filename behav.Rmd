@@ -62,7 +62,7 @@ scan_batch = scan_batch %>%
                        conf_resp== 6), 1, 0))
 ```
 
-### prescan
+### Prescan
 
 ```{r}
 prescan_batch = prescan_batch %>% 
@@ -128,7 +128,7 @@ sub_plot %>% group_by(sub) %>%
   )
 ```
 
-### scan
+### Scan
 
 ```{r}
 scan_batch %>% group_by(sub) %>% summarise(
@@ -171,7 +171,7 @@ scan_batch %>% group_by(sub) %>% summarise(
   )
 ```
 
-### postscan1
+### Posttest1
 
 ```{r}
 
@@ -188,7 +188,7 @@ postscan1_batch %>%
 
 ```
 
-### postscan2
+### Posttest2
 
 ```{r}
 postscan2_batch = postscan2_batch %>% 
@@ -266,11 +266,11 @@ route_df <- data.frame(route=rep(c('pair1_east',
                              'pair4_south'), each=2),
                  destination=c('bench', 'bikerack', 
                                'pole', 'window', 
-                               'bush', 'pergola', 
+                               'shrub', 'pergola', 
                                'entrance', 'map'),
                  competitor=c('bikerack','bench',
                                'window', 'pole', 
-                               'pergola', 'bush', 
+                               'pergola', 'shrub', 
                                'map', 'entrance'))
 
 prescan_batch_competitor = prescan_batch %>% 
@@ -279,36 +279,47 @@ prescan_batch_competitor = prescan_batch %>%
                        ifelse(resp_obj == competitor, 'competitor',
                               'non-competitor')
                        ))
+prescan_batch_competitor$type_no_na = prescan_batch_competitor$type %>% replace_na('non-competitor')
+prescan_batch_competitor$type_no_na = factor(prescan_batch_competitor$type_no_na,
+                                             levels = c('non-competitor',
+                                                        'competitor',
+                                                        'target'))
 
 prescan_batch_competitor %>% 
   mutate(sub = as.factor(sub),
          nquestion = as.factor(nquestion),
          round = as.factor(round),
-         type = as.factor(type)) %>% 
-  count(sub, nquestion, round, type, .drop=FALSE) %>% 
+         type_no_na = as.factor(type_no_na)) %>% 
+  count(sub, nquestion, round, type_no_na, .drop=FALSE) %>% 
   mutate(percentage = n / 4) %>% 
-  group_by(nquestion, round, type) %>% 
+  group_by(nquestion, round, type_no_na) %>% 
   summarise(m = mean(percentage),
             se = sd(percentage)/sqrt(n()),
             n = n()) %>% 
   mutate(round_text = paste0('Round',round)) %>% 
-  ggplot(aes(x = nquestion, y = m, fill = type)) + 
+  ggplot(aes(x = nquestion, y = m, fill = type_no_na)) + 
   geom_histogram(stat = "identity", position = 'dodge')+
   geom_errorbar(aes(ymin=m-se, ymax=m+se), color="black", width=0.1, size=0.5,
                 position = position_dodge(0.9))+
   facet_wrap(~round_text)+
-  theme(legend.position = 'bottom')+
+  theme(legend.position = 'bottom',
+        legend.title = element_blank())+
   labs(title = 'Correct for pre-scan,\nspearated by answer type',
-       y = 'percentage')+
+       y = 'percentage',
+       caption = '*non-competitor includes no response trials.'
+       )+
   colorblindr::scale_fill_OkabeIto()
   
 ```
 
-### Stats - None for now
+### Stats
 
 ANVOA for Accuracy:
 
-```{r eval=FALSE, include=FALSE}
+```{r}
+
+sub_plot$nquestion = factor(sub_plot$nquestion)
+
 ez::ezANOVA(
   data = sub_plot,
   wid = sub,
@@ -319,7 +330,7 @@ ez::ezANOVA(
 
 ANVOA for Confidence:
 
-```{r eval=FALSE, include=FALSE}
+```{r}
 ez::ezANOVA(
   data = sub_plot,
   wid = sub,
@@ -392,7 +403,7 @@ t.test(sub_plot %>% filter(round == 1 & nquestion == 3) %>% .$cor_conf,
 
 Accuracy per round:
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 scan_batch %>% mutate(pic_location = 
                             ifelse(npic < 50, 'early', 'late')) %>% 
@@ -518,7 +529,45 @@ ggplot(curr_plot, aes(x = npic, y = m_conf_correct)) +
 
 ```
 
-# Postscan analysis
+# Posttest analysis
+
+### Posttest 1
+
+```{r}
+postscan1_plot = postscan1_batch %>% 
+  mutate(
+  correct = ifelse(resp_obj == destination, 1, 0),
+  conf = abs(resp)) %>% 
+  group_by(sub, npic) %>% 
+  summarise(m = mean(correct),
+            conf = mean(conf)) %>%
+  group_by(npic) %>% 
+  summarise(correct = mean(m),
+            correct_se = sd(m)/sqrt(n()),
+            confidence = mean(conf),
+            conf_se = sd(conf)/sqrt(n()))
+
+postscan1_plot$npic = factor(postscan1_plot$npic)
+
+ggplot(postscan1_plot, aes(x = npic, y = correct)) + 
+  geom_bar(stat = 'identity') + 
+  geom_errorbar(aes(ymin = correct - correct_se, ymax = 
+                      ifelse(correct + correct_se > 1, 1, correct + correct_se)
+                      ),
+                width = 0.2)
+
+ggplot(postscan1_plot, aes(x = npic, y = confidence)) + 
+  geom_bar(stat = 'identity') + 
+  geom_errorbar(aes(ymin = confidence - conf_se, ymax = 
+                      ifelse(confidence + conf_se > 2, 2, confidence + conf_se)
+                      ),
+                width = 0.2) + 
+  scale_y_continuous(
+    breaks = c(0, 1, 2),
+    labels = c("unsure", "probably", "definitely"))
+```
+
+### Posttest 2
 
 ```{r}
 avg = postscan2_batch %>% group_by(sub) %>% 

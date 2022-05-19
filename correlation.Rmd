@@ -29,7 +29,7 @@ converting_read <- function(curr_path){
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
-on_cluster = TRUE
+on_cluster = FALSE
 
 # Loading behavioral data
 if (on_cluster){
