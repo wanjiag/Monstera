@@ -3,8 +3,6 @@ library(tidyverse)
 library(fs)
 theme_set(theme_minimal(15))
 
-library(ezPurrr)
-
 
 ## ----setup, include=FALSE------------------------------------------------------------------------------
 
@@ -19,8 +17,10 @@ on_cluster = FALSE
 
 # Loading behavioral data
 if (on_cluster){
+  library(ezPurrr, lib="/home/wanjiag/R/R_libs")
   sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/"),  type = "directory")
 } else{
+  library(ezPurrr)
   sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
 }
 
@@ -181,16 +181,12 @@ rois= c('ca23dg-body_thre_0.5_masked',
         'ca1_thre_0.5_masked', 
         'angular_gyrus_2_epi_thre_0.5_masked',
         'evc_2_epi_thre_0.5_masked', 
-        'hippocampus_2_epi_thre_0.5_masked')#,'ppa_mni_2_epi_thre_0.5_masked')
-
-rois = ('ppa_mni_2_epi_thre_0.5_masked')
+        'hippocampus_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked')
 
 rois_names = c('ca23dg-body', 'ca1-body', 
                'ca23dg', 'ca1',
                'angular_gyrus', 'evc', 
-               'hippocampus')#, 'ppa')
-
-rois_names = c('ppa')
+               'hippocampus', 'ppa')
 
 if (on_cluster){
   sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI"))
@@ -258,6 +254,8 @@ for (i in c(1:length(rois))){
     group_by(sub) %>% 
     group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
 
+  break
+  
 }
 
 
