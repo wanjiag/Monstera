@@ -13,11 +13,11 @@ converting_read <- function(curr_path){
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
-on_cluster = FALSE
+on_cluster = TRUE
 
 # Loading behavioral data
 if (on_cluster){
-  library(ezPurrr, lib="/home/wanjiag/R/R_libs")
+  library("ezPurrr", lib="/gpfs/projects/kuhl_lab/wanjiag/R_libs/")
   sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/"),  type = "directory")
 } else{
   library(ezPurrr)
