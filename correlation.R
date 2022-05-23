@@ -8,14 +8,14 @@ library(ezPurrr)
 
 ## ----setup, include=FALSE------------------------------------------------------------------------------
 
-knitr::purl("correlation.Rmd")
+#knitr::purl("correlation.Rmd")
 
 converting_read <- function(curr_path){
   print(curr_path)
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
-on_cluster = TRUE
+on_cluster = FALSE
 
 # Loading behavioral data
 if (on_cluster){
@@ -183,10 +183,14 @@ rois= c('ca23dg-body_thre_0.5_masked',
         'evc_2_epi_thre_0.5_masked', 
         'hippocampus_2_epi_thre_0.5_masked')#,'ppa_mni_2_epi_thre_0.5_masked')
 
+rois = ('ppa_mni_2_epi_thre_0.5_masked')
+
 rois_names = c('ca23dg-body', 'ca1-body', 
                'ca23dg', 'ca1',
                'angular_gyrus', 'evc', 
                'hippocampus')#, 'ppa')
+
+rois_names = c('ppa')
 
 if (on_cluster){
   sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI"))
@@ -203,6 +207,8 @@ processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>%
   map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
   unlist() %>% 
   unique()
+
+processed_sub_list = c('05')
 
 for (i in c(1:length(rois))){
   
