@@ -15,6 +15,7 @@ converting_read <- function(curr_path){
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
+print(Sys.getenv("SLURM_SUBMIT_DIR"))
 on_cluster = TRUE
 
 # Loading behavioral data
