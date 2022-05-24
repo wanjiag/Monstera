@@ -259,6 +259,8 @@ for (i in c(1:length(rois))){
   correlation_df %>% 
     group_by(sub) %>% 
     group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
+
+  break
   
 }
 
