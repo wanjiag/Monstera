@@ -12,14 +12,20 @@ converting_read <- function(curr_path){
   read_csv(curr_path) %>% mutate(sub = as.character(sub))
 }
 
-print(paste0('print:', Sys.getenv("SLURM_JOB_ID")))
+Rinfo = sessionInfo()
 
+if (Rinfo$platform == 'x86_64-pc-linux-gnu (64-bit)'){
 on_cluster = TRUE
+} else{
+on_cluster = FALSE
+}
+
+print(paste0('Running on cluster: ', on_cluster))
 
 # Loading behavioral data
 if (on_cluster){
   library("ezPurrr", lib="/gpfs/projects/kuhl_lab/wanjiag/R_libs/")
-  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/"),  type = "directory")
+  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/behavior/"),  type = "directory")
 } else{
   library(ezPurrr)
   sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
@@ -27,8 +33,6 @@ if (on_cluster){
 
 scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
 timing_batch = map_dfr(scan_timing, converting_read)
-
-
 
 ## ----timing files--------------------------------------------------------------------------------------
 event_files = timing_batch %>% 
