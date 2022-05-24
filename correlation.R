@@ -1,9 +1,10 @@
-## ----include = FALSE-----------------------------------------------------------------------------------
+## ----include = FALSE--------------------------------------------
 library(tidyverse)
 library(fs)
 theme_set(theme_minimal(15))
 
-## ----setup, include=FALSE------------------------------------------------------------------------------
+
+## ----setup, include=FALSE---------------------------------------
 
 #knitr::purl("correlation.Rmd")
 
@@ -34,7 +35,9 @@ if (on_cluster){
 scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
 timing_batch = map_dfr(scan_timing, converting_read)
 
-## ----timing files--------------------------------------------------------------------------------------
+
+
+## ----timing files-----------------------------------------------
 event_files = timing_batch %>% 
   #  calculate TR. as.integer's default is flooring.
   mutate(TR = as.integer(design_onset)) %>% 
@@ -71,7 +74,7 @@ event_files = timing_batch %>%
          catch = as.integer(catch))
 
 
-## ----event files---------------------------------------------------------------------------------------
+## ----event files------------------------------------------------
 event = event_files %>% filter(catch == 0) %>% 
   filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
   mutate(round = as.integer(round)) %>%
@@ -93,7 +96,7 @@ event = event_files %>% filter(catch == 0) %>%
 
 
 
-## ----Supporting Functions------------------------------------------------------------------------------
+## ----Supporting Functions---------------------------------------
 individual_cor <- function(df1, df2){
   df1 <- df1[complete.cases(df1[ , 'value']), ] 
   df2 <- df2[complete.cases(df2[ , 'value']), ] 
@@ -178,7 +181,7 @@ calculating_rolling <- function(sample){
 }
 
 
-## ----ROI files-----------------------------------------------------------------------------------------
+## ----ROI files--------------------------------------------------
 
 rois= c('ca23dg-body_thre_0.5_masked',
         'ca1-body_thre_0.5_masked',
@@ -186,16 +189,12 @@ rois= c('ca23dg-body_thre_0.5_masked',
         'ca1_thre_0.5_masked', 
         'angular_gyrus_2_epi_thre_0.5_masked',
         'evc_2_epi_thre_0.5_masked', 
-        'hippocampus_2_epi_thre_0.5_masked')#,'ppa_mni_2_epi_thre_0.5_masked')
-
-rois = ('ppa_mni_2_epi_thre_0.5_masked')
+        'hippocampus_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked')
 
 rois_names = c('ca23dg-body', 'ca1-body', 
                'ca23dg', 'ca1',
                'angular_gyrus', 'evc', 
-               'hippocampus')#, 'ppa')
-
-rois_names = c('ppa')
+               'hippocampus', 'ppa')
 
 if (on_cluster){
   sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI"))
@@ -212,8 +211,6 @@ processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>%
   map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
   unlist() %>% 
   unique()
-
-processed_sub_list = c('05')
 
 for (i in c(1:length(rois))){
   
@@ -262,7 +259,7 @@ for (i in c(1:length(rois))){
   correlation_df %>% 
     group_by(sub) %>% 
     group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
-
+  
 }
 
 
