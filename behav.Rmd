@@ -537,7 +537,7 @@ ggplot(curr_plot, aes(x = npic, y = m_conf_correct)) +
 postscan1_plot = postscan1_batch %>% 
   mutate(
   correct = ifelse(resp_obj == destination, 1, 0),
-  conf = abs(resp)) %>% 
+  conf = ifelse(correct == 1, abs(resp), 0)) %>%
   group_by(sub, npic) %>% 
   summarise(m = mean(correct),
             conf = mean(conf)) %>%
@@ -562,9 +562,10 @@ ggplot(postscan1_plot, aes(x = npic, y = confidence)) +
                       ifelse(confidence + conf_se > 2, 2, confidence + conf_se)
                       ),
                 width = 0.2) + 
+  labs(y = 'condidence correct') + 
   scale_y_continuous(
     breaks = c(0, 1, 2),
-    labels = c("unsure", "probably", "definitely"))
+    labels = c("unsure/\nincorrect", "probably", "definitely"))
 ```
 
 ### Posttest 2
