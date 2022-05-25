@@ -1,10 +1,10 @@
-## ----include = FALSE-----------------------------------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------------------------------------------------
 library(tidyverse)
 library(fs)
 theme_set(theme_minimal(15))
 
 
-## ----setup, include=FALSE------------------------------------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------------------------------------------------
 
 #knitr::purl("correlation.Rmd")
 
@@ -37,7 +37,7 @@ timing_batch = map_dfr(scan_timing, converting_read)
 
 
 
-## ----timing files--------------------------------------------------------------------------------------
+## ----timing files-------------------------------------------------------------------------------------------------------
 event_files = timing_batch %>% 
   #  calculate TR. as.integer's default is flooring.
   mutate(TR = as.integer(design_onset)) %>% 
@@ -74,7 +74,7 @@ event_files = timing_batch %>%
          catch = as.integer(catch))
 
 
-## ----event files---------------------------------------------------------------------------------------
+## ----event files--------------------------------------------------------------------------------------------------------
 event = event_files %>% filter(catch == 0) %>% 
   filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
   mutate(round = as.integer(round)) %>%
@@ -96,7 +96,7 @@ event = event_files %>% filter(catch == 0) %>%
 
 
 
-## ----Supporting Functions------------------------------------------------------------------------------
+## ----Supporting Functions-----------------------------------------------------------------------------------------------
 individual_cor <- function(df1, df2){
   df1 <- df1[complete.cases(df1[ , 'value']), ] 
   df2 <- df2[complete.cases(df2[ , 'value']), ] 
@@ -181,7 +181,7 @@ calculating_rolling <- function(sample){
 }
 
 
-## ----ROI files-----------------------------------------------------------------------------------------
+## ----ROI files----------------------------------------------------------------------------------------------------------
 
 rois= c('ca23dg-body_thre_0.5_masked',
         'ca1-body_thre_0.5_masked',
@@ -211,7 +211,11 @@ processed_sub_roi_list = map(roi_dir, dir_ls) %>% unlist() %>%
   map_chr(~gsub('.*/sub-([0-9]+.*).RDS','\\1', .x)) %>% 
   as.data.frame()
 
-processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
+if (nrow(processed_sub_roi_list) == 0){
+  processed_sub_roi_df <- data.frame(matrix(ncol = 2, nrow = 0))
+  colnames(processed_sub_roi_df) <- c("sub", "roi")
+}else{
+  processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
   plyr::ldply(rbind) %>% 
   mutate(sub = `1`,
          roi = ifelse(
@@ -219,6 +223,8 @@ processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>%
            `2`,
            paste0(`2`, '_', `3`))) %>%
   select(-c(`1`,`2`,`3`))
+}
+
 
 for (i in c(1:length(rois))){
   

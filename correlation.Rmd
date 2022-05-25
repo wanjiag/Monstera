@@ -235,7 +235,11 @@ processed_sub_roi_list = map(roi_dir, dir_ls) %>% unlist() %>%
   map_chr(~gsub('.*/sub-([0-9]+.*).RDS','\\1', .x)) %>% 
   as.data.frame()
 
-processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
+if (nrow(processed_sub_roi_list) == 0){
+  processed_sub_roi_df <- data.frame(matrix(ncol = 2, nrow = 0))
+  colnames(processed_sub_roi_df) <- c("sub", "roi")
+}else{
+  processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
   plyr::ldply(rbind) %>% 
   mutate(sub = `1`,
          roi = ifelse(
@@ -243,6 +247,8 @@ processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>%
            `2`,
            paste0(`2`, '_', `3`))) %>%
   select(-c(`1`,`2`,`3`))
+}
+
 
 for (i in c(1:length(rois))){
   
