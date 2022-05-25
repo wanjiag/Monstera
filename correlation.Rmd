@@ -241,7 +241,7 @@ processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>%
          roi = ifelse(
            is.na(`3`),
            `2`,
-           paste0(`2`, '-', `3`))) %>%
+           paste0(`2`, '_', `3`))) %>%
   select(-c(`1`,`2`,`3`))
 
 for (i in c(1:length(rois))){
@@ -263,6 +263,10 @@ for (i in c(1:length(rois))){
     curr_roi_can_be_processed_subs[
     !curr_roi_can_be_processed_subs %in% processed_subs_for_curr_roi]
   
+  if(length(to_be_processed) == 0){
+    next
+  }
+  
   curr_sub_dir = c()
   for (curr_sub in to_be_processed){
     if (on_cluster){
@@ -275,16 +279,16 @@ for (i in c(1:length(rois))){
       curr_sub_dir = append(curr_sub_dir,
                             dir_ls(here::here(paste0("./csv_files/fMRI/sub-MONSTERA", curr_sub)),
                             glob = paste0('*/',rois[i],'*.csv')))}
-    }
-  curr_files <- map(curr_sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
-  curr_df <- map_dfr(curr_files, converting_read)
+  }
+  
+  #curr_files <- map(curr_sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  curr_df <- map_dfr(curr_sub_dir, converting_read)
   
   colnames(curr_df)[1] <- 'TR'
   curr_df <- curr_df %>% mutate(
       run = as.integer(stringr::str_extract(run, "\\d+")),
       sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
     select(-roi)
-  curr_df = curr_df %>% filter(!sub %in% processed_sub_list)
   
   curr_df_nest = curr_df %>% 
     group_by(sub, run) %>% 
@@ -294,7 +298,7 @@ for (i in c(1:length(rois))){
   
   curr_df = curr_df_nest %>% select(-data) %>% unnest(cols = c(output))
   
-  nest_df = left_join(event, curr_df, by = c('behav_TR' = 'TR',
+  nest_df = inner_join(event, curr_df, by = c('behav_TR' = 'TR',
                                      'sub' = 'sub',
                                      'round' = 'run')) %>%
   select(-c(behav_TR, odd.even)) %>% 
@@ -303,13 +307,13 @@ for (i in c(1:length(rois))){
   
   #nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
   
-  warning("This will take VERY VERY long to run")
+  warning("-----------This will take VERY VERY long to run-----------")
   
   start_time <- Sys.time()
   correlation_df = nest_df %>% broadcast(summarise_type)
   end_time <- Sys.time()
   
-  print(paste0(rois_names[i], ': ', end_time - start_time))
+  print(paste0('-----------', rois_names[i], ': ', end_time - start_time, '-----------'))
   
   correlation_df = correlation_df %>% select(-data)
   

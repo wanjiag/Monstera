@@ -1,10 +1,10 @@
-## ----include = FALSE--------------------------------------------
+## ----include = FALSE-----------------------------------------------------------------------------------
 library(tidyverse)
 library(fs)
 theme_set(theme_minimal(15))
 
 
-## ----setup, include=FALSE---------------------------------------
+## ----setup, include=FALSE------------------------------------------------------------------------------
 
 #knitr::purl("correlation.Rmd")
 
@@ -37,7 +37,7 @@ timing_batch = map_dfr(scan_timing, converting_read)
 
 
 
-## ----timing files-----------------------------------------------
+## ----timing files--------------------------------------------------------------------------------------
 event_files = timing_batch %>% 
   #  calculate TR. as.integer's default is flooring.
   mutate(TR = as.integer(design_onset)) %>% 
@@ -74,7 +74,7 @@ event_files = timing_batch %>%
          catch = as.integer(catch))
 
 
-## ----event files------------------------------------------------
+## ----event files---------------------------------------------------------------------------------------
 event = event_files %>% filter(catch == 0) %>% 
   filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
   mutate(round = as.integer(round)) %>%
@@ -96,7 +96,7 @@ event = event_files %>% filter(catch == 0) %>%
 
 
 
-## ----Supporting Functions---------------------------------------
+## ----Supporting Functions------------------------------------------------------------------------------
 individual_cor <- function(df1, df2){
   df1 <- df1[complete.cases(df1[ , 'value']), ] 
   df2 <- df2[complete.cases(df2[ , 'value']), ] 
@@ -181,7 +181,7 @@ calculating_rolling <- function(sample){
 }
 
 
-## ----ROI files--------------------------------------------------
+## ----ROI files-----------------------------------------------------------------------------------------
 
 rois= c('ca23dg-body_thre_0.5_masked',
         'ca1-body_thre_0.5_masked',
@@ -207,24 +207,64 @@ if (on_cluster){
   roi_dir = dir_ls(here::here("./csv_files/RDS/"),  type = "directory")
 }
 
-processed_sub_list = map(roi_dir, dir_ls) %>% unlist() %>% 
-  map_chr(~gsub('.*/sub-([0-9]+)_.*','\\1', .x)) %>% 
-  unlist() %>% 
-  unique()
+processed_sub_roi_list = map(roi_dir, dir_ls) %>% unlist() %>% 
+  map_chr(~gsub('.*/sub-([0-9]+.*).RDS','\\1', .x)) %>% 
+  as.data.frame()
+
+processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
+  plyr::ldply(rbind) %>% 
+  mutate(sub = `1`,
+         roi = ifelse(
+           is.na(`3`),
+           `2`,
+           paste0(`2`, '_', `3`))) %>%
+  select(-c(`1`,`2`,`3`))
 
 for (i in c(1:length(rois))){
   
   print(paste0('-----------', rois[i], '-----------'))
   
-  curr_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
-  curr_df <- map_dfr(curr_files, converting_read)
+  all_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  
+  # Getting the subjects with csv files needed for this ROI
+  curr_roi_can_be_processed_subs = all_files %>% unlist() %>% 
+  map_chr(~gsub('.*fMRI/sub-MONSTERA([0-9]+).*','\\1', .x)) %>% 
+    unique()
+  
+  # Getting the subjects that already has the RDS files
+  processed_subs_for_curr_roi = processed_sub_roi_df %>% filter(roi == rois_names[i]) %>% .$sub
+  
+  # Subjects with csv files and doesnt have the RDS files are to be processed
+  to_be_processed = 
+    curr_roi_can_be_processed_subs[
+    !curr_roi_can_be_processed_subs %in% processed_subs_for_curr_roi]
+  
+  if(length(to_be_processed) == 0){
+    next
+  }
+  
+  curr_sub_dir = c()
+  for (curr_sub in to_be_processed){
+    if (on_cluster){
+      curr_sub_dir = append(curr_sub_dir, 
+                          dir_ls(here::here(paste0(
+                            "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI/sub-MONSTERA",
+                            curr_sub)),
+                            glob = paste0('*/',rois[i],'*.csv')))
+    }else{
+      curr_sub_dir = append(curr_sub_dir,
+                            dir_ls(here::here(paste0("./csv_files/fMRI/sub-MONSTERA", curr_sub)),
+                            glob = paste0('*/',rois[i],'*.csv')))}
+  }
+  
+  #curr_files <- map(curr_sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  curr_df <- map_dfr(curr_sub_dir, converting_read)
   
   colnames(curr_df)[1] <- 'TR'
   curr_df <- curr_df %>% mutate(
       run = as.integer(stringr::str_extract(run, "\\d+")),
       sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
     select(-roi)
-  curr_df = curr_df %>% filter(!sub %in% processed_sub_list)
   
   curr_df_nest = curr_df %>% 
     group_by(sub, run) %>% 
@@ -234,7 +274,7 @@ for (i in c(1:length(rois))){
   
   curr_df = curr_df_nest %>% select(-data) %>% unnest(cols = c(output))
   
-  nest_df = left_join(event, curr_df, by = c('behav_TR' = 'TR',
+  nest_df = inner_join(event, curr_df, by = c('behav_TR' = 'TR',
                                      'sub' = 'sub',
                                      'round' = 'run')) %>%
   select(-c(behav_TR, odd.even)) %>% 
@@ -243,13 +283,13 @@ for (i in c(1:length(rois))){
   
   #nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
   
-  warning("This will take VERY VERY long to run")
+  warning("-----------This will take VERY VERY long to run-----------")
   
   start_time <- Sys.time()
   correlation_df = nest_df %>% broadcast(summarise_type)
   end_time <- Sys.time()
   
-  print(paste0(rois_names[i], ': ', end_time - start_time))
+  print(paste0('-----------', rois_names[i], ': ', end_time - start_time, '-----------'))
   
   correlation_df = correlation_df %>% select(-data)
   
