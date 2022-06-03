@@ -49,6 +49,17 @@ postscan2_batch <- map_dfr(postscan2_behav, converting_read)
 ```
 
 
+## Total n = `r nrow(prescan_batch)/24`
+
+Exclude subject 14: squzzed emergency ball while in the scanner.
+
+```{r}
+prescan_batch <- prescan_batch %>% filter(sub != 14)
+scan_batch <- scan_batch %>% filter(sub != 14)
+postscan1_batch <- postscan1_batch %>% filter(sub != 14)
+postscan2_batch <- postscan2_batch %>% filter(sub != 14)
+```
+
 ## n = `r nrow(prescan_batch)/24`
 
 # QA
