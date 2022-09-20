@@ -1,5 +1,5 @@
 ---
-title: "Preliminary fMRI data"
+title: "fMRI - separated timepoints"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -26,15 +26,6 @@ cbPalette <- c("#CC79A7","#009E73","#0072B2","#E69F00","#56B4E9","#F0E442","#999
 
 
 ```{r}
-
-group_valid_type = function(sample){
-  
-  sample %>% group_by(valid, type) %>% 
-    summarise(m = mean(r),
-              .groups = 'drop') %>% 
-    pivot_wider(names_from = type,
-                values_from = m)
-}
 
 group_valid_type_phase = function(sample){
   
@@ -199,96 +190,14 @@ making_4_plots <- function(df){
 
 ```
 
-# All sessions together
-
-## Valid - Valid
-
-```{r}
-# Take long to run:
-all_sub_df = huge_df %>% 
-  broadcast(group_valid_type)
-
-all_sub_df_unnest = all_sub_df %>% 
-  select(-data) %>% unnest(output)
-
-all_sub_df_clean = all_sub_df_unnest %>% 
-  mutate(valid = ifelse(valid == 'invalid-valid',
-                              'valid-invalid', valid))
-
-unique(all_sub_df_clean$valid)
-
-all_sub_df_valid = all_sub_df_clean %>% mutate(wp_ap = within_pair - across_pair,
-                      wi_wp = within_item - within_pair,
-         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) %>% 
-  filter(valid == 'valid-valid')
-
-  
-all_sub_plot = all_sub_df_valid %>% 
-  group_by(segment, within_trial_TR, roi, sub, valid) %>%
-  nest() %>% 
-  broadcast(calculate_mean) %>% 
-  select(-data) %>% 
-  unnest(cols = output)
-
-output = making_4_plots(all_sub_plot)
-```
-
-### within_pair - across_pair
-
-```{r}
-output[[3]]
-output[[1]]
-```
-
-### within_item - across_pair
-
-```{r}
-output[[4]]
-output[[2]]
-```
-
-## Valid - Invalid
-
-```{r}
-
-all_sub_df_invalid = all_sub_df_clean %>% mutate(wp_ap = within_pair - across_pair,
-                      wi_wp = within_item - within_pair,
-         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) %>% 
-  filter(valid == 'valid-invalid')
-
-  
-all_sub_plot = all_sub_df_invalid %>% 
-  group_by(segment, within_trial_TR, roi, sub, valid) %>%
-  nest() %>% 
-  broadcast(calculate_mean) %>% 
-  select(-data) %>% 
-  unnest(cols = output)
-
-output = making_4_plots(all_sub_plot)
-```
-
-### within_pair - across_pair
-
-```{r}
-output[[1]]
-output[[3]]
-```
-
-### within_item - across_pair
-
-```{r}
-output[[2]]
-output[[4]]
-```
-
-
-## Early vs. Late
+# Early vs. Late
 
 ```{r}
 # Take long to run:
 all_sub_phase_df = huge_df %>% 
   broadcast(group_valid_type_phase)
 ```
+
 
 ```{r 0522 presentation figures, eval=FALSE, include=FALSE}
 tmp = df %>% mutate(wp_ap = within_pair - across_pair,
