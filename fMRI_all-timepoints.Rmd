@@ -19,7 +19,7 @@ library(tidyverse)
 library(fs)
 library(ggplot2)
 library(ez)
-theme_set(theme_minimal(18))
+theme_set(theme_classic(18))
 
 library(ezPurrr)
 
@@ -78,9 +78,12 @@ making_4_plots <- function(df){
                                       'hippocampus', 'ppa',
                                       'angular_gyrus', 'evc'))
 
-  p1 = tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
-    geom_vline(xintercept=6) +
-    geom_vline(xintercept=18) +
+  p1 = tmp_sub %>% 
+    filter(roi != 'evc' & roi != 'ca1-body') %>% 
+    ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
     geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
                     ymax = wp_ap_m+wp_ap_se,
                     fill = roi),
@@ -92,9 +95,12 @@ making_4_plots <- function(df){
     theme(legend.position = 'bottom',
           legend.title = element_blank())
   
-  p2 = tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wi_wp_m, color = roi)) +
-    geom_vline(xintercept=6) +
-    geom_vline(xintercept=18) +
+  p2 = tmp_sub %>% 
+    filter(roi != 'evc' & roi != 'ca1-body') %>% 
+    ggplot(aes(x = within_trial_TR, y = wi_wp_m, color = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
     geom_ribbon(aes(ymin = wi_wp_m-wi_wp_se, 
                     ymax = wi_wp_m+wi_wp_se,
                     fill = roi),
@@ -117,6 +123,7 @@ making_4_plots <- function(df){
                 n = n()
                 ) %>% 
       ggplot(aes(x = segment, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
       geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
       geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
       geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = roi, group = roi), 
@@ -124,9 +131,10 @@ making_4_plots <- function(df){
                     jitter.width = 0.2,
                     dodge.width = 0.75)) + 
       labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
       theme(legend.position = 'none',
-            legend.title = element_blank()) + 
-      facet_wrap(~roi, ncol = 2, scales = 'free_y')
+            legend.title = element_blank(),
+            strip.background = element_blank())
     
     tmp3 = tmp %>% group_by(sub, segment, valid, roi) %>% 
       summarise(wi_wp_m = mean(wi_wp),
@@ -139,6 +147,7 @@ making_4_plots <- function(df){
                 n = n()
                 ) %>% 
       ggplot(aes(x = segment, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
       geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
       geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
       geom_point(data = tmp3, aes(x = segment, y = wi_wp_m, color = roi, group = roi), 
@@ -146,9 +155,10 @@ making_4_plots <- function(df){
                     jitter.width = 0.2,
                     dodge.width = 0.75)) + 
       labs(y = 'within_item - within_pair')+ 
+      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
       theme(legend.position = 'none',
-            legend.title = element_blank()) + 
-      facet_wrap(~roi, ncol = 2, scales = 'free_y')
+            legend.title = element_blank(),
+            strip.background = element_blank())
     
     list(p1, p2, list(tmp2,p3), list(tmp3,p4))
 }
@@ -266,7 +276,7 @@ ezANOVA(data=data,
         dv = wp_ap_m)$ANOVA %>% knitr::kable()
 ```
 
-Segment ANOVA fro CA23DG
+Segment One-way ANOVA for CA23DG
 ```{r}
 ezANOVA(data=data %>% filter(roi == 'ca23dg-body'),
         wid=sub,

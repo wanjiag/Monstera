@@ -202,6 +202,76 @@ wp_ap =  tmp2_mean %>%
     facet_wrap(valid~roi,scales = 'free_y', ncol = 4)
 ```
 
+
+### 09/28 presentation tmp figures
+
+```{r 09/28 presentation tmp figures}
+fig_df =  wp_ap %>% filter(phase != 'early-late') %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid')
+
+
+fig_df %>% 
+      group_by(segment, roi, valid, type, phase) %>% 
+      summarise(m = mean(mean),
+                se = sd(mean)/sqrt(n()),
+                n = n()
+                ) %>% 
+      ggplot(aes(x = segment, y = m, fill = phase)) +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.9), width=0.5) +
+      geom_point(data = fig_df, aes(x = segment, y = mean, color = phase, group = phase), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.2,
+                    dodge.width = 0.9)) + 
+      labs(y = 'within_pair-across_pair')+ 
+      theme( legend.position='bottom') + 
+    facet_wrap(valid~roi,scales = 'free_y', ncol = 4)
+```
+
+
+Segment x Phase Two-Way ANOVA
+
+```{r 09/28 presentation tmp figures 2}
+library(ez)
+
+d = fig_df
+
+ezANOVA(data=d,
+        wid=sub,
+        within = .(segment, phase),
+        dv = mean)$ANOVA %>% knitr::kable()
+```
+
+Same vs. Overlapping for late-late correlation
+
+```{r 09/28 presentation tmp figures 3}
+t.test(d %>% filter(segment == 'same' & phase == 'late-late') %>% .$mean,
+       d %>% filter(segment == 'overlapping' & phase == 'late-late') %>% .$mean,
+       paired = TRUE)
+```
+
+Late-late vs. Early-early at same segment
+```{r 09/28 presentation tmp figures 4}
+t.test(d %>% filter(segment == 'same' & phase == 'late-late') %>% .$mean,
+       d %>% filter(segment == 'same' & phase == 'early-early') %>% .$mean,
+       paired = TRUE)
+```
+
+
+```{r 09/28 presentation tmp figures 5, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+valid = wp_ap %>% filter(phase != 'early-late') %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid')
+
+t.test(valid %>% 
+         filter(segment == 'same' & phase == 'early-early') %>% .$mean)
+
+
+t.test(fig_df %>% 
+         filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'overlapping' & phase == 'early-early') %>% .$mean)
+
+t.test(fig_df %>% 
+         filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'non-overlapping' & phase == 'early-early') %>% .$mean)
+```
+
+
 ```{r}
 tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
     geom_vline(xintercept=6) +
