@@ -61,8 +61,9 @@ making_4_plots <- function(df){
 
   tmp$roi =  factor(tmp$roi,
                 levels = c('ca23dg-body', 'ca23dg',
+                           'ppa',
                            'ca1-body', 'ca1',
-                           'hippocampus', 'ppa',
+                           'hippocampus', 
                            'angular_gyrus', 'evc'))
   
   tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>%
@@ -74,8 +75,9 @@ making_4_plots <- function(df){
 
   tmp_sub$roi =  factor(tmp_sub$roi,
                            levels = c('ca23dg-body', 'ca23dg',
+                                      'ppa',
                                       'ca1-body', 'ca1',
-                                      'hippocampus', 'ppa',
+                                      'hippocampus', 
                                       'angular_gyrus', 'evc'))
 
   p1 = tmp_sub %>% 
@@ -435,7 +437,7 @@ output[[2]]
 
 ```{r eval=FALSE, include=FALSE}
 p1 = tmp_sub %>% 
-    filter(roi != 'evc' & roi != 'ca1-body') %>% 
+    filter(roi != 'evc' & roi != 'ca1-body' & roi != 'ca23dg-body') %>% 
     ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
     geom_hline(yintercept = 0, linetype="longdash") +
     geom_vline(xintercept=6, linetype="longdash") +
@@ -450,9 +452,9 @@ p1 = tmp_sub %>%
          x = element_blank()) + 
     theme(legend.position = 'top',
           legend.title = element_blank())+
-      coord_cartesian(xlim = c(0,25)) + 
-  scale_fill_manual(values = cbPalette) + 
-  scale_color_manual(values = cbPalette)
+      coord_cartesian(xlim = c(0,25), ylim = c(-0.0055, 0.0075)) + 
+  scale_fill_manual(values = c(cbPalette[3:8])) + 
+  scale_color_manual(values = c(cbPalette[3:8]))
 
 p1
 
@@ -468,7 +470,7 @@ p2 = postscan2_batch %>%
     theme_classic(18)+
     coord_cartesian(xlim = c(0,25))
   
-  
+library(cowplot)
 plot_grid(p1, p2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
 ```
 

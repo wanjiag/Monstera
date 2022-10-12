@@ -58,8 +58,7 @@ file_name =  './csv_files/R-tmp/all-sub-phase-df_n=11_0921.RDS'
 
 if (re_process){
   
-  rois_names = c('ca23dg-body', 'ca1-body', 
-                 'evc', 'ppa')
+  rois_names = c('ca23dg-body', 'ppa','ca1-body','evc')
                  #'ca23dg', 'ca1',
                  #'angular_gyrus', 'evc', 
                  #'hippocampus', 'ppa')
@@ -142,7 +141,7 @@ tmp = all_sub_phase_df_unnest %>%
          segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping')))
 
   tmp$roi =  factor(tmp$roi,
-                levels = c('ca23dg-body','ca1-body','ppa','evc'))
+                levels = c('ca23dg-body','ppa','ca1-body','evc'))
   
   tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi, phase) %>%
     summarise(wp_ap_m = mean(wp_ap),
@@ -152,7 +151,7 @@ tmp = all_sub_phase_df_unnest %>%
               )
   
   tmp_sub$roi =  factor(tmp_sub$roi,
-                levels = c('ca23dg-body','ca1-body','ppa','evc'))
+                levels = c('ca23dg-body','ppa','ca1-body','evc'))
 ```
 
 ```{r}
@@ -273,7 +272,9 @@ t.test(fig_df %>%
 
 
 ```{r}
-tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
+tmp_sub %>% 
+  filter(roi != 'evc' & roi != 'ca1-body') %>% 
+  ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
     geom_vline(xintercept=6) +
     geom_vline(xintercept=18) +
     geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
@@ -286,7 +287,9 @@ tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
          x = 'within trial timepoint') + 
     theme(legend.position="bottom",
           legend.title = element_blank()) + 
-      facet_wrap(valid~phase)
+      facet_wrap(valid~phase)+
+    scale_fill_manual(values = cbPalette)+ 
+    scale_color_manual(values = cbPalette)
   
 ```
 
@@ -315,7 +318,8 @@ wi_wp =  tmp2_mean %>%
 ```
 
 ```{r}
-tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wi_wp_m, color = roi)) +
+tmp_sub %>% filter(roi != 'evc'& roi != 'ca1-body') %>% 
+  ggplot(aes(x = within_trial_TR, y = wi_wp_m, color = roi)) +
     geom_vline(xintercept=6) +
     geom_vline(xintercept=18) +
     geom_ribbon(aes(ymin = wi_wp_m-wi_wp_se, 
@@ -328,7 +332,9 @@ tmp_sub %>% ggplot(aes(x = within_trial_TR, y = wi_wp_m, color = roi)) +
          x = 'within trial timepoint') + 
     theme(legend.position="bottom",
           legend.title = element_blank()) + 
-      facet_wrap(valid~phase)
+      facet_wrap(valid~phase)+
+    scale_fill_manual(values = cbPalette)+ 
+    scale_color_manual(values = cbPalette)
 ```
 
 
