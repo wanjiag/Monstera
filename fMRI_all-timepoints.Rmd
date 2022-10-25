@@ -181,7 +181,7 @@ making_4_plots <- function(df){
 ```{r reading in data}
 
 re_process = FALSE
-file_name =  './csv_files/R-tmp/all-sub-df_n=11_0921.RDS'
+file_name =  './csv_files/R-tmp/all-sub-df_n=18_1024.RDS'
 
 if (re_process){
 
@@ -215,8 +215,6 @@ if (re_process){
     }
   }
   
-  huge_df = huge_df %>% filter(sub != '13' & sub != '14')
-  
   # Take long to run:
   all_sub_df = huge_df %>% 
     broadcast(group_valid_type)
@@ -232,7 +230,13 @@ if (re_process){
 
 
 ```{r}
+all_sub_df = all_sub_df %>% 
+  filter(sub != '13' & sub != '14' & sub != '23')
+```
 
+## n = `r length(unique(all_sub_df$sub))`
+
+```{r}
 all_sub_df_unnest = all_sub_df %>% 
   select(-data) %>% unnest(output)
 
@@ -390,9 +394,9 @@ t.test(evc %>% filter(segment == 'non-overlapping') %>% .$wp_ap_m)
 output[[1]]
 ```
 
-### within_item - within_pair
 
-```{r}
+```{r eval=FALSE, include=FALSE}
+### within_item - within_pair
 output[[4]][[2]]
 output[[2]]
 ```
@@ -427,9 +431,11 @@ output[[3]][[2]]
 output[[1]]
 ```
 
+
+```{r eval=FALSE, include=FALSE}
+
 ### within_item - within_pair
 
-```{r}
 output[[4]][[2]]
 output[[2]]
 ```
@@ -457,6 +463,29 @@ p1 = tmp_sub %>%
   scale_color_manual(values = c(cbPalette[3:8]))
 
 p1
+
+
+tmp_sub %>% 
+    filter(roi != 'evc' & roi != 'ca1-body' & roi != 'ca23dg-body') %>% 
+    ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                    ymax = wp_ap_m+wp_ap_se,
+                    fill = roi),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within pair - across pair',
+         x = 'Within Trial Timepoint (seconds)') + 
+    theme(legend.position = 'top',
+          legend.title = element_blank())+ 
+  ylim(-0.006, 0.013)+
+  scale_fill_manual(values = cbPalette[2:8])+ 
+  scale_color_manual(values = cbPalette[2:8])
+
+
 
 p2 = postscan2_batch %>%
     filter(correct == 1) %>%

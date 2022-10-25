@@ -56,8 +56,8 @@ Exclude subject 14: squzzed emergency ball while in the scanner.
 ```{r}
 prescan_batch <- prescan_batch %>% filter(sub != 14)
 scan_batch <- scan_batch %>% filter(sub != 14)
-postscan1_batch <- postscan1_batch %>% filter(sub != 13 & sub != 14)
-postscan2_batch <- postscan2_batch %>% filter(sub != 13 & sub != 14)
+postscan1_batch <- postscan1_batch %>% filter(sub != 14)
+postscan2_batch <- postscan2_batch %>% filter(sub != 14)
 ```
 
 ## n = `r nrow(prescan_batch)/24`
@@ -195,7 +195,23 @@ postscan1_batch %>%
             conf = mean(conf)) %>% 
   gt() %>% 
   tab_header(title = "Postscan1 Performance",
-             subtitle = "confidence range from 0 - 2.")
+             subtitle = "confidence range from 0 - 2.") %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(m),
+      rows = m <= 0.5
+    )
+  )%>%
+  tab_footnote(
+    footnote = "accuracy <= 0.5 are highlighted",
+    locations = cells_column_labels(
+      columns = vars(m)
+    )
+  )
 
 ```
 
@@ -207,7 +223,8 @@ postscan2_batch = postscan2_batch %>%
   correct = ifelse(!is.na(post_first_resp_obj) & post_first_resp_obj == destination, 1, 0))
 
 postscan2_batch %>% group_by(sub) %>% 
-  summarise(m = mean(correct)) %>% 
+  summarise(m = mean(correct),
+            m_npic = mean(npic, na.rm = TRUE)) %>% 
   gt() %>%
   tab_header(
     title = "Post scan 2 mean accuracy per subject"
@@ -218,14 +235,30 @@ postscan2_batch %>% group_by(sub) %>%
       cell_text(weight = "bold")
       ),
     locations = cells_body(
-      columns = vars(m),
-      rows = m < 0.5
+      columns = c(m),
+      rows = m <= 0.5
     )
   )%>%
   tab_footnote(
-    footnote = "accuracy < 0.5 are highlighted",
+    footnote = "accuracy <= 0.5 are highlighted",
     locations = cells_column_labels(
-      columns = vars(m)
+      columns = c(m)
+    )
+  )%>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = c(m_npic),
+      rows = m_npic > 75
+    )
+  )%>%
+  tab_footnote(
+    footnote = "average img index > 75 are highlighted",
+    locations = cells_column_labels(
+      columns = c(m_npic)
     )
   )
 ```
@@ -619,17 +652,6 @@ postscan2_batch %>%
 
 ```{r}
 postscan2_batch = postscan2_batch %>% mutate(tp = npic * 0.24, floor_tp = floor(tp), ceiling_tp = ceiling(tp))
-
-postscan2_batch %>%
-  filter(correct == 1) %>%
-  ggplot(aes(x = ceiling_tp)) +
-  geom_histogram(binwidth = 1) +
-  geom_vline(xintercept=6) +
-  geom_vline(xintercept=18) +
-  labs(title = 'Timepoint for correct trials')+
-  scale_x_continuous(breaks = seq(0,24,1))+
-  xlab("Time (seconds)")+
-  theme_classic()
 ```
 
 
