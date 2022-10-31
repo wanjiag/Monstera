@@ -1,0 +1,60 @@
+---
+title: "Confounds"
+author: "Wanjia Guo"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: journal
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
+library(gt)
+library(fs)
+library(purrr)
+library(tidyverse)
+theme_set(theme_minimal(18))
+```
+
+
+```{r setup, include=FALSE}
+
+converting_read <- function(curr_path){
+  print(curr_path)
+  read_tsv(curr_path) %>% select(framewise_displacement) %>% 
+    mutate(sub = str_replace_all(curr_path, ".+sub-MONSTERA(\\d\\d)_task-.+", "\\1"),
+           round = str_replace_all(confounds[1], ".+task-(\\d\\d)_desc.+", "\\1")
+           )
+}
+
+# Loading behavioral data
+sub_dir = dir_ls(here::here("./csv_files/confounds/"))
+confounds <- sub_dir %>% unlist()
+
+confounds_df <- map_dfr(confounds, converting_read)
+
+confounds_df = confounds_df %>% mutate(sub = as.numeric(sub),
+                        framewise_displacement = as.numeric(framewise_displacement)) %>%
+               filter(sub >= 6)
+```
+
+
+```{r}
+
+confounds_df %>% group_by(sub) %>%
+  summarise(m = mean(framewise_displacement, na.rm = TRUE),
+            max = max(framewise_displacement, na.rm = TRUE),
+            sd = sd(framewise_displacement, na.rm = TRUE)) %>% 
+  ggplot(aes(x = reorder(sub, -m), y = m)) + 
+  geom_histogram(stat = "identity") + 
+  geom_errorbar(aes(ymin=m-sd, ymax=m+sd), color="red", width=0.1, size=0.5)+
+  xlab('sub number') + ylab( 'mean framewise displacement') +
+  labs(caption = 'error bar represents Standard deviation.')
+
+
+```
+

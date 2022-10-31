@@ -1,0 +1,273 @@
+---
+title: "poster"
+author: "Wanjia Guo"
+date: '2022-10-30'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+cbPalette <- c("#CC79A7","#0072B2","#009E73","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
+
+df = all_sub_plot
+```
+
+```{r}
+
+tmp = df %>% mutate(wp_ap = within_pair - across_pair,
+                    wi_wp = within_item - across_pair,
+       segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) 
+
+levels(tmp$segment) <- list(same = "same", 
+                             overlap = "overlapping",
+                             different = "non-overlapping")
+
+
+
+tmp$roi =  factor(tmp$roi,
+              levels = c('ca23dg-body', 'ca23dg',
+                         
+                         'ca1-body', 'ca1','ppa',
+                         'hippocampus', 
+                         'angular_gyrus', 'evc'))
+
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>%
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n()),
+            wi_wp_m = mean(wi_wp),
+            wi_wp_se = sd(wi_wp)/sqrt(n()),
+            )
+
+tmp_sub$roi =  factor(tmp_sub$roi,
+                         levels = c('ca23dg-body', 'ca23dg',
+                                    
+                                    'ca1-body', 'ca1','ppa',
+                                    'hippocampus', 
+                                    'angular_gyrus', 'evc'))
+
+tmp_sub %>% 
+  filter(roi != 'evc' & roi != 'ca1-body') %>% 
+  ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = roi)) +
+  geom_hline(yintercept = 0, linetype="longdash") +
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                  ymax = wp_ap_m+wp_ap_se,
+                  fill = roi),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(size = 1)+
+  labs(y = 'within_pair - across_pair',
+       x = 'within trial timepoint') + 
+  theme(legend.position = 'bottom',
+        legend.title = element_blank())+ 
+scale_fill_manual(values = cbPalette)+ 
+scale_color_manual(values = cbPalette)
+
+
+tmp_sub %>% 
+  filter(roi != 'evc' & roi != 'ca1-body') %>% 
+  ggplot(aes(x = within_trial_TR, y = wi_wp_m, color = roi)) +
+  geom_hline(yintercept = 0, linetype="longdash") +
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_ribbon(aes(ymin = wi_wp_m-wi_wp_se, 
+                  ymax = wi_wp_m+wi_wp_se,
+                  fill = roi),
+              alpha = 0.2,
+              color = NA) +
+  geom_line(size = 1)+
+  labs(y = 'within_item - within_pair',
+       x = 'within trial timepoint') + 
+  theme(legend.position = 'bottom',
+        legend.title = element_blank())+ 
+scale_fill_manual(values = cbPalette)+ 
+scale_color_manual(values = cbPalette)
+
+  tmp2 = tmp %>% group_by(sub, segment, valid, roi) %>% 
+    summarise(wp_ap_m = mean(wp_ap),
+              wp_ap_se = sd(wp_ap)/sqrt(n())
+              )
+  
+tmp2 %>% group_by(segment, valid, roi) %>% 
+    summarise(m = mean(wp_ap_m),
+              se = sd(wp_ap_m)/sqrt(n()),
+              n = n()
+              ) %>%
+    ggplot(aes(x = segment, y = m, fill = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+    geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+    geom_point(data = tmp2, aes(x = segment, y = wp_ap_m, color = roi, group = roi), 
+                position=position_jitterdodge(
+                  jitter.width = 0.2,
+                  dodge.width = 0.75)) + 
+    labs(y = 'PSA')+ 
+    facet_wrap(~roi, nrow = 1, scales = 'free_y')+
+    theme(legend.position = 'none',
+          legend.title = element_blank(),
+          strip.background = element_blank())+
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+  
+  tmp3 = tmp %>% group_by(sub, segment, valid, roi) %>% 
+    summarise(wi_wp_m = mean(wi_wp),
+              wi_wp_se = sd(wi_wp)/sqrt(n())
+              )
+  
+tmp3 %>% group_by(segment, valid, roi) %>% 
+    summarise(m = mean(wi_wp_m),
+              se = sd(wi_wp_m)/sqrt(n()),
+              n = n()
+              ) %>% 
+    ggplot(aes(x = segment, y = m, fill = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+    geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+    geom_point(data = tmp3, aes(x = segment, y = wi_wp_m, color = roi, group = roi), 
+                position=position_jitterdodge(
+                  jitter.width = 0.2,
+                  dodge.width = 0.75)) + 
+    labs(y = 'within_item - within_pair')+ 
+    facet_wrap(~roi, ncol = 2, scales = 'free_y')+
+    theme(legend.position = 'none',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+scale_fill_manual(values = cbPalette)+ 
+scale_color_manual(values = cbPalette)
+  
+  list(p1, p2, list(tmp2,p3), list(tmp3,p4))
+    
+```
+
+# early - late
+
+```{r}
+
+levels(fig_df$segment) <- list(same = "same", 
+                             overlap = "overlapping",
+                             different = "non-overlapping")
+
+
+fig_df %>% 
+      group_by(segment, roi, valid, type, phase) %>% 
+      summarise(m = mean(mean),
+                se = sd(mean)/sqrt(n()),
+                n = n()
+                ) %>% 
+      ggplot(aes(x = segment, y = m, fill = phase)) +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.9), width=0.5) +
+      geom_point(data = fig_df, aes(x = segment, y = mean, color = phase, group = phase), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.2,
+                    dodge.width = 0.9)) + 
+      labs(y = 'PSA')+ 
+      theme( legend.position='bottom',
+             legend.title = element_blank()) + 
+    facet_wrap(valid~roi,scales = 'free_y', ncol = 4)+
+  colorblindr::scale_fill_OkabeIto()+ 
+  colorblindr::scale_color_OkabeIto()
+```
+
+
+# Valid and invalid
+
+```{r}
+
+new_mean = function(sample){
+  
+  summary = sample %>% 
+    summarise(m_wp_ap = mean(wp_ap))
+  
+  summary
+  
+}
+
+all_sub_df_both = all_sub_df_clean %>% mutate(wp_ap = within_pair - across_pair,
+         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) %>% 
+  filter(valid != 'invalid-invalid')
+
+all_sub_plot = all_sub_df_both %>% 
+  group_by(segment, within_trial_TR, roi, sub, valid) %>%
+  nest() %>% 
+  broadcast(calculate_mean) %>% 
+  select(-data) %>% 
+  unnest(cols = output)
+  
+  
+  a = all_sub_df_both %>% 
+  group_by(segment, within_trial_TR, roi, sub, valid) %>%
+  nest() %>% 
+  broadcast(new_mean) %>% 
+  select(-data) %>% 
+  unnest(cols = output)
+
+tmp = all_sub_plot %>% mutate(wp_ap = within_pair - across_pair) 
+
+tmp$roi =  factor(tmp$roi,
+              levels = c('ca23dg-body', 'ca23dg',
+                         'ppa',
+                         'ca1-body', 'ca1',
+                         'hippocampus', 
+                         'angular_gyrus', 'evc'))
+  
+tmp_sub = tmp %>% group_by(segment, valid, within_trial_TR, roi) %>%
+  summarise(wp_ap_m = mean(wp_ap),
+            wp_ap_se = sd(wp_ap)/sqrt(n())
+            )
+
+tmp_sub$roi =  factor(tmp_sub$roi,
+                         levels = c('ca23dg-body', 'ca23dg',
+                                    'ppa',
+                                    'ca1-body', 'ca1',
+                                    'hippocampus', 
+                                    'angular_gyrus', 'evc'))
+
+tmp_sub$valid = as.factor(tmp_sub$valid)
+levels(tmp_sub$valid) <- list(valid = "valid-valid", 
+                           invalid = "valid-invalid")
+  
+p1 = tmp_sub %>% 
+    filter(roi == 'ca23dg-body') %>% 
+    ggplot(aes(x = within_trial_TR, y = wp_ap_m, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = wp_ap_m-wp_ap_se, 
+                    ymax = wp_ap_m+wp_ap_se,
+                    fill = valid),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'PSA',
+         x = element_blank()) + 
+    theme(legend.position = 'top',
+          legend.title = element_blank())+
+    scale_x_continuous(breaks = seq(1, 24, by = 1))+
+    coord_cartesian(xlim = c(1,24))+
+  colorblindr::scale_fill_OkabeIto(order = 5:6)+ 
+  colorblindr::scale_color_OkabeIto(order = 5:6)
+
+p1
+
+p2 = postscan2_batch %>%
+    filter(correct == 1) %>%
+    ggplot(aes(x = ceiling_tp)) +
+    geom_histogram(binwidth = 1) +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    scale_x_continuous(breaks = seq(1,24,1), limit = c(1,24))+
+    xlab("Within Trial Timepoint (seconds)")+
+    ylab('Post Test\nCorrect Count') +
+    theme_classic(18)+
+    coord_cartesian(xlim = c(1,24))
+
+p2
+
+library(cowplot)
+plot_grid(p1, p2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
+
+```
+
