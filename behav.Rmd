@@ -51,17 +51,19 @@ postscan2_batch <- map_dfr(postscan2_behav, converting_read)
 
 ## Total n = `r nrow(prescan_batch)/24`
 
-Exclude subject 14: squzzed emergency ball while in the scanner.
+Exclude subject 14: squeezed emergency ball while in the scanner.
+Exclude subject 30: subject wanted to discontinue after round 7 because of discomfort caused by glasses
+Exclude subject 34: the participant perceived the peripheral nerve stimulation to be uncomfortable, so stopped the scan after Round 2.
 
 ```{r}
 prescan_batch <- prescan_batch %>% 
-  filter(sub != '13' & sub != '14' & sub != '23')
+  filter(sub != '14' & sub != '30' & sub != '34')
 scan_batch <- scan_batch %>% 
-  filter(sub != '13' & sub != '14' & sub != '23')
+  filter(sub != '14' & sub != '30' & sub != '34')
 postscan1_batch <- postscan1_batch %>% 
-  filter(sub != '13' & sub != '14' & sub != '23')
+  filter(sub != '14' & sub != '30' & sub != '34')
 postscan2_batch <- postscan2_batch %>% 
-  filter(sub != '13' & sub != '14' & sub != '23')
+  filter(sub != '14' & sub != '30' & sub != '34')
 ```
 
 ## n = `r nrow(prescan_batch)/24`
@@ -95,7 +97,7 @@ sub_plot = prescan_batch %>%
   summarise(m = mean(correct), conf = mean(confidence),
             cor_conf = mean(cor_conf)) 
 
-sub_plot %>% group_by(sub) %>% 
+sub_plot %>% group_by(sub, nquestion) %>% 
   summarise(correct = mean(m)) %>% 
   inner_join(
     sub_plot %>% group_by(sub) %>% 
@@ -276,6 +278,9 @@ Participant were instructed to answer the expected destination for 3 times durin
 ```{r}
 curr_plot = sub_plot %>%
   group_by(nquestion) %>% 
+  mutate(m = m * 100,
+         conf = conf * 100,
+         cor_conf = cor_conf * 100) %>% 
   summarise(mean = mean(m),
             se = sd(m)/sqrt(n()),
             mean_conf = mean(conf),
@@ -302,7 +307,7 @@ ggplot(curr_plot, aes(x = as.factor(nquestion), y = mean_conf)) +
   labs(title = 'Confidence response for pre-scan')+
   scale_x_discrete(
     name = 'segment',
-    labels=c("1" = "same", "2" = "overlap",
+    labels=c("1" = "same", "2" = "similar",
                             "3" = "different"))+
   theme(strip.background = element_blank())
   #gt() %>% cols_align(align = 'left')
@@ -315,7 +320,7 @@ ggplot(curr_plot, aes(x = as.factor(nquestion), y = mean_cor_conf)) +
        y = '% confident correct')+
   scale_x_discrete(
     name = 'segment',
-    labels=c("1" = "same", "2" = "overlap",
+    labels=c("1" = "same", "2" = "similar",
                             "3" = "different"))+
   theme(strip.background = element_blank())
 
@@ -361,9 +366,9 @@ prescan_batch_competitor %>%
             se = sd(percentage)/sqrt(n()),
             n = n()) %>% 
   #mutate(round_text = paste0('Round',round)) %>% 
-  ggplot(aes(x = as.factor(nquestion), y = m, fill = type_no_na)) + 
+  ggplot(aes(x = as.factor(nquestion), y = m*100, fill = type_no_na)) + 
   geom_histogram(stat = "identity", position = 'dodge')+
-  geom_errorbar(aes(ymin=m-se, ymax=m+se), color="black", width=0.1, size=0.5,
+  geom_errorbar(aes(ymin=m*100-se*100, ymax=m*100+se*100), color="black", width=0.1, size=0.5,
                 position = position_dodge(0.9))+
   #facet_wrap(~round_text)+
   theme(legend.position = 'bottom',
@@ -375,7 +380,7 @@ prescan_batch_competitor %>%
   colorblindr::scale_fill_OkabeIto()+
   scale_x_discrete(
     name = 'segment',
-    labels=c("1" = "same", "2" = "overlap",
+    labels=c("1" = "same", "2" = "similar",
                             "3" = "different"))+
   theme(strip.background = element_blank())
   

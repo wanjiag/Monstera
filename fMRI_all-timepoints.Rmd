@@ -19,7 +19,7 @@ library(tidyverse)
 library(fs)
 library(ggplot2)
 library(ez)
-theme_set(theme_classic(18))
+theme_set(theme_classic(25))
 
 library(ezPurrr)
 
@@ -299,95 +299,23 @@ ezANOVA(data=data %>% filter(roi == 'ca23dg-body'),
         dv = wp_ap_m)$ANOVA %>% knitr::kable()
 ```
 
-### One-sample t-test for CA23DG
+One-sample t-tests
 
 ```{r}
-ca23dg = data %>% filter(roi == 'ca23dg-body')
-```
 
+for (curr_r in unique(data$roi)){
+  print(curr_r)
+  for (seg in unique(data$segment)){
+    print(seg)
+    print(t.test(data %>% filter(segment == seg & roi == curr_r) %>% .$wp_ap_m))
+  }
+}
 
- - Same segment
-```{r}
-t.test(ca23dg %>% filter(segment == 'same') %>% .$wp_ap_m)
-```
+t.test(
+  data %>% filter(segment == 'same'  & roi == 'ca23dg-body') %>% .$wp_ap_m,
+  data %>% filter(segment == 'overlapping'  & roi == 'ca23dg-body') %>% .$wp_ap_m,
+  paired = TRUE)
 
- - Overlapping segment
-```{r}
-t.test(ca23dg %>% filter(segment == 'overlapping') %>% .$wp_ap_m)
-
-```
-
- - Non-overlapping segment
-```{r}
-t.test(ca23dg %>% filter(segment == 'non-overlapping') %>% .$wp_ap_m)
-```
-
-### One-sample t-test for CA1
-
-```{r}
-ca1 = data %>% filter(roi == 'ca1-body')
-```
-
-
- - Same segment
-```{r}
-t.test(ca1 %>% filter(segment == 'same') %>% .$wp_ap_m)
-```
-
- - Overlapping segment
-```{r}
-t.test(ca1 %>% filter(segment == 'overlapping') %>% .$wp_ap_m)
-
-```
-
- - Non-overlapping segment
-```{r}
-t.test(ca1 %>% filter(segment == 'non-overlapping') %>% .$wp_ap_m)
-```
-
-### One-sample t-test for PPA
-
-```{r}
-ppa = data %>% filter(roi == 'ppa')
-```
-
-
- - Same segment
-```{r}
-t.test(ppa %>% filter(segment == 'same') %>% .$wp_ap_m)
-```
-
- - Overlapping segment
-```{r}
-t.test(ppa %>% filter(segment == 'overlapping') %>% .$wp_ap_m)
-
-```
-
- - Non-overlapping segment
-```{r}
-t.test(ppa %>% filter(segment == 'non-overlapping') %>% .$wp_ap_m)
-```
-
-### One-sample t-test for EVC
-
-```{r}
-evc = data %>% filter(roi == 'evc')
-```
-
- - Same segment
-```{r}
-t.test(evc %>% filter(segment == 'same') %>% .$wp_ap_m)
-```
-
- - Overlapping segment
-```{r}
-t.test(evc %>% filter(segment == 'overlapping') %>% .$wp_ap_m)
-
-```
-
- - Non-overlapping segment
-```{r}
-t.test(evc %>% filter(segment == 'non-overlapping') %>% .$wp_ap_m)
 ```
 
 
@@ -429,9 +357,47 @@ output = making_4_plots(all_sub_plot)
 
 ```{r}
 output[[3]][[2]]
-output[[1]]
 ```
 
+#### Statistics:
+
+```{r}
+data = output[[3]][[1]]
+```
+
+ROI x Segment ANOVA
+```{r}
+ezANOVA(data=data,
+        wid=sub,
+        within = .(roi, segment),
+        dv = wp_ap_m)$ANOVA %>% knitr::kable()
+```
+
+Segment One-way ANOVA for CA23DG
+```{r}
+ezANOVA(data=data %>% filter(roi == 'ca23dg-body'),
+        wid=sub,
+        within = .(segment),
+        dv = wp_ap_m)$ANOVA %>% knitr::kable()
+```
+
+One-sample t-tests
+
+```{r}
+
+for (curr_r in unique(data$roi)){
+  print(curr_r)
+  for (seg in unique(data$segment)){
+    print(seg)
+    print(t.test(data %>% filter(segment == seg & roi == curr_r) %>% .$wp_ap_m))
+  }
+}
+
+```
+
+```{r}
+output[[1]]
+```
 
 ```{r eval=FALSE, include=FALSE}
 

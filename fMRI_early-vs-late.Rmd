@@ -105,7 +105,8 @@ if (re_process){
 
 ```{r}
 all_sub_phase_df = all_sub_phase_df %>% 
-  filter(sub != '13' & sub != '14' & sub != '23')
+  filter(sub != '13' & sub != '14' & sub != '23' &
+           sub != '20' & sub != '24' & sub != '27')
 ```
 
 ## n = `r length(unique(all_sub_phase_df$sub))`
@@ -204,7 +205,6 @@ wp_ap =  tmp2_mean %>%
     facet_wrap(valid~roi,scales = 'free_y', ncol = 4)
 ```
 
-
 ### Zoom in figures
 
 
@@ -246,8 +246,29 @@ ezANOVA(data=d,
         dv = mean)$ANOVA %>% knitr::kable()
 ```
 
-Same vs. Overlapping for late-late correlation
+One-sample t-tests
 
+```{r}
+
+for (pha in unique(d$phase)){
+  print(pha)
+  for (seg in unique(d$segment)){
+    print(seg)
+    print(t.test(d %>% filter(segment == seg & phase == pha) %>% .$mean))
+  }
+}
+
+```
+
+
+Same vs. Overlapping for early-early correlation
+```{r}
+t.test(d %>% filter(segment == 'same' & phase == 'early-early') %>% .$mean,
+       d %>% filter(segment == 'overlapping' & phase == 'early-early') %>% .$mean,
+       paired = TRUE)
+```
+
+Same vs. Overlapping for late-late correlation
 ```{r}
 t.test(d %>% filter(segment == 'same' & phase == 'late-late') %>% .$mean,
        d %>% filter(segment == 'overlapping' & phase == 'late-late') %>% .$mean,
@@ -261,10 +282,11 @@ t.test(d %>% filter(segment == 'same' & phase == 'late-late') %>% .$mean,
        paired = TRUE)
 ```
 
-Early-Early one-sample t-test
+Late-late vs. Early-early at overlapping segment
 ```{r}
-t.test(d %>% filter(segment == 'same' & phase == 'early-early') %>% .$mean)
-t.test(d %>% filter(segment == 'overlapping' & phase == 'early-early') %>% .$mean)
+t.test(d %>% filter(segment == 'overlapping' & phase == 'late-late') %>% .$mean,
+       d %>% filter(segment == 'overlapping' & phase == 'early-early') %>% .$mean,
+       paired = TRUE)
 ```
 
 
@@ -289,7 +311,9 @@ fig_df %>%
                     dodge.width = 0.9)) + 
       labs(y = 'within_pair-across_pair')+ 
       theme( legend.position='bottom') + 
-    facet_wrap(valid~roi,scales = 'free_y', ncol = 4)
+    facet_wrap(valid~roi,scales = 'free_y', ncol = 4)+
+  colorblindr::scale_fill_OkabeIto()+ 
+  colorblindr::scale_color_OkabeIto()
 ```
 
 Segment x Phase Two-Way ANOVA
@@ -304,9 +328,28 @@ ezANOVA(data=d,
         dv = mean)$ANOVA %>% knitr::kable()
 ```
 
+One-sample t-tests
+
+```{r}
+
+for (pha in unique(d$phase)){
+  print(pha)
+  for (seg in unique(d$segment)){
+    print(seg)
+    print(t.test(d %>% filter(segment == seg & phase == pha) %>% .$mean))
+  }
+}
+
+```
+
+Same vs. Overlapping for early-early correlation
+```{r}
+t.test(d %>% filter(segment == 'same' & phase == 'early-early') %>% .$mean,
+       d %>% filter(segment == 'overlapping' & phase == 'early-early') %>% .$mean,
+       paired = TRUE)
+```
 
 Same vs. Overlapping for late-late correlation
-
 ```{r}
 t.test(d %>% filter(segment == 'same' & phase == 'late-late') %>% .$mean,
        d %>% filter(segment == 'overlapping' & phase == 'late-late') %>% .$mean,
@@ -317,6 +360,13 @@ Late-late vs. Early-early at same segment
 ```{r}
 t.test(d %>% filter(segment == 'same' & phase == 'late-late') %>% .$mean,
        d %>% filter(segment == 'same' & phase == 'early-early') %>% .$mean,
+       paired = TRUE)
+```
+
+Late-late vs. Early-early at overlapping segment
+```{r}
+t.test(d %>% filter(segment == 'overlapping' & phase == 'late-late') %>% .$mean,
+       d %>% filter(segment == 'overlapping' & phase == 'early-early') %>% .$mean,
        paired = TRUE)
 ```
 
