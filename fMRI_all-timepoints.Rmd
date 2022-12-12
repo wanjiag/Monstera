@@ -256,8 +256,8 @@ all_sub_df_clean = all_sub_df_unnest %>%
 
 all_sub_df_valid = all_sub_df_clean %>% mutate(wp_ap = within_pair - across_pair,
                       wi_wp = within_item - within_pair,
-         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) %>% 
-  filter(valid == 'valid-valid')
+         segment = factor(segment, levels = c('same', 'overlapping', 'non-overlapping'))) #%>% 
+  #filter(valid == 'valid-valid')
 
   
 all_sub_plot = all_sub_df_valid %>% 

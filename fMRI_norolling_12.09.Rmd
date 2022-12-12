@@ -1,0 +1,279 @@
+---
+title: "fMRI with Python"
+author: "Wanjia Guo"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
+knitr::opts_chunk$set(fig.width=12, fig.height=8) 
+
+library(tidyverse)
+library(fs)
+library(ggplot2)
+library(ez)
+library(gt)
+theme_set(theme_classic(12))
+
+library(ezPurrr)
+
+cbPalette <- c("#CC79A7","#009E73","#0072B2","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
+#pink, green, blue, yellow
+```
+
+```{r reading in data, include=FALSE}
+converting_read <- function(curr_path){
+  print(curr_path)
+  if (str_split(curr_path, pattern = '_')[[1]][7] %in% rois_names){
+    read_csv(curr_path) %>% mutate(sub = as.character(sub))
+  }
+}
+
+sub_dir = dir_ls(here::here("./csv_files/cluster_csv"))
+
+rois_names = c('ca23dg-body', 'ca1-body', 
+               'evc', 'ppa')
+
+files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary.csv') %>% unlist()
+
+norolling <- map_dfr(files, converting_read)
+  
+```
+
+```{r}
+sub_p1 = norolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(sub != '13' & sub != '23') %>% 
+  pivot_wider(names_from = type, values_from = cor) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same)) %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  group_by(valid, segment, roi, sub) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+p1 = sub_p1 %>% summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p1$segment = factor(p1$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid'))
+
+ggplot(p1, aes(x = segment, y = mean, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
+      #geom_point(data = sub_p1, aes(x = segment, y = m, color = roi, group = roi), 
+      #            position=position_jitterdodge(
+      #              jitter.width = 0.2,
+      #              dodge.width = 0.75)) + 
+      labs(y = 'within_item - within_pair')+ 
+      facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+```
+
+
+```{r}
+t = sub_p1 %>% 
+  group_by(segment, valid, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$m)$p.value) %>% 
+  unnest(output) %>% 
+  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
+  select(-data) %>% 
+  pivot_wider(names_from = valid,
+              values_from = output)
+
+a = sub_p1 %>% select(-c(se, n)) %>% 
+  pivot_wider(names_from = valid,
+              values_from = m) %>% 
+  group_by(segment, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(t, a, by = c("segment", "roi"))
+t$segment = factor(t$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+t$roi = factor(t$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+
+
+t %>% ungroup() %>% 
+  gt(
+    rowname_col = "row",
+    groupname_col = "segment"
+  ) %>%
+  row_group_order(groups = c("same","early-similar","late-similar","different")) %>%
+  tab_header(title = "Stats") %>%
+  
+  fmt_number(
+    columns = c(`valid-invalid`, `valid-valid`, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-invalid`,
+      rows = `valid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-valid`,
+      rows = `valid-valid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
+```
+
+
+
+```{r}
+sub_p2 = norolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(sub != '13' & sub != '23') %>% 
+  pivot_wider(names_from = type, values_from = cor) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same)) %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 18, 'similar','different')
+                                   )) %>% 
+  group_by(valid, segment, roi, sub) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+p2 = sub_p2 %>% summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p2$segment = factor(p2$segment, levels = c('same', 'similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid'))
+
+ggplot(p2, aes(x = segment, y = mean, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
+      #geom_point(data = sub_p1, aes(x = segment, y = m, color = roi, group = roi), 
+      #            position=position_jitterdodge(
+      #              jitter.width = 0.2,
+      #              dodge.width = 0.75)) + 
+      labs(y = 'within_item - within_pair')+ 
+      facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+```
+
+```{r}
+
+t = sub_p2 %>% 
+  group_by(segment, valid, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$m)$p.value) %>% 
+  unnest(output) %>% 
+  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
+  select(-data) %>% 
+  pivot_wider(names_from = valid,
+              values_from = output)
+
+a = sub_p2 %>% select(-c(se, n)) %>% 
+  pivot_wider(names_from = valid,
+              values_from = m) %>% 
+  group_by(segment, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(t, a, by = c("segment", "roi"))
+
+t %>% ungroup() %>% 
+  gt(
+    rowname_col = "row",
+    groupname_col = "segment"
+  ) %>%
+  row_group_order(groups = c("same","similar","different")) %>%
+  tab_header(title = "Stats") %>%
+  
+  fmt_number(
+    columns = c(`valid-invalid`, `valid-valid`, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-invalid`,
+      rows = `valid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-valid`,
+      rows = `valid-valid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
+```
+
