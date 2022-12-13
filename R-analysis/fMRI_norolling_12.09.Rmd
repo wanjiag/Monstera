@@ -53,7 +53,7 @@ norolling <- map_dfr(files, converting_read)
 ```{r early and late}
 sub_p1 = norolling %>% 
   #filter(valid != 'invalid-invalid') %>% 
-  #filter(sub != '13' & sub != '23') %>% 
+  filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
   select(-c(across, within, same)) %>% 
