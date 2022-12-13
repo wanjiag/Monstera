@@ -1,0 +1,20 @@
+/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/input_data/__init__.py:27: FutureWarning: The import path 'nilearn.input_data' is deprecated in version 0.9. Importing from 'nilearn.input_data' will be possible at least until release 0.13.0. Please import from 'nilearn.maskers' instead.
+  warnings.warn(message, FutureWarning)
+Traceback (most recent call last):
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/hippocampus_subfields.py", line 176, in <module>
+    flt = fsl.FLIRT(in_file = '/home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/{}/tse.nii.gz'.format(subnum),
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/nipype/interfaces/fsl/base.py", line 171, in __init__
+    super(FSLCommand, self).__init__(**inputs)
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/nipype/interfaces/base/core.py", line 630, in __init__
+    super(CommandLine, self).__init__(**inputs)
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/nipype/interfaces/base/core.py", line 202, in __init__
+    self.inputs.trait_set(**inputs)
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/traits/has_traits.py", line 1520, in trait_set
+    setattr(self, name, value)
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/nipype/interfaces/base/traits_extension.py", line 330, in validate
+    value = super(File, self).validate(objekt, name, value, return_pathlike=True)
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/nipype/interfaces/base/traits_extension.py", line 135, in validate
+    self.error(objekt, name, str(value))
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env/lib/python3.9/site-packages/traits/base_trait_handler.py", line 74, in error
+    raise TraitError(
+traits.trait_errors.TraitError: The 'in_file' trait of a FLIRTInputSpec instance must be a pathlike object or string representing an existing file, but a value of '/home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA16/tse.nii.gz' <class 'str'> was specified.

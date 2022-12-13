@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/rois.py", line 7, in <module>
+    from nilearn.masker import NiftiMasker
+ModuleNotFoundError: No module named 'nilearn.masker'

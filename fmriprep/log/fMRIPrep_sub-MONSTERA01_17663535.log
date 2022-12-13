@@ -1,0 +1,852 @@
+220226-22:19:05,448 nipype.workflow IMPORTANT:
+	 Running fMRIPrep version 21.0.1
+
+         License NOTICE ##################################################
+         fMRIPrep 21.0.1
+         Copyright 2021 The NiPreps Developers.
+         
+         This product includes software developed by
+         the NiPreps Community (https://nipreps.org/).
+         
+         Portions of this software were developed at the Department of
+         Psychology at Stanford University, Stanford, CA, US.
+         
+         This software redistributes the versioneer Python package, which is
+         Public domain source code.
+         
+         This software is also distributed as a Docker container image.
+         The bootstraping file for the image ("Dockerfile") is licensed
+         under the MIT License.
+         
+         This software may be distributed through an add-on package called
+         "Docker Wrapper" that is under the BSD 3-clause License.
+         #################################################################
+220226-22:19:05,524 nipype.workflow IMPORTANT:
+	 Building fMRIPrep's workflow:
+           * BIDS dataset path: /data.
+           * Participant list: ['MONSTERA01'].
+           * Run identifier: 20220226-221857_6767bdf2-3321-4d5d-8dff-f3a58bb577ae.
+           * Output spaces: MNI152NLin2009cAsym:res-native T1w fsaverage:den-41k.
+           * Pre-run FreeSurfer's SUBJECTS_DIR: /output/sourcedata/freesurfer.
+220226-22:19:07,878 nipype.workflow INFO:
+	 B0 field inhomogeneity map will be estimated with  the following 1 estimators: [<EstimatorType.PEPOLAR: 2>].
+220226-22:19:08,58 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-01_sbref.nii.gz.
+220226-22:19:08,58 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-01_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:08,160 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:08,638 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-02_sbref.nii.gz.
+220226-22:19:08,638 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-02_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:08,732 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:08,938 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-03_sbref.nii.gz.
+220226-22:19:08,938 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-03_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:09,29 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:09,319 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-04_sbref.nii.gz.
+220226-22:19:09,320 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-04_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:09,409 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:09,570 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-05_sbref.nii.gz.
+220226-22:19:09,570 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-05_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:09,663 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:09,827 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-06_sbref.nii.gz.
+220226-22:19:09,827 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-06_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:09,920 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:10,93 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-07_sbref.nii.gz.
+220226-22:19:10,93 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-07_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:10,186 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:10,348 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-08_sbref.nii.gz.
+220226-22:19:10,348 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-08_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:10,440 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.446s.
+220226-22:19:10,708 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-09_sbref.nii.gz.
+220226-22:19:10,708 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-09_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:10,800 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:10,977 nipype.workflow INFO:
+	 Using single-band reference file(s) sub-MONSTERA01_task-10_sbref.nii.gz.
+220226-22:19:10,977 nipype.workflow INFO:
+	 Found usable B0-map (fieldmap) estimator(s) <auto_00000> to correct </data/sub-MONSTERA01/func/sub-MONSTERA01_task-10_bold.nii.gz> for susceptibility-derived distortions.
+220226-22:19:11,68 nipype.workflow IMPORTANT:
+	 BOLD series will be slice-timing corrected to an offset of 0.445s.
+220226-22:19:11,420 nipype.workflow INFO:
+	 Setting-up fieldmap "auto_00000" (EstimatorType.PEPOLAR) with <sub-MONSTERA01_dir-ap_run-09_epi.nii.gz, sub-MONSTERA01_dir-pa_run-10_epi.nii.gz>
+220226-22:19:14,767 nipype.workflow INFO:
+	 fMRIPrep workflow graph with 2629 nodes built successfully.
+220226-22:19:22,975 nipype.workflow IMPORTANT:
+	 fMRIPrep started!
+220226-22:19:25,388 nipype.workflow WARNING:
+	 Some nodes exceed the total amount of memory available (40.00GB).
+220226-22:19:29,713 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.full_wm" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/brain_extraction_wf/full_wm".
+220226-22:19:29,716 nipype.workflow INFO:
+	 [Node] Running "full_wm" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:29,735 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/bold_source".
+220226-22:19:29,736 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/func_derivatives_wf/raw_sources".
+220226-22:19:29,739 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:29,739 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:29,770 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.bold_source".
+220226-22:19:29,770 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/bold_source".
+220226-22:19:29,771 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/func_derivatives_wf/raw_sources".
+220226-22:19:29,771 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.func_derivatives_wf.raw_sources".
+220226-22:19:29,774 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:29,774 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:29,777 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.func_derivatives_wf.raw_sources".
+220226-22:19:29,778 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/bold_source".
+220226-22:19:29,782 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/func_derivatives_wf/raw_sources".
+220226-22:19:29,786 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:29,807 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.bold_source".
+220226-22:19:29,815 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:29,817 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.func_derivatives_wf.raw_sources".
+220226-22:19:29,817 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.bold_source".
+220226-22:19:29,889 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.lap_tmpl" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/brain_extraction_wf/lap_tmpl".
+220226-22:19:29,893 nipype.workflow INFO:
+	 [Node] Running "lap_tmpl" ("nipype.interfaces.ants.utils.ImageMath"), a CommandLine Interface with command:
+ImageMath 3 tpl-OASIS30ANTs_res-01_T1w_maths.nii.gz Laplacian /home/wanjiag/.cache/templateflow/tpl-OASIS30ANTs/tpl-OASIS30ANTs_res-01_T1w.nii.gz 1.5 1
+220226-22:19:29,910 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.res_tmpl" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/brain_extraction_wf/res_tmpl".
+220226-22:19:29,913 nipype.workflow INFO:
+	 [Node] Running "res_tmpl" ("niworkflows.interfaces.nibabel.RegridToZooms")
+220226-22:19:30,40 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/get_dummy".
+220226-22:19:30,44 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/val_sbref".
+220226-22:19:30,44 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/val_bold".
+220226-22:19:30,44 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:30,48 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:30,48 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:30,51 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,52 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,56 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/get_dummy".
+220226-22:19:30,57 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/val_bold".
+220226-22:19:30,58 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/val_sbref".
+220226-22:19:30,61 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:30,63 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:30,64 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:30,67 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,67 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,90 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:30,92 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.val_bold".
+220226-22:19:30,99 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:30,101 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.val_bold".
+220226-22:19:30,128 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:30,130 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.val_sbref".
+220226-22:19:30,152 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:30,154 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.val_sbref".
+220226-22:19:30,194 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/bold_source".
+220226-22:19:30,194 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/func_derivatives_wf/raw_sources".
+220226-22:19:30,198 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:30,199 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:30,200 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.func_derivatives_wf.raw_sources".
+220226-22:19:30,202 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.bold_source".
+220226-22:19:30,360 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.bidssrc" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/bidssrc".
+220226-22:19:30,365 nipype.workflow INFO:
+	 [Node] Running "bidssrc" ("niworkflows.interfaces.bids.BIDSDataGrabber")
+220226-22:19:30,391 nipype.interface INFO:
+	 No "flair" images found for sub-MONSTERA01
+220226-22:19:30,391 nipype.interface INFO:
+	 No "roi" images found for sub-MONSTERA01
+220226-22:19:30,395 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.bidssrc".
+220226-22:19:30,432 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.full_wm".
+220226-22:19:30,470 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/get_dummy".
+220226-22:19:30,473 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:30,473 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/val_bold".
+220226-22:19:30,475 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/val_bold".
+220226-22:19:30,475 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/val_sbref".
+220226-22:19:30,480 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:30,481 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:30,481 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:30,482 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,485 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,486 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:30,528 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:30,530 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.val_bold".
+220226-22:19:30,534 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:30,535 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.val_bold".
+220226-22:19:30,583 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:30,584 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.val_sbref".
+220226-22:19:31,355 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.res_tmpl".
+220226-22:19:32,193 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/get_dummy".
+220226-22:19:32,193 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/val_sbref".
+220226-22:19:32,194 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/bold_source".
+220226-22:19:32,194 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/func_derivatives_wf/raw_sources".
+220226-22:19:32,197 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/bold_source".
+220226-22:19:32,197 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:32,198 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/func_derivatives_wf/raw_sources".
+220226-22:19:32,198 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:32,198 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:32,200 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.bold_source".
+220226-22:19:32,201 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:32,201 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:32,201 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/val_bold".
+220226-22:19:32,201 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/val_sbref".
+220226-22:19:32,201 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.func_derivatives_wf.raw_sources".
+220226-22:19:32,202 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/get_dummy".
+220226-22:19:32,202 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:32,202 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/val_sbref".
+220226-22:19:32,203 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:32,204 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.bold_source".
+220226-22:19:32,205 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.func_derivatives_wf.raw_sources".
+220226-22:19:32,205 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:32,205 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:32,205 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:32,207 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:32,210 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:32,210 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:32,214 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:32,229 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:32,230 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.val_bold".
+220226-22:19:32,252 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:32,254 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.val_sbref".
+220226-22:19:32,266 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:32,268 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.val_sbref".
+220226-22:19:32,280 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:32,282 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.val_sbref".
+220226-22:19:32,403 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/val_bold".
+220226-22:19:32,409 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:32,413 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:32,437 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:32,439 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.val_bold".
+220226-22:19:32,447 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/get_dummy".
+220226-22:19:32,450 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:34,201 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/bold_source".
+220226-22:19:34,202 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/func_derivatives_wf/raw_sources".
+220226-22:19:34,202 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/val_bold".
+220226-22:19:34,203 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/val_sbref".
+220226-22:19:34,204 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/bold_source".
+220226-22:19:34,204 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/func_derivatives_wf/raw_sources".
+220226-22:19:34,205 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/get_dummy".
+220226-22:19:34,205 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/val_bold".
+220226-22:19:34,205 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:34,207 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:34,207 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/get_dummy".
+220226-22:19:34,210 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.bold_source".
+220226-22:19:34,212 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:34,212 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:34,213 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:34,214 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:34,214 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:34,215 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.func_derivatives_wf.raw_sources".
+220226-22:19:34,216 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:34,215 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:34,217 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:34,218 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.bold_source".
+220226-22:19:34,218 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.func_derivatives_wf.raw_sources".
+220226-22:19:34,219 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:34,220 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:34,235 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:34,236 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.val_bold".
+220226-22:19:34,248 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:34,250 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.val_bold".
+220226-22:19:34,276 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:34,278 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.val_sbref".
+220226-22:19:36,223 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/val_sbref".
+220226-22:19:36,224 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/bold_source".
+220226-22:19:36,224 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/func_derivatives_wf/raw_sources".
+220226-22:19:36,225 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/val_bold".
+220226-22:19:36,226 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/val_sbref".
+220226-22:19:36,226 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/get_dummy".
+220226-22:19:36,228 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.bold_source" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/bold_source".
+220226-22:19:36,230 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:36,231 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:36,231 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:36,233 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:36,233 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:36,235 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:36,235 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:36,237 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.func_derivatives_wf.raw_sources".
+220226-22:19:36,237 nipype.workflow INFO:
+	 [Node] Running "bold_source" ("nipype.interfaces.utility.base.Select")
+220226-22:19:36,242 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.bold_source".
+220226-22:19:36,243 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:36,244 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.bold_source".
+220226-22:19:36,250 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:36,272 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:36,276 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.val_bold".
+220226-22:19:36,290 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:36,291 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.val_sbref".
+220226-22:19:36,308 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:36,310 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.val_sbref".
+220226-22:19:36,491 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.get_dummy".
+220226-22:19:36,573 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.get_dummy".
+220226-22:19:37,294 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.get_dummy".
+220226-22:19:38,217 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.func_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/func_derivatives_wf/raw_sources".
+220226-22:19:38,217 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.val_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/val_bold".
+220226-22:19:38,219 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.val_sbref" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/val_sbref".
+220226-22:19:38,219 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.out_merge_fmap_id" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/fmap_preproc_wf/out_merge_fmap_id".
+220226-22:19:38,220 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.out_merge_method" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/fmap_preproc_wf/out_merge_method".
+220226-22:19:38,222 nipype.workflow INFO:
+	 [Node] Setting-up "_val_bold0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/val_bold/mapflow/_val_bold0".
+220226-22:19:38,222 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:38,225 nipype.workflow INFO:
+	 [Node] Running "out_merge_fmap_id" ("nipype.interfaces.utility.base.Merge")
+220226-22:19:38,225 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.func_derivatives_wf.raw_sources".
+220226-22:19:38,227 nipype.workflow INFO:
+	 [Node] Running "_val_bold0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:38,228 nipype.workflow INFO:
+	 [Node] Running "out_merge_method" ("nipype.interfaces.utility.base.Merge")
+220226-22:19:38,228 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.out_merge_fmap_id".
+220226-22:19:38,230 nipype.workflow INFO:
+	 [Node] Setting-up "_val_sbref0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/val_sbref/mapflow/_val_sbref0".
+220226-22:19:38,230 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.out_merge_method".
+220226-22:19:38,234 nipype.workflow INFO:
+	 [Node] Running "_val_sbref0" ("niworkflows.interfaces.header.ValidateImage")
+220226-22:19:38,251 nipype.workflow INFO:
+	 [Node] Finished "_val_bold0".
+220226-22:19:38,252 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.val_bold".
+220226-22:19:38,290 nipype.workflow INFO:
+	 [Node] Finished "_val_sbref0".
+220226-22:19:38,291 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.val_sbref".
+220226-22:19:38,311 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.flatten" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/fmap_preproc_wf/wf_auto_00000/flatten".
+220226-22:19:38,315 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.get_dummy" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/get_dummy".
+220226-22:19:38,320 nipype.workflow INFO:
+	 [Node] Running "get_dummy" ("niworkflows.interfaces.bold.NonsteadyStatesDetector")
+220226-22:19:38,323 nipype.workflow INFO:
+	 [Node] Running "flatten" ("sdcflows.interfaces.utils.Flatten")
+220226-22:19:38,442 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.flatten".
+220226-22:19:38,716 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.get_dummy".
+220226-22:19:38,762 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.get_dummy".
+220226-22:19:38,921 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.get_dummy".
+220226-22:19:38,989 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.lap_tmpl".
+220226-22:19:40,723 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.get_dummy".
+220226-22:19:40,758 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.get_dummy".
+220226-22:19:42,631 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.get_dummy".
+220226-22:19:43,705 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_template_wf.t1w_ref_dimensions" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/anat_template_wf/t1w_ref_dimensions".
+220226-22:19:44,35 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.mrg_tmpl" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/brain_extraction_wf/mrg_tmpl".
+220226-22:19:44,36 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/select_bold".
+220226-22:19:44,40 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:44,42 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.select_bold".
+220226-22:19:44,60 nipype.workflow INFO:
+	 [Node] Running "mrg_tmpl" ("nipype.interfaces.utility.base.Merge")
+220226-22:19:44,63 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.brain_extraction_wf.mrg_tmpl".
+220226-22:19:44,283 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.bids_info" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/bids_info".
+220226-22:19:44,288 nipype.workflow INFO:
+	 [Node] Running "bids_info" ("niworkflows.interfaces.bids.BIDSInfo")
+220226-22:19:44,287 nipype.workflow INFO:
+	 [Node] Running "t1w_ref_dimensions" ("niworkflows.interfaces.images.TemplateDimensions")
+220226-22:19:44,294 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.bids_info".
+220226-22:19:44,346 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/select_bold".
+220226-22:19:44,349 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:44,350 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_template_wf.t1w_ref_dimensions".
+220226-22:19:44,350 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:44,352 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:44,353 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.select_bold".
+220226-22:19:44,477 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:44,497 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.get_dummy".
+220226-22:19:44,651 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/select_bold".
+220226-22:19:44,654 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:44,658 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:44,658 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:44,661 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.select_bold".
+220226-22:19:44,779 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:44,948 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/select_bold".
+220226-22:19:44,951 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:44,953 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:44,954 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:44,955 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.select_bold".
+220226-22:19:45,73 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:45,242 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/select_bold".
+220226-22:19:45,244 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:45,252 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:45,337 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:45,340 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.select_bold".
+220226-22:19:45,372 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:45,532 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:45,532 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/select_bold".
+220226-22:19:45,537 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:45,539 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.select_bold".
+220226-22:19:45,541 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:45,659 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:45,829 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:45,834 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:45,953 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:46,2 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/select_bold".
+220226-22:19:46,6 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:46,8 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.select_bold".
+220226-22:19:46,287 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/select_bold".
+220226-22:19:46,294 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:46,298 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.select_bold".
+220226-22:19:46,324 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:46,327 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:46,446 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:46,587 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/select_bold".
+220226-22:19:46,589 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:46,591 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:46,593 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.select_bold".
+220226-22:19:46,596 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:46,719 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:46,884 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:46,884 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.select_bold" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/select_bold".
+220226-22:19:46,888 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:46,893 nipype.workflow INFO:
+	 [Node] Running "select_bold" ("nipype.interfaces.utility.base.Select")
+220226-22:19:46,896 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.select_bold".
+220226-22:19:47,9 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:47,181 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.merge_sbrefs" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/merge_sbrefs".
+220226-22:19:47,200 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.regrid" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/fmap_preproc_wf/wf_auto_00000/regrid".
+220226-22:19:47,204 nipype.workflow INFO:
+	 [Node] Running "regrid" ("sdcflows.interfaces.utils.UniformGrid")
+220226-22:19:47,204 nipype.workflow INFO:
+	 [Node] Running "merge_sbrefs" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:47,283 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.regrid".
+220226-22:19:47,323 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.merge_sbrefs".
+220226-22:19:47,797 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.fs_isrunning" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/fs_isrunning".
+220226-22:19:47,802 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_template_wf.t1w_conform" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/anat_template_wf/t1w_conform".
+220226-22:19:47,806 nipype.workflow INFO:
+	 [Node] Setting-up "_t1w_conform0" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/anat_template_wf/t1w_conform/mapflow/_t1w_conform0".
+220226-22:19:47,808 nipype.workflow INFO:
+	 [Node] Running "_t1w_conform0" ("niworkflows.interfaces.images.Conform")
+220226-22:19:47,823 nipype.workflow INFO:
+	 [Node] Finished "_t1w_conform0".
+220226-22:19:47,825 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_template_wf.t1w_conform".
+220226-22:19:47,945 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_derivatives_wf.raw_sources" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/anat_derivatives_wf/raw_sources".
+220226-22:19:47,949 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/gen_avg".
+220226-22:19:47,952 nipype.workflow INFO:
+	 [Node] Running "raw_sources" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:47,954 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_derivatives_wf.raw_sources".
+220226-22:19:47,957 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,70 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,116 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/gen_avg".
+220226-22:19:48,116 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/gen_avg".
+220226-22:19:48,118 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/gen_avg".
+220226-22:19:48,119 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/gen_avg".
+220226-22:19:48,119 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/gen_avg".
+220226-22:19:48,120 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/initial_boldref_wf/gen_avg".
+220226-22:19:48,121 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,123 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,124 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,125 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,126 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,127 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:48,248 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,249 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,252 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,257 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,257 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,259 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.initial_boldref_wf.gen_avg".
+220226-22:19:48,366 nipype.workflow INFO:
+	 [Node] Running "fs_isrunning" ("nipype.interfaces.utility.wrappers.Function")
+220226-22:19:48,369 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.fs_isrunning".
+220226-22:19:48,431 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,438 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-05_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-05_bold.nii.gz
+220226-22:19:48,826 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,832 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-01_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-01_bold.nii.gz
+220226-22:19:48,848 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,857 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-02_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-02_bold.nii.gz
+220226-22:19:48,953 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,960 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 1 -prefix sub-MONSTERA01_task-04_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-04_bold.nii.gz
+220226-22:19:48,963 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_07_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,970 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 1 -prefix sub-MONSTERA01_task-07_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_07_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-07_bold.nii.gz
+220226-22:19:48,971 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,980 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-08_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.446 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-08_bold.nii.gz
+220226-22:19:48,988 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:48,997 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-03_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-03_bold.nii.gz
+220226-22:19:49,26 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:49,33 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-06_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-06_bold.nii.gz
+220226-22:19:50,123 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_08_wf/initial_boldref_wf/gen_avg".
+220226-22:19:50,124 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/initial_boldref_wf/gen_avg".
+220226-22:19:50,125 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.gen_avg" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/initial_boldref_wf/gen_avg".
+220226-22:19:50,125 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.concat_blips" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/fmap_preproc_wf/wf_auto_00000/concat_blips".
+220226-22:19:50,129 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:50,133 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:50,154 nipype.workflow INFO:
+	 [Node] Running "concat_blips" ("niworkflows.interfaces.nibabel.MergeSeries")
+220226-22:19:50,213 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.pad_ref_slices" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/fmap_preproc_wf/wf_auto_00000/pad_ref_slices".
+220226-22:19:50,223 nipype.workflow INFO:
+	 [Node] Running "gen_avg" ("niworkflows.interfaces.images.RobustAverage")
+220226-22:19:50,237 nipype.workflow INFO:
+	 [Node] Running "pad_ref_slices" ("sdcflows.interfaces.utils.PadSlices")
+220226-22:19:50,260 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.initial_boldref_wf.gen_avg".
+220226-22:19:50,261 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.pad_ref_slices".
+220226-22:19:50,262 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.initial_boldref_wf.gen_avg".
+220226-22:19:50,308 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_template_wf.get1st" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/anat_preproc_wf/anat_template_wf/get1st".
+220226-22:19:50,316 nipype.workflow INFO:
+	 [Node] Running "get1st" ("nipype.interfaces.utility.base.Select")
+220226-22:19:50,319 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.anat_preproc_wf.anat_template_wf.get1st".
+220226-22:19:50,367 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_08_wf.initial_boldref_wf.gen_avg".
+220226-22:19:50,427 nipype.workflow INFO:
+	 [Node] Finished "fmriprep_wf.single_subject_MONSTERA01_wf.fmap_preproc_wf.wf_auto_00000.concat_blips".
+220226-22:19:50,464 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_10_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:50,471 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-10_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_10_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-10_bold.nii.gz
+220226-22:19:51,57 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_09_wf.bold_stc_wf.slice_timing_correction" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/bold_stc_wf/slice_timing_correction".
+220226-22:19:51,70 nipype.workflow INFO:
+	 [Node] Running "slice_timing_correction" ("fmriprep.workflows.bold.stc.TShift"), a CommandLine Interface with command:
+3dTshift -ignore 0 -prefix sub-MONSTERA01_task-09_bold_tshift.nii.gz -tpattern @slice_timing.1D -TR 1s -tzero 0.445 /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_09_wf/bold_stc_wf/slice_timing_correction/sub-MONSTERA01_task-09_bold.nii.gz
+220226-22:19:52,387 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_02_wf.bold_hmc_wf.mcflirt" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/bold_hmc_wf/mcflirt".
+220226-22:19:52,389 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_04_wf.bold_hmc_wf.mcflirt" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/bold_hmc_wf/mcflirt".
+220226-22:19:52,394 nipype.workflow INFO:
+	 [Node] Running "mcflirt" ("nipype.interfaces.fsl.preprocess.MCFLIRT"), a CommandLine Interface with command:
+mcflirt -in /data/sub-MONSTERA01/func/sub-MONSTERA01_task-02_bold.nii.gz -out /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/bold_hmc_wf/mcflirt/sub-MONSTERA01_task-02_bold_mcf.nii.gz -reffile /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_02_wf/initial_boldref_wf/gen_avg/sub-MONSTERA01_task-02_sbref_merged_squeezed.nii.gz -mats -plots -rmsabs -rmsrel
+220226-22:19:52,399 nipype.workflow INFO:
+	 [Node] Running "mcflirt" ("nipype.interfaces.fsl.preprocess.MCFLIRT"), a CommandLine Interface with command:
+mcflirt -in /data/sub-MONSTERA01/func/sub-MONSTERA01_task-04_bold.nii.gz -out /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/bold_hmc_wf/mcflirt/sub-MONSTERA01_task-04_bold_mcf.nii.gz -reffile /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_04_wf/initial_boldref_wf/gen_avg/sub-MONSTERA01_task-04_sbref_merged_squeezed.nii.gz -mats -plots -rmsabs -rmsrel
+220226-22:19:52,412 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_06_wf.bold_hmc_wf.mcflirt" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/bold_hmc_wf/mcflirt".
+220226-22:19:52,419 nipype.workflow INFO:
+	 [Node] Running "mcflirt" ("nipype.interfaces.fsl.preprocess.MCFLIRT"), a CommandLine Interface with command:
+mcflirt -in /data/sub-MONSTERA01/func/sub-MONSTERA01_task-06_bold.nii.gz -out /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/bold_hmc_wf/mcflirt/sub-MONSTERA01_task-06_bold_mcf.nii.gz -reffile /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_06_wf/initial_boldref_wf/gen_avg/sub-MONSTERA01_task-06_sbref_merged_squeezed.nii.gz -mats -plots -rmsabs -rmsrel
+220226-22:19:52,445 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_03_wf.bold_hmc_wf.mcflirt" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/bold_hmc_wf/mcflirt".
+220226-22:19:52,452 nipype.workflow INFO:
+	 [Node] Running "mcflirt" ("nipype.interfaces.fsl.preprocess.MCFLIRT"), a CommandLine Interface with command:
+mcflirt -in /data/sub-MONSTERA01/func/sub-MONSTERA01_task-03_bold.nii.gz -out /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/bold_hmc_wf/mcflirt/sub-MONSTERA01_task-03_bold_mcf.nii.gz -reffile /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_03_wf/initial_boldref_wf/gen_avg/sub-MONSTERA01_task-03_sbref_merged_squeezed.nii.gz -mats -plots -rmsabs -rmsrel
+220226-22:19:52,457 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_01_wf.bold_hmc_wf.mcflirt" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/bold_hmc_wf/mcflirt".
+220226-22:19:52,462 nipype.workflow INFO:
+	 [Node] Running "mcflirt" ("nipype.interfaces.fsl.preprocess.MCFLIRT"), a CommandLine Interface with command:
+mcflirt -in /data/sub-MONSTERA01/func/sub-MONSTERA01_task-01_bold.nii.gz -out /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/bold_hmc_wf/mcflirt/sub-MONSTERA01_task-01_bold_mcf.nii.gz -reffile /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_01_wf/initial_boldref_wf/gen_avg/sub-MONSTERA01_task-01_sbref_merged_squeezed.nii.gz -mats -plots -rmsabs -rmsrel
+220226-22:19:52,470 nipype.workflow INFO:
+	 [Node] Setting-up "fmriprep_wf.single_subject_MONSTERA01_wf.func_preproc_task_05_wf.bold_hmc_wf.mcflirt" in "/work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/bold_hmc_wf/mcflirt".
+220226-22:19:52,483 nipype.workflow INFO:
+	 [Node] Running "mcflirt" ("nipype.interfaces.fsl.preprocess.MCFLIRT"), a CommandLine Interface with command:
+mcflirt -in /data/sub-MONSTERA01/func/sub-MONSTERA01_task-05_bold.nii.gz -out /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/bold_hmc_wf/mcflirt/sub-MONSTERA01_task-05_bold_mcf.nii.gz -reffile /work/fmriprep_wf/single_subject_MONSTERA01_wf/func_preproc_task_05_wf/initial_boldref_wf/gen_avg/sub-MONSTERA01_task-05_sbref_merged_squeezed.nii.gz -mats -plots -rmsabs -rmsrel
+slurmstepd: error: *** JOB 17663535 ON n197 CANCELLED AT 2022-02-26T23:32:11 ***

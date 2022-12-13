@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --partition=short        ### Partition (like a queue in PBS)
+#SBATCH --job-name=RSD     ### Job Name
+#SBATCH --output=./logs/07_R_%j.out         ### File in which to store job output
+#SBATCH --error=./logs/07_R_%j.err          ### File in which to store job error messages
+#SBATCH --time=0-20:00:00       ### Wall clock time limit in Days-HH:MM:SS
+#SBATCH --nodes=1               ### Number of nodes needed for the job
+#SBATCH --ntasks-per-node=1     ### Number of tasks to be launched per Node
+#SBATCH --mem=30G
+#SBATCH --account=kuhl_lab      ### Account used for job submission
+#SBATCH --partition=kuhl
+#SBATCH --mail-user=wanjiag@uoregon.edu
+#SBATCH --mail-type=END 
+                 
+module load R/4.0.2
+
+#export R_LIBS=/gpfs/projects/kuhl_lab/wanjiag/R_libs/
+
+Rscript /home/wanjiag/projects/MONSTERA/derivatives/scripts/R-analysis/correlation.R 
+

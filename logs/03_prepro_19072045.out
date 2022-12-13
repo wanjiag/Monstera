@@ -1,0 +1,383 @@
+sub-MONSTERA09
+calculating mask intersection...
+['/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-01_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-02_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-03_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-04_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-05_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-06_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-07_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-08_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-09_space-T1w_desc-brain_mask.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA09/func/sub-MONSTERA09_task-10_space-T1w_desc-brain_mask.nii.gz']
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:26:18,212 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:18.212290:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:26:18,238 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:18.212290:++ Authored by: KR Hammett & RW Cox
+220502-12:26:18,238 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:18.238951:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:26:18,239 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:18.238951:     Warnings of this type will be muted for this session.
+220502-12:26:18,239 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:18.238951:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:26:31,723 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:31.723798:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:26:32,259 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:32.259011:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:26:32,263 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:32.259011:++ Authored by: A cast of thousands
+220502-12:26:32,302 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:32.302783:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:26:32,302 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:32.302783:     Warnings of this type will be muted for this session.
+220502-12:26:32,302 nipype.interface INFO:
+	 stderr 2022-05-02T12:26:32.302783:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:27:34,88 nipype.interface INFO:
+	 stderr 2022-05-02T12:27:34.088787:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:28:33,973 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:33.973135:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:28:33,973 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:33.973135:++ Authored by: KR Hammett & RW Cox
+220502-12:28:33,983 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:33.983778:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:28:33,983 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:33.983778:     Warnings of this type will be muted for this session.
+220502-12:28:33,983 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:33.983778:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:28:47,194 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:47.194877:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:28:47,302 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:47.302783:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:28:47,303 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:47.302783:++ Authored by: A cast of thousands
+220502-12:28:47,303 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:47.302783:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:28:47,303 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:47.302783:     Warnings of this type will be muted for this session.
+220502-12:28:47,303 nipype.interface INFO:
+	 stderr 2022-05-02T12:28:47.302783:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:29:48,852 nipype.interface INFO:
+	 stderr 2022-05-02T12:29:48.852793:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:30:48,741 nipype.interface INFO:
+	 stderr 2022-05-02T12:30:48.741431:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:30:48,741 nipype.interface INFO:
+	 stderr 2022-05-02T12:30:48.741431:++ Authored by: KR Hammett & RW Cox
+220502-12:30:48,748 nipype.interface INFO:
+	 stderr 2022-05-02T12:30:48.748775:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:30:48,748 nipype.interface INFO:
+	 stderr 2022-05-02T12:30:48.748775:     Warnings of this type will be muted for this session.
+220502-12:30:48,748 nipype.interface INFO:
+	 stderr 2022-05-02T12:30:48.748775:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:31:01,939 nipype.interface INFO:
+	 stderr 2022-05-02T12:31:01.939806:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:31:02,318 nipype.interface INFO:
+	 stderr 2022-05-02T12:31:02.318785:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:31:02,319 nipype.interface INFO:
+	 stderr 2022-05-02T12:31:02.318785:++ Authored by: A cast of thousands
+220502-12:31:02,319 nipype.interface INFO:
+	 stderr 2022-05-02T12:31:02.318785:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:31:02,319 nipype.interface INFO:
+	 stderr 2022-05-02T12:31:02.318785:     Warnings of this type will be muted for this session.
+220502-12:31:02,319 nipype.interface INFO:
+	 stderr 2022-05-02T12:31:02.318785:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:32:03,641 nipype.interface INFO:
+	 stderr 2022-05-02T12:32:03.641371:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:33:03,355 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:03.355242:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:33:03,355 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:03.355242:++ Authored by: KR Hammett & RW Cox
+220502-12:33:03,365 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:03.365779:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:33:03,365 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:03.365779:     Warnings of this type will be muted for this session.
+220502-12:33:03,365 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:03.365779:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:33:16,853 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:16.853817:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:33:17,176 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:17.176787:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:33:17,177 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:17.176787:++ Authored by: A cast of thousands
+220502-12:33:17,177 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:17.176787:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:33:17,177 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:17.176787:     Warnings of this type will be muted for this session.
+220502-12:33:17,177 nipype.interface INFO:
+	 stderr 2022-05-02T12:33:17.176787:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:34:19,673 nipype.interface INFO:
+	 stderr 2022-05-02T12:34:19.673183:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:35:20,93 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:20.093365:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:35:20,93 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:20.093365:++ Authored by: KR Hammett & RW Cox
+220502-12:35:20,103 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:20.103775:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:35:20,103 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:20.103775:     Warnings of this type will be muted for this session.
+220502-12:35:20,103 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:20.103775:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:35:33,401 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:33.401791:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:35:33,741 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:33.741148:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:35:33,741 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:33.741148:++ Authored by: A cast of thousands
+220502-12:35:33,850 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:33.850795:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:35:33,850 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:33.850795:     Warnings of this type will be muted for this session.
+220502-12:35:33,850 nipype.interface INFO:
+	 stderr 2022-05-02T12:35:33.850795:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:36:35,304 nipype.interface INFO:
+	 stderr 2022-05-02T12:36:35.304798:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:37:35,582 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:35.582098:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:37:35,582 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:35.582098:++ Authored by: KR Hammett & RW Cox
+220502-12:37:35,592 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:35.592777:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:37:35,592 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:35.592777:     Warnings of this type will be muted for this session.
+220502-12:37:35,592 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:35.592777:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:37:49,200 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:49.200785:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:37:49,454 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:49.454786:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:37:49,455 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:49.454786:++ Authored by: A cast of thousands
+220502-12:37:49,455 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:49.454786:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:37:49,455 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:49.454786:     Warnings of this type will be muted for this session.
+220502-12:37:49,455 nipype.interface INFO:
+	 stderr 2022-05-02T12:37:49.454786:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:38:51,417 nipype.interface INFO:
+	 stderr 2022-05-02T12:38:51.417777:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:39:51,663 nipype.interface INFO:
+	 stderr 2022-05-02T12:39:51.663123:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:39:51,663 nipype.interface INFO:
+	 stderr 2022-05-02T12:39:51.663123:++ Authored by: KR Hammett & RW Cox
+220502-12:39:51,847 nipype.interface INFO:
+	 stderr 2022-05-02T12:39:51.847781:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:39:51,847 nipype.interface INFO:
+	 stderr 2022-05-02T12:39:51.847781:     Warnings of this type will be muted for this session.
+220502-12:39:51,847 nipype.interface INFO:
+	 stderr 2022-05-02T12:39:51.847781:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:40:05,190 nipype.interface INFO:
+	 stderr 2022-05-02T12:40:05.190770:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:40:05,455 nipype.interface INFO:
+	 stderr 2022-05-02T12:40:05.455831:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:40:05,456 nipype.interface INFO:
+	 stderr 2022-05-02T12:40:05.455831:++ Authored by: A cast of thousands
+220502-12:40:05,465 nipype.interface INFO:
+	 stderr 2022-05-02T12:40:05.465768:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:40:05,465 nipype.interface INFO:
+	 stderr 2022-05-02T12:40:05.465768:     Warnings of this type will be muted for this session.
+220502-12:40:05,465 nipype.interface INFO:
+	 stderr 2022-05-02T12:40:05.465768:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:41:06,824 nipype.interface INFO:
+	 stderr 2022-05-02T12:41:06.824812:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:42:08,290 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:08.290813:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:42:08,291 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:08.290813:++ Authored by: KR Hammett & RW Cox
+220502-12:42:08,301 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:08.301776:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:42:08,301 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:08.301776:     Warnings of this type will be muted for this session.
+220502-12:42:08,301 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:08.301776:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:42:21,765 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:21.765774:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:42:22,60 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:22.060768:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:42:22,60 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:22.060768:++ Authored by: A cast of thousands
+220502-12:42:22,61 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:22.060768:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:42:22,61 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:22.060768:     Warnings of this type will be muted for this session.
+220502-12:42:22,61 nipype.interface INFO:
+	 stderr 2022-05-02T12:42:22.060768:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:43:23,172 nipype.interface INFO:
+	 stderr 2022-05-02T12:43:23.172677:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:44:22,523 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:22.523461:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:44:22,523 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:22.523461:++ Authored by: KR Hammett & RW Cox
+220502-12:44:22,534 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:22.534779:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:44:22,534 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:22.534779:     Warnings of this type will be muted for this session.
+220502-12:44:22,534 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:22.534779:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:44:35,657 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:35.657792:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:44:35,950 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:35.950230:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:44:35,950 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:35.950230:++ Authored by: A cast of thousands
+220502-12:44:36,40 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:36.040781:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:44:36,40 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:36.040781:     Warnings of this type will be muted for this session.
+220502-12:44:36,40 nipype.interface INFO:
+	 stderr 2022-05-02T12:44:36.040781:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:45:38,842 nipype.interface INFO:
+	 stderr 2022-05-02T12:45:38.842763:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+triming data...
+(86, 103, 80, 458)    (86, 103, 80, 452)
+(1.702, 1.702, 1.7, 1.0)
+[[  1.70200002   0.           0.         -73.69020844]
+ [  0.           1.70200002   0.         -85.0999527 ]
+ [  0.           0.           1.70000005 -61.38673019]
+ [  0.           0.           0.           1.        ]]
+triming data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs.nii.gz
+220502-12:46:39,931 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:39.931808:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:46:39,932 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:39.931808:++ Authored by: KR Hammett & RW Cox
+220502-12:46:40,150 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:40.150779:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:46:40,150 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:40.150779:     Warnings of this type will be muted for this session.
+220502-12:46:40,150 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:40.150779:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:46:53,685 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:53.685769:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz
+Centering data ......
+3dcalc -a /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs.nii.gz -b /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_mean-img.nii.gz -c /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_space-T1w_desc-brain_intersect_mask.nii.gz -expr "c * min(200, a/b*100)*step(a)*step(b)" -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+220502-12:46:53,952 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:53.952213:++ 3dcalc: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+220502-12:46:53,952 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:53.952213:++ Authored by: A cast of thousands
+220502-12:46:53,962 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:53.962763:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs.nii.gz to FLOAT32
+220502-12:46:53,962 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:53.962763:     Warnings of this type will be muted for this session.
+220502-12:46:53,962 nipype.interface INFO:
+	 stderr 2022-05-02T12:46:53.962763:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+220502-12:47:55,413 nipype.interface INFO:
+	 stderr 2022-05-02T12:47:55.413764:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+Centering data...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz

@@ -1,0 +1,416 @@
+['/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz']
+(88, 103, 86)
+now on session: task-01 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.image.resampling.resample_img...
+resample_img(<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6bc18>, target_affine=None, target_shape=None, copy=False, interpolation='nearest')
+_____________________________________________________resample_img - 0.0s, 0.0min
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6bc18>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.003302  0.088022 -0.011982  ...     1.0 -0.973742  0.922260
+7   -0.008054  0.043051 -0.030386  ...     1.0 -0.969365  0.909504
+8    0.000145  0.029683  0.003799  ...     1.0 -0.964989  0.896806
+9    0.005656  0.081713  0.008300  ...     1.0 -0.960613  0.884165
+10   0.013370  0.098304 -0.018873  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453 -0.074221 -0.010679  0.126403  ...     1.0  0.982495  0.947943
+454 -0.061632  0.069242  0.166350  ...     1.0  0.986871  0.960871
+455 -0.047304  0.046189  0.139838  ...     1.0  0.991247  0.973857
+456 -0.061741  0.023815  0.137268  ...     1.0  0.995624  0.986900
+457 -0.071422  0.035092  0.139725  ...     1.0  1.000000  1.000000
+
+[452 rows x 27 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.1s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-01 finished denoise and z-score--------------------
+now on session: task-02 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b550>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.027206  0.170554  0.012313  ...     1.0 -0.973742  0.922260
+7    0.035071  0.087288 -0.013449  ...     1.0 -0.969365  0.909504
+8    0.036394  0.024224  0.008262  ...     1.0 -0.964989  0.896806
+9    0.025613  0.022711  0.011641  ...     1.0 -0.960613  0.884165
+10   0.037472  0.108553 -0.001570  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.139032  0.438515 -0.019002  ...     1.0  0.982495  0.947943
+454  0.138228  0.479312 -0.032902  ...     1.0  0.986871  0.960871
+455  0.156795  0.515485 -0.039605  ...     1.0  0.991247  0.973857
+456  0.157692  0.461960 -0.075287  ...     1.0  0.995624  0.986900
+457  0.147414  0.487189 -0.055683  ...     1.0  1.000000  1.000000
+
+[452 rows x 27 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.1s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-02 finished denoise and z-score--------------------
+now on session: task-03 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b198>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.018932  0.192820  0.073147  ...     1.0 -0.973742  0.922260
+7    0.023441  0.264439  0.064391  ...     1.0 -0.969365  0.909504
+8    0.020911  0.185041  0.061087  ...     1.0 -0.964989  0.896806
+9    0.027608  0.142302  0.057662  ...     1.0 -0.960613  0.884165
+10   0.017923  0.116041  0.075217  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.134319  0.303217  0.244657  ...     1.0  0.982495  0.947943
+454  0.133410  0.265760  0.227612  ...     1.0  0.986871  0.960871
+455  0.126872  0.305810  0.281807  ...     1.0  0.991247  0.973857
+456  0.134523  0.352721  0.263549  ...     1.0  0.995624  0.986900
+457  0.148005  0.280048  0.253644  ...     1.0  1.000000  1.000000
+
+[452 rows x 23 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.1s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-03 finished denoise and z-score--------------------
+now on session: task-04 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b080>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6   -0.004634  0.138935 -0.042946  ...     1.0 -0.973742  0.922260
+7    0.012753  0.173356 -0.050862  ...     1.0 -0.969365  0.909504
+8    0.009389  0.204567 -0.057240  ...     1.0 -0.964989  0.896806
+9    0.007416  0.147072 -0.065191  ...     1.0 -0.960613  0.884165
+10   0.013713  0.134331 -0.044082  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.047271  0.240087  0.251824  ...     1.0  0.982495  0.947943
+454  0.041782  0.195411  0.199758  ...     1.0  0.986871  0.960871
+455  0.058182  0.217047  0.249775  ...     1.0  0.991247  0.973857
+456  0.042077  0.264098  0.231065  ...     1.0  0.995624  0.986900
+457  0.053435  0.203888  0.201036  ...     1.0  1.000000  1.000000
+
+[452 rows x 24 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.0s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-04 finished denoise and z-score--------------------
+now on session: task-05 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b5c0>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.014560  0.141782  0.021588  ...     1.0 -0.973742  0.922260
+7    0.018114  0.130552 -0.002172  ...     1.0 -0.969365  0.909504
+8    0.015312  0.106334  0.024509  ...     1.0 -0.964989  0.896806
+9    0.020147  0.175621  0.046785  ...     1.0 -0.960613  0.884165
+10   0.011890  0.174347  0.026760  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453 -0.066660  0.354077  0.208762  ...     1.0  0.982495  0.947943
+454 -0.067647  0.342492 -0.027858  ...     1.0  0.986871  0.960871
+455 -0.067988  0.379855  0.079747  ...     1.0  0.991247  0.973857
+456 -0.076233  0.389614  0.113722  ...     1.0  0.995624  0.986900
+457 -0.070530  0.302750  0.060143  ...     1.0  1.000000  1.000000
+
+[452 rows x 24 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.1s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-05 finished denoise and z-score--------------------
+now on session: task-06 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6bb00>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.021272  0.128499 -0.026642  ...     1.0 -0.973742  0.922260
+7    0.030578  0.167103  0.011510  ...     1.0 -0.969365  0.909504
+8    0.021564  0.114306 -0.008491  ...     1.0 -0.964989  0.896806
+9    0.024513  0.088620 -0.023237  ...     1.0 -0.960613  0.884165
+10   0.031548  0.157135  0.035543  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.085085  0.127497 -0.050158  ...     1.0  0.982495  0.947943
+454  0.098993  0.175911 -0.051766  ...     1.0  0.986871  0.960871
+455  0.081596  0.128385 -0.057485  ...     1.0  0.991247  0.973857
+456  0.081628  0.158583 -0.045200  ...     1.0  0.995624  0.986900
+457  0.092597  0.225721 -0.053245  ...     1.0  1.000000  1.000000
+
+[452 rows x 20 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.2s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-06 finished denoise and z-score--------------------
+now on session: task-07 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b828>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.073794  0.098119  0.181387  ...     1.0 -0.973742  0.922260
+7    0.083727  0.065737  0.229335  ...     1.0 -0.969365  0.909504
+8    0.099150  0.026810  0.207226  ...     1.0 -0.964989  0.896806
+9    0.087126 -0.034608  0.208314  ...     1.0 -0.960613  0.884165
+10   0.094989 -0.063226  0.246875  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.120915  0.009144  0.293850  ...     1.0  0.982495  0.947943
+454  0.120006  0.045719  0.330062  ...     1.0  0.986871  0.960871
+455  0.142078  0.081104  0.294835  ...     1.0  0.991247  0.973857
+456  0.139091  0.041937  0.327322  ...     1.0  0.995624  0.986900
+457  0.136129  0.041017  0.312468  ...     1.0  1.000000  1.000000
+
+[452 rows x 20 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.1s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-07 finished denoise and z-score--------------------
+now on session: task-08 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b6a0>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.014572  0.079889 -0.026451  ...     1.0 -0.973742  0.922260
+7    0.004101  0.077749 -0.021153  ...     1.0 -0.969365  0.909504
+8    0.006902  0.159559 -0.014861  ...     1.0 -0.964989  0.896806
+9   -0.003668  0.159982 -0.019594  ...     1.0 -0.960613  0.884165
+10  -0.011680  0.095068 -0.038388  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.060999  0.034908 -0.049022  ...     1.0  0.982495  0.947943
+454  0.041379  0.176304 -0.005779  ...     1.0  0.986871  0.960871
+455  0.044937  0.178035 -0.037552  ...     1.0  0.991247  0.973857
+456  0.043068  0.077325 -0.040333  ...     1.0  0.995624  0.986900
+457  0.039101  0.097218  0.007791  ...     1.0  1.000000  1.000000
+
+[452 rows x 21 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.0s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-08 finished denoise and z-score--------------------
+now on session: task-09 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b5c0>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.024829  0.037701  0.054111  ...     1.0 -0.973742  0.922260
+7    0.034948  0.082243  0.038604  ...     1.0 -0.969365  0.909504
+8    0.038283  0.008885  0.024503  ...     1.0 -0.964989  0.896806
+9    0.035902  0.014753  0.050742  ...     1.0 -0.960613  0.884165
+10   0.036395 -0.017025  0.050510  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.058519 -0.058228  0.136401  ...     1.0  0.982495  0.947943
+454  0.052781 -0.025777  0.194465  ...     1.0  0.986871  0.960871
+455  0.057086 -0.013405  0.164248  ...     1.0  0.991247  0.973857
+456  0.051533 -0.107052  0.170957  ...     1.0  0.995624  0.986900
+457  0.052481 -0.094005  0.172925  ...     1.0  1.000000  1.000000
+
+[452 rows x 17 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.1s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-09 finished denoise and z-score--------------------
+now on session: task-10 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+________________________________________________________________________________
+[Memory] Calling nilearn.input_data.nifti_masker.filter_and_mask...
+filter_and_mask('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', 
+<nibabel.nifti1.Nifti1Image object at 0x2aaadbb6b198>, { 'detrend': False,
+  'dtype': None,
+  'high_pass': 0.0078125,
+  'high_variance_confounds': False,
+  'low_pass': None,
+  'reports': True,
+  'runs': None,
+  'smoothing_fwhm': None,
+  'standardize': True,
+  'standardize_confounds': True,
+  't_r': 1,
+  'target_affine': None,
+  'target_shape': None}, memory_level=1, memory=Memory(location=nilearn_cache/joblib), verbose=1, confounds=[       trans_x   trans_y   trans_z  ...  poly_0    poly_1    poly_2
+6    0.010379  0.037096 -0.010434  ...     1.0 -0.973742  0.922260
+7    0.011683  0.055333 -0.006989  ...     1.0 -0.969365  0.909504
+8    0.000101  0.117223 -0.002690  ...     1.0 -0.964989  0.896806
+9    0.010196  0.043081 -0.038863  ...     1.0 -0.960613  0.884165
+10   0.008182  0.126879 -0.022202  ...     1.0 -0.956236  0.871582
+..        ...       ...       ...  ...     ...       ...       ...
+453  0.060433  0.188331 -0.123806  ...     1.0  0.982495  0.947943
+454  0.043786  0.250628 -0.057189  ...     1.0  0.986871  0.960871
+455  0.081881  0.305489 -0.085107  ...     1.0  0.991247  0.973857
+456  0.076707  0.269833 -0.115581  ...     1.0  0.995624  0.986900
+457  0.057592  0.293235 -0.084807  ...     1.0  1.000000  1.000000
+
+[452 rows x 19 columns]], sample_mask=None, copy=True, dtype=None)
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA08/sub-MONSTERA08_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+_________________________________________________filter_and_mask - 34.2s, 0.6min
+epi_mask_data shape: (88, 103, 86, 452)
+--------------------sub-MONSTERA08 task-10 finished denoise and z-score--------------------

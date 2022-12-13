@@ -1,0 +1,6 @@
+/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/input_data/__init__.py:27: FutureWarning: The import path 'nilearn.input_data' is deprecated in version 0.9. Importing from 'nilearn.input_data' will be possible at least until release 0.13.0. Please import from 'nilearn.maskers' instead.
+  warnings.warn(message, FutureWarning)
+slurmstepd: error: error from open of cgroup '/sys/fs/cgroup/memory/slurm/uid_1724/job_22661500/step_batch' : No such file or directory
+slurmstepd: error: common_cgroup_lock error: No such file or directory
+slurmstepd: error: problem with oom_pipe[0]
+slurmstepd: fatal: cgroup_v1.c:1181 _oom_event_monitor: pthread_mutex_lock(): Invalid argument

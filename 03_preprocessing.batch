@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --partition=short        ### Partition (like a queue in PBS)
+#SBATCH --job-name=prepro      ### Job Name
+#SBATCH --output=./logs/03_prepro_%j.out         ### File in which to store job output
+#SBATCH --error=./logs/03_prepro_%j.err          ### File in which to store job error messages
+#SBATCH --time=0-06:00:00       ### Wall clock time limit in Days-HH:MM:SS
+#SBATCH --nodes=1               ### Number of nodes needed for the job
+#SBATCH --ntasks-per-node=1     ### Number of tasks to be launched per Node
+#SBATCH --mem=20G
+#SBATCH --account=kuhl_lab      ### Account used for job submission
+#SBATCH --partition=kuhl
+#SBATCH --mail-user=wanjiag@uoregon.edu
+#SBATCH --mail-type=END 
+                 
+module load tensorflow
+module load fsl
+module load freesurfer
+module load afni
+
+conda activate /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/monstera_conda_env 
+
+python /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/preprocessing.py
+
+python /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py

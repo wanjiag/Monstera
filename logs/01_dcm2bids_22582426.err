@@ -1,0 +1,4 @@
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/dcm2bids.py", line 133
+    if subid == 'MONSTERA26':
+                            ^
+TabError: inconsistent use of tabs and spaces in indentation

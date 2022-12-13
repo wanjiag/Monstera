@@ -1,0 +1,25 @@
+Lmod has detected the following error: Cannot load module "miniconda/20190102"
+because these module(s) are loaded:
+   python3
+
+While processing the following module(s):
+    Module fullname     Module Filename
+    ---------------     ---------------
+    miniconda/20190102  /packages/modulefiles/Core/miniconda/20190102.lua
+    tensorflow          /packages/modulefiles/Core/tensorflow.lua
+
+ERROR: The install method you used for conda--probably either `pip install conda`
+or `easy_install conda`--is not compatible with using conda as an application.
+If your intention is to install conda as a standalone application, currently
+supported install methods include the Anaconda installer and the miniconda
+installer.  You can download the miniconda installer from
+https://conda.io/miniconda.html.
+
+Traceback (most recent call last):
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/rois.py", line 1, in <module>
+    import pandas as pd
+ImportError: No module named pandas
+Traceback (most recent call last):
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/hippocampus_subfields.py", line 1, in <module>
+    from nipype.interfaces import fsl
+ImportError: No module named nipype.interfaces

@@ -1,0 +1,450 @@
+--------------------sub-MONSTERA20-------------------
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sourcedata/freesurfer/sub-MONSTERA20/mri/aparc.a2009s+aseg.mgz
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/aparc.a2009s+aseg.nii.gz
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_desc-aparcaseg_dseg.nii.gz
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/run-5_desc-aparcaseg_dseg.nii.gz
+calculating mean......
+221018-14:36:33,271 nipype.utils WARNING:
+	 A newer version (1.8.4) of nipy/nipype is available. You are using 1.7.1
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-01_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:36:33,407 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:33.407443:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:36:33,407 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:33.407443:++ Authored by: KR Hammett & RW Cox
+221018-14:36:33,434 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:33.434901:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-01_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:36:33,435 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:33.434901:     Warnings of this type will be muted for this session.
+221018-14:36:33,435 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:33.434901:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:36:42,665 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:42.665382:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-02_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:36:42,776 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:42.776074:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:36:42,776 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:42.776074:++ Authored by: KR Hammett & RW Cox
+221018-14:36:42,836 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:42.836690:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-02_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:36:42,836 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:42.836690:     Warnings of this type will be muted for this session.
+221018-14:36:42,836 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:42.836690:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:36:52,82 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:52.082873:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-03_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:36:52,178 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:52.178024:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:36:52,178 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:52.178024:++ Authored by: KR Hammett & RW Cox
+221018-14:36:52,232 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:52.232609:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-03_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:36:52,232 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:52.232609:     Warnings of this type will be muted for this session.
+221018-14:36:52,232 nipype.interface INFO:
+	 stderr 2022-10-18T14:36:52.232609:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:01,490 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:01.490641:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-04_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:01,582 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:01.582390:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:01,582 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:01.582390:++ Authored by: KR Hammett & RW Cox
+221018-14:37:01,655 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:01.655114:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-04_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:01,655 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:01.655114:     Warnings of this type will be muted for this session.
+221018-14:37:01,655 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:01.655114:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:10,895 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:10.895774:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-05_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:10,987 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:10.987145:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:10,987 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:10.987145:++ Authored by: KR Hammett & RW Cox
+221018-14:37:11,23 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:11.023770:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-05_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:11,23 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:11.023770:     Warnings of this type will be muted for this session.
+221018-14:37:11,23 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:11.023770:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:20,171 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:20.171379:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-06_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:20,264 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:20.263934:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:20,264 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:20.263934:++ Authored by: KR Hammett & RW Cox
+221018-14:37:20,291 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:20.291590:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-06_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:20,291 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:20.291590:     Warnings of this type will be muted for this session.
+221018-14:37:20,291 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:20.291590:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:29,512 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:29.512494:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-07_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:29,604 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:29.604411:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:29,604 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:29.604411:++ Authored by: KR Hammett & RW Cox
+221018-14:37:29,661 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:29.661605:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-07_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:29,661 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:29.661605:     Warnings of this type will be muted for this session.
+221018-14:37:29,661 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:29.661605:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:38,905 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:38.905532:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-08_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:39,29 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:39.029861:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:39,30 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:39.029861:++ Authored by: KR Hammett & RW Cox
+221018-14:37:39,74 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:39.074962:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-08_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:39,75 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:39.074962:     Warnings of this type will be muted for this session.
+221018-14:37:39,75 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:39.074962:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:48,327 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:48.327770:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-09_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:48,420 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:48.420014:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:48,420 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:48.420014:++ Authored by: KR Hammett & RW Cox
+221018-14:37:48,469 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:48.469202:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-09_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:48,469 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:48.469202:     Warnings of this type will be muted for this session.
+221018-14:37:48,469 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:48.469202:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:37:57,667 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:57.667478:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-10_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:37:57,760 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:57.760208:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:37:57,760 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:57.760208:++ Authored by: KR Hammett & RW Cox
+221018-14:37:57,835 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:57.835468:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA20/sub-MONSTERA20_task-10_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:37:57,835 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:57.835468:     Warnings of this type will be muted for this session.
+221018-14:37:57,835 nipype.interface INFO:
+	 stderr 2022-10-18T14:37:57.835468:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:38:07,79 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:07.079727:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/sub-MONSTERA20_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -div 10 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz
+--------------------Angular Gyrus-------------------
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/aparc.a2009s+aseg.nii.gz -thr 11125 -uthr 11125 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ctx_lh_G_pariet_inf-Angular.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/aparc.a2009s+aseg.nii.gz -thr 12125 -uthr 12125 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ctx_rh_G_pariet_inf-Angular.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ctx_lh_G_pariet_inf-Angular.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ctx_rh_G_pariet_inf-Angular.nii.gz -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/angular_gyrus.nii.gz
+flirt -in /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/angular_gyrus.nii.gz -ref /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz -out /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/angular_gyrus_2_epi.nii.gz -omat /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/angular_gyrus_2_epi.mat -applyxfm -usesqform
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/angular_gyrus_2_epi.nii.gz -thr 0.5000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/angular_gyrus_2_epi_thre_0.5.nii.gz
+--------------------Whole Hippocampus-------------------
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/run-5_desc-aparcaseg_dseg.nii.gz -thr 17 -uthr 17 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/Left-Hippocampus.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/run-5_desc-aparcaseg_dseg.nii.gz -thr 53 -uthr 53 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/Right-Hippocampus.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/Left-Hippocampus.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/Right-Hippocampus.nii.gz -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/hippocampus.nii.gz
+flirt -in /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/hippocampus.nii.gz -ref /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz -out /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/hippocampus_2_epi.nii.gz -omat /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/hippocampus_2_epi.mat -applyxfm -usesqform
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/hippocampus_2_epi.nii.gz -thr 0.5000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/hippocampus_2_epi_thre_0.5.nii.gz
+--------------------PPA-------------------
+/home/wanjiag/projects/MONSTERA/derivatives/rois/mni/ppa/ppa.nii.gz 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/ppa/ppa.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ppa_mni_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ppa_mni_2_epi.nii.gz -thr 0.5000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/ppa_mni_2_epi_thr_0.5.nii.gz
+--------------------EVC-------------------
+/home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi1_lh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_lh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_lh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_lh_2_epi_thr_50.nii.gz
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi1_rh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_rh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_rh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_rh_2_epi_thr_50.nii.gz
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi2_lh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_lh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_lh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_lh_2_epi_thr_50.nii.gz
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi2_rh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_rh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_rh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_rh_2_epi_thr_50.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_lh_2_epi_thr_50.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi1_rh_2_epi_thr_50.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_lh_2_epi_thr_50.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/perc_VTPM_vol_roi2_rh_2_epi_thr_50.nii.gz -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA20/evc_2_epi_thr_0.5.nii.gz
+--------------------sub-MONSTERA21-------------------
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sourcedata/freesurfer/sub-MONSTERA21/mri/aparc.a2009s+aseg.mgz
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/aparc.a2009s+aseg.nii.gz
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_desc-aparcaseg_dseg.nii.gz
+/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/run-5_desc-aparcaseg_dseg.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-01_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:38:25,631 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:25.631567:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:38:25,631 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:25.631567:++ Authored by: KR Hammett & RW Cox
+221018-14:38:25,671 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:25.671609:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-01_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:38:25,671 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:25.671609:     Warnings of this type will be muted for this session.
+221018-14:38:25,671 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:25.671609:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:38:36,536 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:36.536934:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-02_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:38:36,628 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:36.628834:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:38:36,629 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:36.628834:++ Authored by: KR Hammett & RW Cox
+221018-14:38:36,692 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:36.692353:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-02_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:38:36,692 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:36.692353:     Warnings of this type will be muted for this session.
+221018-14:38:36,692 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:36.692353:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:38:47,733 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:47.733153:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-03_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:38:47,825 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:47.825518:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:38:47,825 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:47.825518:++ Authored by: KR Hammett & RW Cox
+221018-14:38:47,870 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:47.870200:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-03_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:38:47,870 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:47.870200:     Warnings of this type will be muted for this session.
+221018-14:38:47,870 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:47.870200:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:38:58,807 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:58.807016:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-04_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:38:58,898 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:58.898514:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:38:58,898 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:58.898514:++ Authored by: KR Hammett & RW Cox
+221018-14:38:58,950 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:58.950194:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-04_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:38:58,950 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:58.950194:     Warnings of this type will be muted for this session.
+221018-14:38:58,950 nipype.interface INFO:
+	 stderr 2022-10-18T14:38:58.950194:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:39:09,836 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:09.836446:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-05_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:39:09,928 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:09.927942:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:39:09,928 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:09.927942:++ Authored by: KR Hammett & RW Cox
+221018-14:39:09,955 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:09.955895:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-05_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:39:09,955 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:09.955895:     Warnings of this type will be muted for this session.
+221018-14:39:09,956 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:09.955895:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:39:20,901 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:20.901827:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-06_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:39:20,993 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:20.993559:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:39:20,993 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:20.993559:++ Authored by: KR Hammett & RW Cox
+221018-14:39:21,44 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:21.044367:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-06_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:39:21,44 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:21.044367:     Warnings of this type will be muted for this session.
+221018-14:39:21,44 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:21.044367:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:39:31,948 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:31.948343:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-07_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:39:32,40 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:32.039997:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:39:32,40 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:32.039997:++ Authored by: KR Hammett & RW Cox
+221018-14:39:32,93 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:32.093110:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-07_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:39:32,93 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:32.093110:     Warnings of this type will be muted for this session.
+221018-14:39:32,93 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:32.093110:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:39:43,66 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:43.066361:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-08_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:39:43,157 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:43.157310:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:39:43,157 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:43.157310:++ Authored by: KR Hammett & RW Cox
+221018-14:39:43,200 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:43.200851:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-08_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:39:43,200 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:43.200851:     Warnings of this type will be muted for this session.
+221018-14:39:43,200 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:43.200851:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:39:54,82 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:54.082803:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-09_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:39:54,176 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:54.176362:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:39:54,176 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:54.176362:++ Authored by: KR Hammett & RW Cox
+221018-14:39:54,236 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:54.236846:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-09_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:39:54,236 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:54.236846:     Warnings of this type will be muted for this session.
+221018-14:39:54,237 nipype.interface INFO:
+	 stderr 2022-10-18T14:39:54.236846:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:40:05,158 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:05.158536:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean......
+3dTstat -mean -prefix /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-10_desc-preproc_bold_trim6_denoise_z-scored.nii.gz
+221018-14:40:05,252 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:05.252508:++ 3dTstat: AFNI version=AFNI_18.2.04 (Jul  6 2018) [64-bit]
+221018-14:40:05,252 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:05.252508:++ Authored by: KR Hammett & RW Cox
+221018-14:40:05,289 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:05.289903:** AFNI converts NIFTI_datatype=64 (FLOAT64) in file /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA21/sub-MONSTERA21_task-10_desc-preproc_bold_trim6_denoise_z-scored.nii.gz to FLOAT32
+221018-14:40:05,290 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:05.289903:     Warnings of this type will be muted for this session.
+221018-14:40:05,290 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:05.289903:     Set AFNI_NIFTI_TYPE_WARN to YES to see them all, NO to see none.
+221018-14:40:16,191 nipype.interface INFO:
+	 stderr 2022-10-18T14:40:16.191659:++ Output dataset /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+calculating mean...output to /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-01_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-02_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-03_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-04_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-05_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-06_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-07_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-08_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-09_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/sub-MONSTERA21_task-10_desc-preproc_bold_trim6_denoise_z-scored_mean.nii.gz -div 10 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz
+--------------------Angular Gyrus-------------------
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/aparc.a2009s+aseg.nii.gz -thr 11125 -uthr 11125 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ctx_lh_G_pariet_inf-Angular.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/aparc.a2009s+aseg.nii.gz -thr 12125 -uthr 12125 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ctx_rh_G_pariet_inf-Angular.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ctx_lh_G_pariet_inf-Angular.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ctx_rh_G_pariet_inf-Angular.nii.gz -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/angular_gyrus.nii.gz
+flirt -in /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/angular_gyrus.nii.gz -ref /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz -out /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/angular_gyrus_2_epi.nii.gz -omat /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/angular_gyrus_2_epi.mat -applyxfm -usesqform
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/angular_gyrus_2_epi.nii.gz -thr 0.5000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/angular_gyrus_2_epi_thre_0.5.nii.gz
+--------------------Whole Hippocampus-------------------
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/run-5_desc-aparcaseg_dseg.nii.gz -thr 17 -uthr 17 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/Left-Hippocampus.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/run-5_desc-aparcaseg_dseg.nii.gz -thr 53 -uthr 53 /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/Right-Hippocampus.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/Left-Hippocampus.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/Right-Hippocampus.nii.gz -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/hippocampus.nii.gz
+flirt -in /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/hippocampus.nii.gz -ref /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz -out /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/hippocampus_2_epi.nii.gz -omat /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/hippocampus_2_epi.mat -applyxfm -usesqform
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/hippocampus_2_epi.nii.gz -thr 0.5000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/hippocampus_2_epi_thre_0.5.nii.gz
+--------------------PPA-------------------
+/home/wanjiag/projects/MONSTERA/derivatives/rois/mni/ppa/ppa.nii.gz 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/ppa/ppa.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ppa_mni_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ppa_mni_2_epi.nii.gz -thr 0.5000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/ppa_mni_2_epi_thr_0.5.nii.gz
+--------------------EVC-------------------
+/home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5 
+ /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi1_lh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_lh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_lh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_lh_2_epi_thr_50.nii.gz
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi1_rh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_rh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_rh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_rh_2_epi_thr_50.nii.gz
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi2_lh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_lh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_lh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_lh_2_epi_thr_50.nii.gz
+antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input /home/wanjiag/projects/MONSTERA/derivatives/rois/mni/visual_cortex/subj_vol_all/perc_VTPM_vol_roi2_rh.nii.gz --interpolation Linear --output /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_rh_2_epi.nii.gz --reference-image /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz --transform /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_rh_2_epi.nii.gz -thr 50.0000000000 -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_rh_2_epi_thr_50.nii.gz
+fslmaths /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_lh_2_epi_thr_50.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi1_rh_2_epi_thr_50.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_lh_2_epi_thr_50.nii.gz -add /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/perc_VTPM_vol_roi2_rh_2_epi_thr_50.nii.gz -bin /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA21/evc_2_epi_thr_0.5.nii.gz
+221018-14:40:45,578 nipype.utils WARNING:
+	 A newer version (1.8.4) of nipy/nipype is available. You are using 1.7.1
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/tse.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/T2_to_T1.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/T2_to_T1.mat -cost mutualinfo -dof 6
+---------------------Whole hippocampus: sub-MONSTERA20----------------------
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/final/sub-MONSTERA20_left_lfseg_corr_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/left-ca1_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/final/sub-MONSTERA20_right_lfseg_corr_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/right-ca1_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/left-ca1_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/right-ca1_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca1_epi-space_thre_0.5.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/final/sub-MONSTERA20_left_lfseg_corr_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/left-ca23dg_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/final/sub-MONSTERA20_right_lfseg_corr_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/right-ca23dg_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/left-ca23dg_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/right-ca23dg_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/whole/ca23dg_epi-space_thre_0.5.nii.gz
+---------------------Hippocampus body: sub-MONSTERA20----------------------
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/final/sub-MONSTERA20_left_lfseg_corr_nogray.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/sub-MONSTERA20_left_body_nogray.nii.gz 0 -1 0 -1 31 9
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/front_empty.nii.gz 0 -1 0 -1 0 30
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/end_empty.nii.gz 0 -1 0 -1 0 26
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA20/final/sub-MONSTERA20_right_lfseg_corr_nogray.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/sub-MONSTERA20_right_body_nogray.nii.gz 0 -1 0 -1 31 10
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/front_empty.nii.gz 0 -1 0 -1 0 30
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/end_empty.nii.gz 0 -1 0 -1 0 25
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/sub-MONSTERA20_left_body_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/left-ca1-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/sub-MONSTERA20_right_body_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/right-ca1-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/left-ca1-body_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/right-ca1-body_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca1-body_epi-space_thre_0.5.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/sub-MONSTERA20_left_body_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/left-ca23dg-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/sub-MONSTERA20_right_body_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/right-ca23dg-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/left-ca23dg-body_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/right-ca23dg-body_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA20/anat/sub-MONSTERA20_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA20/ashs/body/ca23dg-body_epi-space_thre_0.5.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/tse.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/T2_to_T1.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/T2_to_T1.mat -cost mutualinfo -dof 6
+---------------------Whole hippocampus: sub-MONSTERA21----------------------
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/final/sub-MONSTERA21_left_lfseg_corr_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/left-ca1_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/final/sub-MONSTERA21_right_lfseg_corr_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/right-ca1_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/left-ca1_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/right-ca1_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca1_epi-space_thre_0.5.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/final/sub-MONSTERA21_left_lfseg_corr_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/left-ca23dg_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/final/sub-MONSTERA21_right_lfseg_corr_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/right-ca23dg_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/left-ca23dg_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/right-ca23dg_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/whole/ca23dg_epi-space_thre_0.5.nii.gz
+---------------------Hippocampus body: sub-MONSTERA21----------------------
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/final/sub-MONSTERA21_left_lfseg_corr_nogray.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/sub-MONSTERA21_left_body_nogray.nii.gz 0 -1 0 -1 33 10
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/front_empty.nii.gz 0 -1 0 -1 0 32
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/end_empty.nii.gz 0 -1 0 -1 0 23
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA21/final/sub-MONSTERA21_right_lfseg_corr_nogray.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/sub-MONSTERA21_right_body_nogray.nii.gz 0 -1 0 -1 31 12
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/front_empty.nii.gz 0 -1 0 -1 0 30
+fslroi /home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/empty_t2.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/end_empty.nii.gz 0 -1 0 -1 0 23
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/sub-MONSTERA21_left_body_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/left-ca1-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/sub-MONSTERA21_right_body_nogray.nii.gz -thr 1 -uthr 1 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/right-ca1-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/left-ca1-body_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/right-ca1-body_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca1-body_epi-space_thre_0.5.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/sub-MONSTERA21_left_body_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/left-ca23dg-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/sub-MONSTERA21_right_body_nogray.nii.gz -thr 2 -uthr 4 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/right-ca23dg-body_T2w-space.nii.gz
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/left-ca23dg-body_T2w-space.nii.gz -add /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/right-ca23dg-body_T2w-space.nii.gz /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_T2w-space.nii.gz
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_T2w-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/fmriprep/sub-MONSTERA21/anat/sub-MONSTERA21_run-5_desc-preproc_T1w.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_T2w-to-T1-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_T2w-to-T1-space.mat -applyxfm -init /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/T2_to_T1.mat
+flirt -in /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_T2w-to-T1-space.nii.gz -ref /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/avg_all_fmriprerp_func.nii.gz -out /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_epi-space.nii.gz -omat /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_epi-space.mat -applyxfm -usesqform
+fslmaths /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_epi-space.nii.gz -thr 0.5000000000 -bin /home/wanjiag/projects/MONSTERA/derivatives/rois/sub-MONSTERA21/ashs/body/ca23dg-body_epi-space_thre_0.5.nii.gz

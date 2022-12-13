@@ -1,0 +1,14 @@
+/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/input_data/__init__.py:27: FutureWarning: The import path 'nilearn.input_data' is deprecated in version 0.9. Importing from 'nilearn.input_data' will be possible at least until release 0.13.0. Please import from 'nilearn.maskers' instead.
+  warnings.warn(message, FutureWarning)
+Traceback (most recent call last):
+  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/extract_values.py", line 32, in <module>
+    region_data = masker.fit_transform(file_dir)
+  File "/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/maskers/base_masker.py", line 253, in fit_transform
+    return self.fit(**fit_params).transform(X,
+  File "/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/maskers/nifti_masker.py", line 397, in fit
+    self.mask_img_ = _utils.check_niimg_3d(self.mask_img)
+  File "/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/_utils/niimg_conversions.py", line 338, in check_niimg_3d
+    return check_niimg(niimg, ensure_ndim=3, dtype=dtype)
+  File "/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/_utils/niimg_conversions.py", line 271, in check_niimg
+    raise ValueError("File not found: '%s'" % niimg)
+ValueError: File not found: '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/rois/sub-MONSTERA06/evc_2_epi_thr_0.5_masked.nii.gz'

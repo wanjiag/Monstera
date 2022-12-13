@@ -1,0 +1,2 @@
+WARNING: skipping mount of /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep_tmp: stat /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep_tmp: no such file or directory
+FATAL:   container creation failed: mount /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep_tmp->/work error: while mounting /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep_tmp: mount source /gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/fmriprep_tmp doesn't exist

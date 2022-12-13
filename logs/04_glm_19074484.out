@@ -1,0 +1,112 @@
+['/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz', '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz']
+(86, 103, 80)
+now on session: task-01 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-01_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-01 finished denoise and z-score--------------------
+now on session: task-02 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-02_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-02 finished denoise and z-score--------------------
+now on session: task-03 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-03_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-03 finished denoise and z-score--------------------
+now on session: task-04 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-04_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-04 finished denoise and z-score--------------------
+now on session: task-05 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-05_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-05 finished denoise and z-score--------------------
+now on session: task-06 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-06_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-06 finished denoise and z-score--------------------
+now on session: task-07 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-07_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-07 finished denoise and z-score--------------------
+now on session: task-08 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-08_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-08 finished denoise and z-score--------------------
+now on session: task-09 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-09_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-09 finished denoise and z-score--------------------
+now on session: task-10 for /projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz
+(1.702, 1.702, 1.7, 1.0)
+transform next...
+<class 'str'>
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess/sub-MONSTERA09/sub-MONSTERA09_task-10_space-T1w_desc-preproc_bold_trim6TRs_centered-masked.nii.gz')
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+epi_mask_data shape: (86, 103, 80, 452)
+--------------------sub-MONSTERA09 task-10 finished denoise and z-score--------------------
