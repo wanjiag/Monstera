@@ -10,6 +10,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+![valid-valid](./pngs/valid-valid.png){ width=50% }
+![valid-invalid](./pngs/valid-invalid.png){ width=50% }
+![invalid-invalid](./pngs/invalid-invalid.png){ width=50% }
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
 knitr::opts_chunk$set(fig.width=10, fig.height=16) 
@@ -46,7 +50,7 @@ norolling <- map_dfr(files, converting_read)
   
 ```
 
-```{r}
+```{r early and late}
 sub_p1 = norolling %>% 
   #filter(valid != 'invalid-invalid') %>% 
   #filter(sub != '13' & sub != '23') %>% 
@@ -176,7 +180,7 @@ t %>% ungroup() %>%
 
 
 
-```{r}
+```{r together}
 sub_p2 = norolling %>% 
   #filter(valid != 'invalid-invalid') %>% 
   #filter(sub != '13' & sub != '23') %>% 
