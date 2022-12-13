@@ -1,5 +1,5 @@
 ---
-title: "fMRI time points (with Python)"
+title: "Timeseries analysis (with Python)"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:

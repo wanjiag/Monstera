@@ -1,5 +1,5 @@
 ---
-title: "fMRI with Python"
+title: "Segments analysis (with Python)"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -82,7 +82,7 @@ ggplot(p1, aes(x = segment, y = mean, fill = roi)) +
       #            position=position_jitterdodge(
       #              jitter.width = 0.2,
       #              dodge.width = 0.75)) + 
-      labs(y = 'within_item - within_pair')+ 
+      labs(y = 'within_pair - across_pair')+ 
       facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
       theme(legend.position = 'none',
             legend.title = element_blank(),
@@ -92,6 +92,34 @@ ggplot(p1, aes(x = segment, y = mean, fill = roi)) +
 
 ```
 
+ANOVA across ROI (ca23dg & ppa), segment, and valid
+
+```{r}
+ezANOVA(data=sub_p1 %>% filter(roi %in% c('ca23dg-body', 'ppa')),
+        wid=sub,
+        within = .(valid, segment, roi),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+ANOVA across segment and valid for PPA
+
+```{r}
+ezANOVA(data=sub_p1 %>% filter(roi == 'ppa'),
+        wid=sub,
+        within = .(valid, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+ANOVA across segment and valid for CA23DG
+
+```{r}
+ezANOVA(data=sub_p1 %>% filter(roi == 'ca23dg-body'),
+        wid=sub,
+        within = .(valid, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+t-tests
 
 ```{r}
 t = sub_p1 %>% 
@@ -210,7 +238,7 @@ ggplot(p2, aes(x = segment, y = mean, fill = roi)) +
       #            position=position_jitterdodge(
       #              jitter.width = 0.2,
       #              dodge.width = 0.75)) + 
-      labs(y = 'within_item - within_pair')+ 
+      labs(y = 'within_pair - across_pair')+ 
       facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
       theme(legend.position = 'none',
             legend.title = element_blank(),
@@ -219,6 +247,35 @@ ggplot(p2, aes(x = segment, y = mean, fill = roi)) +
   scale_color_manual(values = cbPalette)
 
 ```
+
+ANOVA across ROI (ca23dg & ppa), segment, and valid
+
+```{r}
+ezANOVA(data=sub_p2 %>% filter(roi %in% c('ca23dg-body', 'ppa')),
+        wid=sub,
+        within = .(valid, segment, roi),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+ANOVA across segment and valid for PPA
+
+```{r}
+ezANOVA(data=sub_p2 %>% filter(roi == 'ppa'),
+        wid=sub,
+        within = .(valid, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+ANOVA across segment and valid for CA23DG
+
+```{r}
+ezANOVA(data=sub_p2 %>% filter(roi == 'ca23dg-body'),
+        wid=sub,
+        within = .(valid, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+t-tests
 
 ```{r}
 
