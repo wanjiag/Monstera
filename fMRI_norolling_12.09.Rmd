@@ -12,7 +12,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
-knitr::opts_chunk$set(fig.width=12, fig.height=8) 
+knitr::opts_chunk$set(fig.width=10, fig.height=16) 
 
 library(tidyverse)
 library(fs)
@@ -48,7 +48,7 @@ norolling <- map_dfr(files, converting_read)
 
 ```{r}
 sub_p1 = norolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
+  #filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -68,7 +68,7 @@ p1 = sub_p1 %>% summarise(mean = mean(m),
 
 p1$segment = factor(p1$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
 p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
-p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid'))
+p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
 
 ggplot(p1, aes(x = segment, y = mean, fill = roi)) +
       geom_hline(yintercept = 0, linetype="longdash") +
@@ -125,7 +125,7 @@ t %>% ungroup() %>%
   tab_header(title = "Stats") %>%
   
   fmt_number(
-    columns = c(`valid-invalid`, `valid-valid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
     decimals = 3
   ) %>%
   tab_style(
@@ -157,6 +157,17 @@ t %>% ungroup() %>%
                 color = "red")
       ),
     locations = cells_body(
+      columns = `invalid-invalid`,
+      rows = `invalid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
       columns = `paired`,
       rows = `paired` < 0.05
     )
@@ -167,7 +178,7 @@ t %>% ungroup() %>%
 
 ```{r}
 sub_p2 = norolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
+  #filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -185,7 +196,7 @@ p2 = sub_p2 %>% summarise(mean = mean(m),
 
 p2$segment = factor(p2$segment, levels = c('same', 'similar', 'different'))
 p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
-p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid'))
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
 
 ggplot(p2, aes(x = segment, y = mean, fill = roi)) +
       geom_hline(yintercept = 0, linetype="longdash") +
@@ -239,7 +250,7 @@ t %>% ungroup() %>%
   tab_header(title = "Stats") %>%
   
   fmt_number(
-    columns = c(`valid-invalid`, `valid-valid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
     decimals = 3
   ) %>%
   tab_style(
@@ -262,6 +273,17 @@ t %>% ungroup() %>%
     locations = cells_body(
       columns = `valid-valid`,
       rows = `valid-valid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `invalid-invalid`,
+      rows = `invalid-invalid` < 0.05
     )
   )%>%
   tab_style(

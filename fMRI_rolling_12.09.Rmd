@@ -48,7 +48,7 @@ rolling <- map_dfr(files, converting_read)
 
 ```{r}
 sub_p1 = rolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
+  #filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -61,7 +61,7 @@ p1 = sub_p1 %>%
             n = n())
 
 p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
-p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid'))
+p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
 ```
 
 ## n = `r length(unique(sub_p1$sub))`
@@ -123,7 +123,7 @@ t = inner_join(t, a, by = c("within_trial_TR"))
 t %>% ungroup() %>% gt() %>% 
   tab_header(title = "Timepoint p-values for ca23dg-body") %>%
   fmt_number(
-    columns = c(`valid-invalid`, `valid-valid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, paired,`invalid-invalid`),
     decimals = 3
   ) %>%
   tab_style(
@@ -146,6 +146,17 @@ t %>% ungroup() %>% gt() %>%
     locations = cells_body(
       columns = `valid-valid`,
       rows = `valid-valid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `invalid-invalid`,
+      rows = `invalid-invalid` < 0.05
     )
   )%>%
   tab_style(

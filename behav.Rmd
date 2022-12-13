@@ -537,7 +537,7 @@ Distribution of picture index:
 
 Grouped in 10:
 
-```{r fig.width=10, fig.height=12,eval=FALSE, include=FALSE}
+```{r fig.width=10, fig.height=12}
 
 curr_plot = scan_batch %>% 
   mutate(npic_10 = floor(npic/10)*10) %>% 
@@ -563,7 +563,7 @@ ggplot(curr_plot, aes(x = npic_10, y = m_conf_correct)) +
 
 Grouped in 5:
 
-```{r fig.width=10, fig.height=12, eval=FALSE, include=FALSE}
+```{r fig.width=10, fig.height=12}
 
 curr_plot = scan_batch %>% 
   mutate(npic_5 = floor(npic/5)*5) %>% 
@@ -660,7 +660,7 @@ avg = postscan2_batch %>% group_by(sub) %>%
 
 Average accuracy = `r avg`
 
-```{r fig.width=16, fig.height=10}
+```{r fig.width=12, fig.height=16}
 postscan2_batch %>%
   filter(correct == 1) %>%
   mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
@@ -672,11 +672,11 @@ postscan2_batch %>%
   labs(title = 'Picture index for correct trials')+
   facet_wrap(destination~route, ncol = 2)+
   theme(strip.background = element_blank(),
-        legend.position = 'bottom')
+        legend.position = 'none')
 ```
 
 
-```{r}
+```{r fig.width=12, fig.height=16}
 postscan2_batch %>% 
   filter(correct == 0 & resp != -999) %>%
   mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
@@ -688,7 +688,7 @@ postscan2_batch %>%
   labs(title = 'Picture index for incorrect trials')+
   facet_wrap(destination~route, ncol = 2)+
   theme(strip.background = element_blank(),
-        legend.position = 'bottom')
+        legend.position = 'none')
 ```
 
 
@@ -705,7 +705,7 @@ postscan2_batch %>%
   geom_vline(xintercept=6) +
   geom_vline(xintercept=18) +
   labs(title = 'Timepoint for correct trials')+
-  scale_x_continuous(breaks = seq(0,24,1), limit = c(0,25))+
+  scale_x_continuous(breaks = seq(0,24,2), limit = c(0,25))+
   xlab("Time (seconds)")
 ```
 
