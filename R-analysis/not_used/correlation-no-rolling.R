@@ -1,0 +1,286 @@
+## ----include = FALSE----------------------------------------------------------------------------------------------------
+library(tidyverse)
+library(fs)
+theme_set(theme_minimal(15))
+
+
+## ----setup, include=FALSE-----------------------------------------------------------------------------------------------
+
+#knitr::purl("correlation.Rmd")
+
+converting_read <- function(curr_path){
+  print(curr_path)
+  read_csv(curr_path) %>% mutate(sub = as.character(sub))
+}
+
+Rinfo = sessionInfo()
+
+if (Rinfo$platform == 'x86_64-pc-linux-gnu (64-bit)'){
+  on_cluster = TRUE
+} else{
+  on_cluster = FALSE
+}
+
+print(paste0('Running on cluster: ', on_cluster))
+
+# Loading behavioral data
+if (on_cluster){
+  library("ezPurrr", lib="/gpfs/projects/kuhl_lab/wanjiag/R_libs/")
+  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/behavior/"),  type = "directory")
+} else{
+  library(ezPurrr)
+  sub_dir = dir_ls(here::here("csv_files/behavior/"),  type = "directory")
+}
+
+scan_timing = map(sub_dir, dir_ls, regexp = '(.*)_scan(\\d?\\d)_timing_.*') %>% unlist()
+timing_batch = map_dfr(scan_timing, converting_read)
+
+
+
+## ----timing files-------------------------------------------------------------------------------------------------------
+event_files = timing_batch %>% 
+  #  calculate TR. as.integer's default is flooring.
+  mutate(TR = as.integer(design_onset)) %>% 
+  # Remove _ from npic
+  separate(npic, 
+           into ='n_pic', 
+           sep = '_', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting name for pair and route
+  separate(condition, 
+           into =c('pair', 'route'), 
+           sep = '/', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting trial type (valid vs. invalid; catch vs. non-catch)
+  separate(route, 
+           into =c('route', 'valid', 'trial_type'), 
+           extra = 'drop', 
+           sep = ',',
+           remove = FALSE) %>% 
+  mutate(pair = stringr::str_sub(pair, start = 3),
+         route = stringr::str_extract(route, "[a-z]+"),
+         catch = stringr::str_extract(trial_type, "[0-1]+")) %>% 
+  select(-c(trial_type, npic, condition)) %>% 
+  # Getting segment
+  mutate(int_pic = as.integer(n_pic)) %>% 
+  mutate(segment = ifelse(is.na(int_pic), n_pic,
+                          ifelse(int_pic <= 25, 'same',
+                                 ifelse(int_pic >= 76, 'non-overlapping',
+                                        'overlapping')))) %>% 
+  select(-int_pic) %>% 
+  mutate(valid = as.integer((valid)),
+         catch = as.integer(catch))
+
+
+## ----event files--------------------------------------------------------------------------------------------------------
+event = event_files %>% filter(catch == 0) %>% 
+  filter(segment == 'same' | segment == 'overlapping' | segment == 'non-overlapping') %>% 
+  mutate(round = as.integer(round)) %>%
+  group_by(sub, round, trial, pair, route, segment, valid, catch) %>% 
+  summarize(TR = min(design_onset) %>% round() %>% as.integer()) %>%
+  mutate(end_TR = ifelse((segment == 'same' | segment == 'non-overlapping'), TR+5, TR+11)) %>% 
+  mutate(behav_TR = map2(TR, end_TR, ~ seq(from = .x, to = .y))) %>%
+  unnest(behav_TR) %>% 
+  mutate(within_trial_TR = behav_TR - TR) %>% 
+  mutate(within_trial_TR = ifelse(segment == 'overlapping',
+                                  within_trial_TR+7, 
+                                  ifelse(segment == 'non-overlapping', 
+                                         within_trial_TR + 19,
+                                         within_trial_TR + 1)
+  ),
+  odd.even = ifelse(round %% 2 == 0, 'even', 'odd'),
+  valid = ifelse(valid == 0, 'valid', 'invalid')) %>% 
+  select(-c(TR, end_TR, catch))
+
+
+
+## ----Supporting Functions-----------------------------------------------------------------------------------------------
+individual_cor <- function(df1, df2){
+  df1 <- df1[complete.cases(df1[ , 'value']), ] 
+  df2 <- df2[complete.cases(df2[ , 'value']), ] 
+  
+  cor(df1$value, df2$value)
+}
+
+summarise_type <- function(sample){
+  
+  remove('output_df')
+  
+  for (row1 in 1:nrow(sample)) {
+    
+    output_df_row = sample[row1, ] %>% select(-c(`0`:last_col()))
+    
+    curr_row = sample[row1, ] %>% 
+      pivot_longer(cols = c(`0`:last_col()),
+                   names_to = 'voxels',
+                   values_to = 'value'
+      )
+    
+    curr_df = sample %>% filter(round != unique(curr_row$round))
+    curr_df_nest = curr_df %>% 
+      pivot_longer(cols = c(`0`:last_col()),
+                   names_to = 'voxels',
+                   values_to = 'value'
+      ) %>% 
+      group_by(round, trial, pair, route, valid) %>% 
+      nest()
+    
+    curr_df_nest$r = map_dbl(.x = curr_df_nest$data,
+                             .f = ~individual_cor(df1 = curr_row, df2 = .x))
+    curr_df_nest = curr_df_nest %>% mutate(type = ifelse(pair != unique(curr_row$pair),
+                                                         'across_pair',
+                                                         ifelse(route == unique(curr_row$route),
+                                                                'within_item',
+                                                                'within_pair'))) %>% 
+      mutate(valid = paste0(unique(curr_row$valid), '-', valid)) %>% 
+      select(-data)
+    
+    output_df_row = output_df_row %>% 
+      select(-valid) %>% 
+      rename_with( ~ paste0(.x, '1'))
+    
+    output_df_row = cbind(output_df_row, curr_df_nest)
+    
+    output_df_row = output_df_row %>% 
+      group_by(round1, trial1, pair1, route1) %>% 
+      nest()
+    
+    if (exists('output_df')){
+      output_df = rbind(output_df, output_df_row)
+    } else(
+      output_df = output_df_row
+    )
+    
+  }
+  
+  output_df
+  
+}
+
+
+
+## ----ROI files----------------------------------------------------------------------------------------------------------
+
+rois= c('ca23dg-body_thre_0.5_masked',
+        'ca1-body_thre_0.5_masked',
+        'evc_2_epi_thre_0.5_masked', 
+        'ppa_mni_2_epi_thre_0.5_masked')
+
+rois_names = c('ca23dg-body', 'ca1-body', 
+               'evc', 
+               'ppa')
+
+if (on_cluster){
+  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI"))
+  rdata_dir = here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/RDS")
+  roi_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/RDS/"),  
+                   type = "directory")
+}else{
+  sub_dir = dir_ls(here::here("./csv_files/fMRI"))
+  rdata_dir = here::here("./csv_files/RDS")
+  roi_dir = dir_ls(here::here("./csv_files/RDS/"),  type = "directory")
+}
+
+processed_sub_roi_list = map(roi_dir, dir_ls) %>% unlist() %>% 
+  map_chr(~gsub('.*/sub-([0-9]+.*).RDS','\\1', .x)) %>% 
+  as.data.frame()
+
+if (nrow(processed_sub_roi_list) == 0){
+  processed_sub_roi_df <- data.frame(matrix(ncol = 2, nrow = 0))
+  colnames(processed_sub_roi_df) <- c("sub", "roi")
+}else{
+  processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
+    plyr::ldply(rbind) %>% 
+    mutate(sub = `1`,
+           roi = ifelse(
+             is.na(`3`),
+             `2`,
+             paste0(`2`, '_', `3`))) %>%
+    select(-c(`1`,`2`,`3`))
+}
+
+
+for (i in c(1:length(rois))){
+  
+  print(paste0('-----------', rois[i], '-----------'))
+  
+  all_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  
+  # Getting the subjects with csv files needed for this ROI
+  curr_roi_can_be_processed_subs = all_files %>% unlist() %>% 
+    map_chr(~gsub('.*fMRI/sub-MONSTERA([0-9]+).*','\\1', .x)) %>% 
+    unique()
+  
+  # Getting the subjects that already has the RDS files
+  processed_subs_for_curr_roi = processed_sub_roi_df %>% filter(roi == rois_names[i]) %>% .$sub
+  
+  # Subjects with csv files and doesnt have the RDS files are to be processed
+  to_be_processed = 
+    curr_roi_can_be_processed_subs[
+      !curr_roi_can_be_processed_subs %in% processed_subs_for_curr_roi]
+  
+  if(length(to_be_processed) == 0){
+    next
+  }
+  
+  curr_sub_dir = c()
+  for (curr_sub in to_be_processed){
+    if (on_cluster){
+      curr_sub_dir = append(curr_sub_dir, 
+                            dir_ls(here::here(paste0(
+                              "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI/sub-MONSTERA",
+                              curr_sub)),
+                              glob = paste0('*/',rois[i],'*.csv')))
+    }else{
+      curr_sub_dir = append(curr_sub_dir,
+                            dir_ls(here::here(paste0("./csv_files/fMRI/sub-MONSTERA", curr_sub)),
+                                   glob = paste0('*/',rois[i],'*.csv')))}
+  }
+  
+  #curr_files <- map(curr_sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  curr_df <- map_dfr(curr_sub_dir, converting_read)
+  
+  colnames(curr_df)[1] <- 'TR'
+  curr_df <- curr_df %>% mutate(
+    run = as.integer(stringr::str_extract(run, "\\d+")),
+    sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
+    select(-roi)
+  
+  curr_df_nest = curr_df %>% 
+    group_by(sub, run) %>% 
+    nest()
+  
+  curr_df = curr_df_nest %>% select(-data) %>% unnest(cols = c(output))
+  
+  nest_df = inner_join(event, curr_df, by = c('behav_TR' = 'TR',
+                                              'sub' = 'sub',
+                                              'round' = 'run')) %>%
+    select(-c(behav_TR, odd.even)) %>% 
+    group_by(sub, segment, within_trial_TR) %>% 
+    nest()
+  
+  #nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
+  
+  warning("-----------This will take VERY VERY long to run-----------")
+  
+  start_time <- Sys.time()
+  correlation_df = nest_df %>% broadcast(summarise_type)
+  end_time <- Sys.time()
+  
+  print(paste0('-----------', rois_names[i], ': ', end_time - start_time, '-----------'))
+  
+  correlation_df = correlation_df %>% select(-data)
+  
+  output_path = file.path(rdata_dir, rois_names[i])
+  dir.create(output_path)
+  
+  correlation_df %>% 
+    group_by(sub) %>% 
+    group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
+  
+}
+
+
+
