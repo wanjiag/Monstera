@@ -101,35 +101,6 @@ def save_file(subnum, output_df, file_name):
     
     out_file = opj(sub_out_dir, file_name)
     output_df.to_csv(out_file, index=False)
-
-def summarize(df):
-    # remove same round correlations
-    df = df.loc[df['round_x'] != df['round_y']]
-    
-    # define trial type
-    conditions = [
-    (df['pair_x'] != df['pair_y']),
-    (df['destination_x'] != df['destination_y']),
-    (df['destination_x'] == df['destination_y'])
-    ]
-    values = ['across', 'within', 'same']
-    df['type'] = np.select(conditions, values)
-    
-    # define valid type
-    conditions = [
-    (df['valid_x'] != df['valid_y']),
-    (df['valid_x'] == True),
-    (df['valid_x'] == False)
-        ]
-    values = ['valid-invalid', 'valid-valid', 'invalid-invalid']
-    df['valid'] = np.select(conditions, values)
-    
-    # mean correlations
-    df = df.groupby(['type','valid','within_trial_TR_x'])['cor'].mean().reset_index()
-    df['within_trial_TR'] = df['within_trial_TR_x']
-    df = df.drop(columns=['within_trial_TR_x'])
-    
-    return df
     
 rois_dict = {
     'ca23dg-body_thre_0.5_masked':'ca23dg-body',
@@ -183,19 +154,9 @@ for subnum in todo_subnums:
         output_df = per_tr_calculation(df)
         save_file(subnum, output_df, 'sub-MONSTERA{}_norolling_{}.csv'.format(subnum, roi))
         
-        summary_df = summarize(output_df)
-        summary_df['sub'] = subnum
-        summary_df['roi'] = roi
-        save_file(subnum, summary_df, 'sub-MONSTERA{}_norolling_{}_summary.csv'.format(subnum, roi))
-        
         #calculating rolling data
         rolling_df = fmri_df.groupby(['sub','round']).rolling(3, center = True, method = 'table').mean()
         rolling_df = rolling_df.drop(columns= ['sub','round']).reset_index().drop(columns= 'level_2')
         df = behav_df.merge(rolling_df, on=['sub', 'round', 'TR'], how='left')
         output_df = per_tr_calculation(df)
         save_file(subnum, output_df, 'sub-MONSTERA{}_rolling3_{}.csv'.format(subnum, roi))
-        
-        summary_df = summarize(output_df)
-        summary_df['sub'] = subnum
-        summary_df['roi'] = roi
-        save_file(subnum, summary_df, 'sub-MONSTERA{}_rolling3_{}_summary.csv'.format(subnum, roi))

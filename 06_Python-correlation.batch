@@ -16,3 +16,5 @@ module load tensorflow
 
 python /home/wanjiag/projects/MONSTERA/derivatives/scripts/python_code/correlation.py
 
+python /home/wanjiag/projects/MONSTERA/derivatives/scripts/python_code/summary.py
+
