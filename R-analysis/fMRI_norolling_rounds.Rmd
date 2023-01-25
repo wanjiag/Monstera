@@ -43,7 +43,7 @@ sub_dir = dir_ls(here::here("./csv_files/python_summary"))
 rois_names = c('ca23dg-body', 'ca1-body', 
                'evc', 'ppa')
 
-files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary.csv') %>% unlist()
+files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary_with_rounds.csv') %>% unlist()
 
 norolling <- map_dfr(files, converting_read)
   
@@ -51,7 +51,7 @@ norolling <- map_dfr(files, converting_read)
 
 ```{r early and late}
 sub_p1 = norolling %>% 
-  #filter(valid != 'invalid-invalid') %>% 
+  filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -60,20 +60,28 @@ sub_p1 = norolling %>%
                             ifelse(within_trial_TR <= 12, 'early-similar',
                                    ifelse(within_trial_TR <= 18, 'late-similar',
                                           'different')
-                                   ))) %>% 
-  group_by(valid, segment, roi, sub) %>% 
+                                   )),
+         'time' = ifelse((round_x <= 5 & round_y <= 5), 'early',
+                         ifelse((round_x > 5 & round_y > 5), 'late',
+                                'others'))) %>% 
+  filter(time != 'others') %>% 
+  group_by(valid, segment, roi, sub, time) %>% 
   summarise(m = mean(wp_ap),
             se = sd(wp_ap)/sqrt(n()),
             n = n())
-p1 = sub_p1 %>% summarise(mean = mean(m),
+
+p1 = sub_p1 %>% 
+  group_by(valid, segment, roi, time) %>% 
+  summarise(mean = mean(m),
             se = sd(m)/sqrt(n()),
             n = n())
 
 p1$segment = factor(p1$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
 p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
 p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+p1$time = factor(p1$time, levels = c('early', 'late'))
 
-ggplot(p1, aes(x = segment, y = mean, fill = roi)) +
+ggplot(p1, aes(x = segment, y = mean, fill = time)) +
       geom_hline(yintercept = 0, linetype="longdash") +
       geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
       geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
@@ -83,7 +91,7 @@ ggplot(p1, aes(x = segment, y = mean, fill = roi)) +
       #              dodge.width = 0.75)) + 
       labs(y = 'within_pair - across_pair')+ 
       facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
-      theme(legend.position = 'none',
+      theme(legend.position = 'top',
             legend.title = element_blank(),
             strip.background = element_blank())+ 
   scale_fill_manual(values = cbPalette)+ 

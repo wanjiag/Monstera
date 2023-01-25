@@ -65,7 +65,10 @@ sub_p1 = norolling %>%
   summarise(m = mean(wp_ap),
             se = sd(wp_ap)/sqrt(n()),
             n = n())
-p1 = sub_p1 %>% summarise(mean = mean(m),
+
+p1 = sub_p1 %>% 
+  group_by(valid, segment, roi) %>%
+  summarise(mean = mean(m),
             se = sd(m)/sqrt(n()),
             n = n())
 
@@ -221,7 +224,9 @@ sub_p2 = norolling %>%
   summarise(m = mean(wp_ap),
             se = sd(wp_ap)/sqrt(n()),
             n = n())
-p2 = sub_p2 %>% summarise(mean = mean(m),
+p2 = sub_p2 %>% 
+  group_by(valid, segment, roi) %>% 
+  summarise(mean = mean(m),
             se = sd(m)/sqrt(n()),
             n = n())
 
