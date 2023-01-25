@@ -1,4 +1,4 @@
-for i in 38
+for i in 39
 do
 
 	if [ ! -d "/home/wanjiag/projects/MONSTERA/derivatives/rois/ASHS/sub-MONSTERA"$i"" ] ; then

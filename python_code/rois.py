@@ -94,8 +94,9 @@ else:
     #subs = ['sub-MONSTERA27', 'sub-MONSTERA28']
     #subs = ['sub-MONSTERA29', 'sub-MONSTERA31', 'sub-MONSTERA32', 'sub-MONSTERA33']
     #subs = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
-    subs = ['sub-MONSTERA38']
-    
+    #subs = ['sub-MONSTERA38']
+    subs = ['sub-MONSTERA39']
+
 session_list = []
 for i in range(1,11):
     session_list.append('task-{:02d}'.format(i))
