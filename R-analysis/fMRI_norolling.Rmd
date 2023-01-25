@@ -12,7 +12,7 @@ editor_options:
 
 ![valid-valid](./pngs/valid-valid.png){ width=50% }
 ![valid-invalid](./pngs/valid-invalid.png){ width=50% }
-![invalid-invalid](./pngs/invalid-invalid.png){ width=50% }
+#![invalid-invalid](./pngs/invalid-invalid.png){ width=50% }
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
@@ -51,7 +51,7 @@ norolling <- map_dfr(files, converting_read)
 
 ```{r early and late}
 sub_p1 = norolling %>% 
-  #filter(valid != 'invalid-invalid') %>% 
+  filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -159,7 +159,8 @@ t %>% ungroup() %>%
   tab_header(title = "Valid Stats") %>%
   
   fmt_number(
-    columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
+    #columns = c(`valid-invalid`, `valid-valid`,`invalid-invalid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
     decimals = 3
   ) %>%
   tab_style(
@@ -184,17 +185,17 @@ t %>% ungroup() %>%
       rows = `valid-valid` < 0.05
     )
   )%>%
-  tab_style(
-    style = list(
-      cell_fill(color = "lightcyan"),
-      cell_text(weight = "bold",
-                color = "red")
-      ),
-    locations = cells_body(
-      columns = `invalid-invalid`,
-      rows = `invalid-invalid` < 0.05
-    )
-  )%>%
+#  tab_style(
+#    style = list(
+#      cell_fill(color = "lightcyan"),
+#      cell_text(weight = "bold",
+#                color = "red")
+#      ),
+#    locations = cells_body(
+#      columns = `invalid-invalid`,
+#      rows = `invalid-invalid` < 0.05
+#    )
+#  )%>%
   tab_style(
     style = list(
       cell_fill(color = "lightcyan"),
@@ -212,7 +213,7 @@ t %>% ungroup() %>%
 
 ```{r together}
 sub_p2 = norolling %>% 
-  #filter(valid != 'invalid-invalid') %>% 
+  filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -315,7 +316,8 @@ t %>% ungroup() %>%
   tab_header(title = "Valid Stats") %>%
   
   fmt_number(
-    columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
+    #columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
     decimals = 3
   ) %>%
   tab_style(
@@ -340,17 +342,17 @@ t %>% ungroup() %>%
       rows = `valid-valid` < 0.05
     )
   )%>%
-  tab_style(
-    style = list(
-      cell_fill(color = "lightcyan"),
-      cell_text(weight = "bold",
-                color = "red")
-      ),
-    locations = cells_body(
-      columns = `invalid-invalid`,
-      rows = `invalid-invalid` < 0.05
-    )
-  )%>%
+  #tab_style(
+  #  style = list(
+  #    cell_fill(color = "lightcyan"),
+  #    cell_text(weight = "bold",
+  #              color = "red")
+  #    ),
+  #  locations = cells_body(
+  #    columns = `invalid-invalid`,
+  #    rows = `invalid-invalid` < 0.05
+  #  )
+  #)%>%
   tab_style(
     style = list(
       cell_fill(color = "lightcyan"),
@@ -389,7 +391,8 @@ t %>% ungroup() %>%
     rowname_col = "row",
     groupname_col = "valid"
   ) %>%
-  row_group_order(groups = c("valid-valid", "valid-invalid", "invalid-invalid")) %>%
+  #row_group_order(groups = c("valid-valid", "valid-invalid", "invalid-invalid")) %>%
+  row_group_order(groups = c("valid-valid", "valid-invalid")) %>%
   tab_header(title = "Segment Stats") %>% 
   fmt_number(
     columns = c(`same-similar`, `similar-different`, `same-different`),
@@ -464,15 +467,18 @@ newdata <- behav_df[order(behav_df$m_npic),]
 
 n = floor(nrow(newdata) / 2)
 
-performance = c(rep('good', n), rep('bad', nrow(newdata)-n))
+performance = c(rep('early', n), rep('late', nrow(newdata)-n))
 
-newdata$performance = c(rep('good', n), rep('bad', nrow(newdata)-n))
+newdata$performance = c(rep('early', n), rep('late', nrow(newdata)-n))
+newdata$sub = newdata$sub %>% as.numeric()
 
 newdata %>% group_by(performance) %>% summarise(m = mean(m_npic))
 ```
 
 
 ```{r}
+
+sub_p1$sub = sub_p1$sub %>% as.numeric()
 
 sub_p3 = left_join(sub_p1, newdata, on = 'sub')
 
@@ -504,7 +510,7 @@ post-test1
 
 ```{r}
 
-good = c('06', '07', '08', '09', '10', '11', '12', '15', '16', '17', '18', '19', '21', '22', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37')
+good = c('06', '07', '08', '09', '10', '11', '12', '15', '16', '17', '18', '19', '21', '22', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '39')
 
 bad = c('20', '24', '27')
 
@@ -573,7 +579,8 @@ t %>% ungroup() %>%
   tab_header(title = "Stats") %>%
   
   fmt_number(
-    columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
+    #columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
     decimals = 3
   ) %>%
   tab_style(
@@ -598,17 +605,17 @@ t %>% ungroup() %>%
       rows = `valid-valid` < 0.05
     )
   )%>%
-  tab_style(
-    style = list(
-      cell_fill(color = "lightcyan"),
-      cell_text(weight = "bold",
-                color = "red")
-      ),
-    locations = cells_body(
-      columns = `invalid-invalid`,
-      rows = `invalid-invalid` < 0.05
-    )
-  )%>%
+  #tab_style(
+  #  style = list(
+  #    cell_fill(color = "lightcyan"),
+  #    cell_text(weight = "bold",
+  #              color = "red")
+  #    ),
+  #  locations = cells_body(
+  #    columns = `invalid-invalid`,
+  #    rows = `invalid-invalid` < 0.05
+  #  )
+  #)%>%
   tab_style(
     style = list(
       cell_fill(color = "lightcyan"),

@@ -38,7 +38,7 @@ sub_dir = dir_ls(here::here("./csv_files/python_summary"))
 rois_names = c('ca23dg-body', 'ca1-body', 
                'evc', 'ppa')
 
-files <- map(sub_dir, dir_ls, glob = '*/*rolling3_*summary.csv') %>% unlist()
+files <- map(sub_dir, dir_ls, glob = '*/*rolling3_*summary_with_rounds.csv') %>% unlist()
 
 rolling <- map_dfr(files, converting_read)
   
@@ -50,10 +50,14 @@ sub_p1 = rolling %>%
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
-  select(-c(across, within, same))
+  select(-c(across, within, same))%>% 
+  mutate('time' = ifelse((round_x <= 5 & round_y <= 5), 'early',
+                         ifelse((round_x > 5 & round_y > 5), 'late',
+                                'others'))) %>%
+  filter(time != 'others')
 
 p1 = sub_p1 %>% 
-  group_by(valid, within_trial_TR, roi) %>%
+  group_by(valid, within_trial_TR, roi, time) %>%
   summarise(mean = mean(wp_ap),
             se = sd(wp_ap)/sqrt(n()),
             n = n())
@@ -67,13 +71,13 @@ p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-
 ```{r}
 
 figure = p1 %>% 
-    ggplot(aes(x = within_trial_TR, y = mean, color = roi)) +
+    ggplot(aes(x = within_trial_TR, y = mean, color = time)) +
     geom_hline(yintercept = 0, linetype="longdash") +
     geom_vline(xintercept=6, linetype="longdash") +
     geom_vline(xintercept=18, linetype="longdash") +
     geom_ribbon(aes(ymin = mean-se, 
                     ymax = mean+se,
-                    fill = roi),
+                    fill = time),
                 alpha = 0.2,
                 color = NA) +
     geom_line(size = 1)+
@@ -96,33 +100,40 @@ print(figure)
 ca23dg = sub_p1 %>% filter(roi == 'ca23dg-body')
 
 t = ca23dg %>% 
+  select(-c(round_x, round_y, sub_x)) %>% 
+  group_by(sub, valid, within_trial_TR, time) %>% 
+  summarise(m = mean(wp_ap)) %>% 
+  pivot_wider(names_from = time, values_from = m) %>% 
   group_by(within_trial_TR, valid) %>% 
   nest() %>% 
-  broadcast(~t.test(.$wp_ap)$p.value) %>% 
-  unnest(output) %>%
-  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
-  select(-data) %>% 
-  pivot_wider(names_from = valid,
-              values_from = output)
-
-a = ca23dg %>% 
-  pivot_wider(names_from = valid,
-              values_from = wp_ap) %>% 
-  group_by(within_trial_TR) %>% 
-  nest() %>% 
-  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
-                    paired = TRUE)$p.value) %>%
+  broadcast(~t.test(.$early, .$late, paired = TRUE)$p.value) %>% 
   unnest(output) %>%
   mutate(paired = output) %>% 
+  select(-c(data, output))
+
+a = ca23dg %>% 
+  select(-c(round_x, round_y, sub_x)) %>% 
+  group_by(sub, valid, within_trial_TR, time) %>% 
+  summarise(m = mean(wp_ap)) %>% 
+  pivot_wider(names_from = time, values_from = m) %>% 
+  group_by(within_trial_TR, valid) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`early`)$p.value) %>%
+  unnest(output) %>%
+  mutate(early = output) %>% 
+  broadcast(~t.test(.$`late`)$p.value) %>%
+  unnest(output) %>%
+  mutate(late = output) %>% 
   select(-c(data, output)) 
 
-t = inner_join(t, a, by = c("within_trial_TR"))
+t = inner_join(a, t, by = c("within_trial_TR", "valid"))
 
-t %>% ungroup() %>% gt() %>% 
+t %>% ungroup() %>% gt(
+    groupname_col = "valid") %>%
+  row_group_order(groups = c("valid-valid", "valid-invalid")) %>%
   tab_header(title = "Timepoint p-values for ca23dg-body") %>%
   fmt_number(
-    #columns = c(`valid-invalid`, `valid-valid`, paired,`invalid-invalid`),
-    columns = c(`valid-invalid`, `valid-valid`, paired),
+    columns = c(early, late, paired),
     decimals = 3
   ) %>%
   tab_style(
@@ -132,8 +143,8 @@ t %>% ungroup() %>% gt() %>%
                 color = "red")
       ),
     locations = cells_body(
-      columns = `valid-invalid`,
-      rows = `valid-invalid` < 0.05
+      columns = `early`,
+      rows = `early` < 0.05
     )
   )%>%
   tab_style(
@@ -143,21 +154,21 @@ t %>% ungroup() %>% gt() %>%
                 color = "red")
       ),
     locations = cells_body(
-      columns = `valid-valid`,
-      rows = `valid-valid` < 0.05
+      columns = `late`,
+      rows = `late` < 0.05
     )
   )%>%
-#  tab_style(
-#    style = list(
-#      cell_fill(color = "lightcyan"),
-#      cell_text(weight = "bold",
-#                color = "red")
-#      ),
-#    locations = cells_body(
-#      columns = `invalid-invalid`,
-#      rows = `invalid-invalid` < 0.05
-#    )
-#  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )%>%
   tab_style(
     style = list(
       cell_fill(color = "lightcyan"),
