@@ -1,5 +1,5 @@
 ---
-title: "Timeseries analysis (with Python)"
+title: "Timeseries analysis - early vs. late learning"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:

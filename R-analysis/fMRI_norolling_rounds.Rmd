@@ -1,5 +1,5 @@
 ---
-title: "Segments analysis (with Python)"
+title: "Segments analysis - early vs. late learning"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -83,7 +83,7 @@ ggplot(p2, aes(x = segment, y = mean, fill = time)) +
       #              dodge.width = 0.75)) + 
       labs(y = 'within_pair - across_pair')+ 
       facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
-      theme(legend.position = 'none',
+      theme(legend.position = 'top',
             legend.title = element_blank(),
             strip.background = element_blank())+ 
   scale_fill_manual(values = cbPalette)+ 
