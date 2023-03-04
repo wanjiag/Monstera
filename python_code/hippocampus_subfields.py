@@ -18,7 +18,9 @@ subfields = {'ca1':1,
 #sub_list = ['sub-MONSTERA29', 'sub-MONSTERA31', 'sub-MONSTERA32', 'sub-MONSTERA33']
 #sub_list = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
 #sub_list = ['sub-MONSTERA38']
-sub_list = ['sub-MONSTERA39']
+#sub_list = ['sub-MONSTERA39']
+sub_list = ['sub-MONSTERA40','sub-MONSTERA41','sub-MONSTERA42','sub-MONSTERA43']
+
 
 # first num = Starting slices in ITK-snap; second num = how many slices to include (inclusive of the last one)
 
@@ -54,7 +56,11 @@ left_body = {#'01':[30,10],
              'sub-MONSTERA36':[33,9],
              'sub-MONSTERA37':[33,9],
              'sub-MONSTERA38':[32,12],
-             'sub-MONSTERA39':[33,9]}
+             'sub-MONSTERA39':[33,9],
+             'sub-MONSTERA40':[32,11],
+             'sub-MONSTERA41':[32,9],
+             'sub-MONSTERA42':[34,10],
+             'sub-MONSTERA43':[32,10]}
 
 right_body = {#'01':[30,10],
               'sub-MONSTERA06':[31,11],
@@ -88,7 +94,11 @@ right_body = {#'01':[30,10],
               'sub-MONSTERA36':[32,10],
               'sub-MONSTERA37':[32,10],
               'sub-MONSTERA38':[32,12],
-              'sub-MONSTERA39':[33,9]}
+              'sub-MONSTERA39':[33,9],
+              'sub-MONSTERA40':[33,10],
+              'sub-MONSTERA41':[32,9],
+              'sub-MONSTERA42':[34,10],
+              'sub-MONSTERA43':[33,9]}
 
 
 epi_mask_threshold = 0.5

@@ -19,7 +19,8 @@ hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_
 #sublist = ['sub-MONSTERA29', 'sub-MONSTERA31', 'sub-MONSTERA32', 'sub-MONSTERA33']
 #sublist = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
 #sublist = ['sub-MONSTERA38']
-sublist = ['sub-MONSTERA39']
+#sublist = ['sub-MONSTERA39']
+sublist = ['sub-MONSTERA40','sub-MONSTERA41','sub-MONSTERA42','sub-MONSTERA43']
 
 session_list = []
 for i in range(1,11):
