@@ -670,7 +670,7 @@ postscan2_batch %>%
   geom_vline(xintercept=25) +
   geom_vline(xintercept=75) +
   labs(title = 'Picture index for correct trials')+
-  facet_wrap(destination~route, ncol = 2)+
+  facet_wrap(~route, ncol = 2)+
   theme(strip.background = element_blank(),
         legend.position = 'none')
 ```
@@ -686,7 +686,7 @@ postscan2_batch %>%
   geom_vline(xintercept=25) +
   geom_vline(xintercept=75) +
   labs(title = 'Picture index for incorrect trials')+
-  facet_wrap(destination~route, ncol = 2)+
+  facet_wrap(~route, ncol = 2)+
   theme(strip.background = element_blank(),
         legend.position = 'none')
 ```

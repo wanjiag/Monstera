@@ -207,8 +207,84 @@ t %>% ungroup() %>%
       rows = `paired` < 0.05
     )
   )
+
 ```
 
+## Testing linear mixed effect model
+```{r}
+library(lme4)
+library(lmerTest)
+```
+
+valid * segment * roi
+
+```{r}
+m1 <- lmer(m ~ valid * segment * roi + (1 | sub), sub_p1)
+(aov <- anova(m1))
+```
+
+ca23dg-body: valid * segment
+
+```{r}
+m2 <- lmer(m ~ valid * segment + (1 | sub), sub_p1 %>% filter(roi == 'ca23dg-body'))
+(aov <- anova(m2))
+```
+
+ca1: valid * segment
+
+```{r}
+m3 <- lmer(m ~ valid * segment + (1 | sub), sub_p1 %>% filter(roi == 'ca1-body'))
+(aov <- anova(m3))
+```
+
+ppa: valid * segment
+
+```{r}
+m4 <- lmer(m ~ valid * segment + (1 | sub), sub_p1 %>% filter(roi == 'ppa'))
+(aov <- anova(m4))
+```
+
+evc: valid * segment
+
+```{r}
+m5 <- lmer(m ~ valid * segment + (1 | sub), sub_p1 %>% filter(roi == 'evc'))
+(aov <- anova(m5))
+
+```
+
+```{r}
+t = sub_p1 %>% 
+  group_by(segment, roi, sub) %>% 
+  summarise(m = mean(m),
+            n = n()) %>% 
+  group_by(segment, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$m)$p.value) %>% 
+  unnest(output) %>% 
+  select(-data)
+
+t %>% ungroup() %>% 
+  gt(
+    rowname_col = "row",
+    groupname_col = "segment"
+  ) %>%
+  row_group_order(groups = c("same","early-similar","late-similar","different")) %>%
+  tab_header(title = "Valid Combined") %>%
+  fmt_number(
+    columns = c(output),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = output,
+      rows = output < 0.05
+    ))
+```
 
 
 ```{r together}
@@ -433,6 +509,78 @@ t %>% ungroup() %>%
   ) 
 ```
 
+## Testing linear mixed effect model
+
+valid * segment * roi
+
+```{r}
+m1 <- lmer(m ~ valid * segment * roi + (1 | sub), sub_p2)
+(aov <- anova(m1))
+```
+
+ca23dg-body: valid * segment
+
+```{r}
+m2 <- lmer(m ~ valid * segment + (1 | sub), sub_p2 %>% filter(roi == 'ca23dg-body'))
+(aov <- anova(m2))
+```
+
+ca1: valid * segment
+
+```{r}
+m3 <- lmer(m ~ valid * segment + (1 | sub), sub_p2 %>% filter(roi == 'ca1-body'))
+(aov <- anova(m3))
+```
+
+ppa: valid * segment
+
+```{r}
+m4 <- lmer(m ~ valid * segment + (1 | sub), sub_p2 %>% filter(roi == 'ppa'))
+(aov <- anova(m4))
+```
+
+evc: valid * segment
+
+```{r}
+m5 <- lmer(m ~ valid * segment + (1 | sub), sub_p2 %>% filter(roi == 'evc'))
+(aov <- anova(m5))
+
+```
+
+
+```{r}
+t = sub_p2 %>% 
+  group_by(segment, roi, sub) %>% 
+  summarise(m = mean(m),
+            n = n()) %>% 
+  group_by(segment, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$m)$p.value) %>% 
+  unnest(output) %>% 
+  select(-data)
+
+t %>% ungroup() %>% 
+  gt(
+    rowname_col = "row",
+    groupname_col = "segment"
+  ) %>%
+  row_group_order(groups = c("same","similar","different")) %>%
+  tab_header(title = "Valid Combined") %>%
+  fmt_number(
+    columns = c(output),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = output,
+      rows = output < 0.05
+    ))
+```
 
 # Tests
 
