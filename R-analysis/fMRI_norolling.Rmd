@@ -1,5 +1,5 @@
 ---
-title: "Segments analysis (with Python)"
+title: "Segments analysis"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -12,7 +12,7 @@ editor_options:
 
 ![valid-valid](./pngs/valid-valid.png){ width=50% }
 ![valid-invalid](./pngs/valid-invalid.png){ width=50% }
-#![invalid-invalid](./pngs/invalid-invalid.png){ width=50% }
+![invalid-invalid](./pngs/invalid-invalid.png){ width=50% }
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
@@ -48,6 +48,7 @@ files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary.csv') %>% unlist()
 norolling <- map_dfr(files, converting_read)
   
 ```
+
 
 ```{r early and late}
 sub_p1 = norolling %>% 
@@ -116,6 +117,15 @@ ANOVA across segment and valid for CA23DG
 
 ```{r}
 ezANOVA(data=sub_p1 %>% filter(roi == 'ca23dg-body'),
+        wid=sub,
+        within = .(valid, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+ANOVA across segment and valid for CA1
+
+```{r}
+ezANOVA(data=sub_p1 %>% filter(roi == 'ca1-body'),
         wid=sub,
         within = .(valid, segment),
         dv = m)$ANOVA %>% knitr::kable()
@@ -356,6 +366,15 @@ ezANOVA(data=sub_p2 %>% filter(roi == 'ca23dg-body'),
         dv = m)$ANOVA %>% knitr::kable()
 ```
 
+ANOVA across segment and valid for CA1
+
+```{r}
+ezANOVA(data=sub_p2 %>% filter(roi == 'ca1-body'),
+        wid=sub,
+        within = .(valid, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
 t-tests
 
 ```{r}
@@ -586,7 +605,7 @@ t %>% ungroup() %>%
 
 ## Separating by behavior
 
-post-test2
+post-test2: separate subjects into 2 groups based on their performence in the posttest2 (on average, when press the button indicating they know the destination.)
 
 ```{r include=FALSE}
 
@@ -658,7 +677,7 @@ post-test1
 
 ```{r}
 
-good = c('06', '07', '08', '09', '10', '11', '12', '15', '16', '17', '18', '19', '21', '22', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '39')
+good = c('06', '07', '08', '09', '10', '11', '12', '15', '16', '17', '18', '19', '21', '22', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '39', '40', '41', '42', '43')
 
 bad = c('20', '24', '27')
 
@@ -668,8 +687,11 @@ bad = c('20', '24', '27')
 ```{r}
 sub_p4 = sub_p1 %>% 
   filter(!(sub %in% bad))
+```
 
-unique(sub_p4$sub)
+There are `r length(unique(sub_p4$sub))` good subjects (with 100% accuracy and high confidence at differnet segment for post-test1)
+
+```{r}
 
 p4 = sub_p4 %>% 
   group_by(valid, segment, roi) %>% 

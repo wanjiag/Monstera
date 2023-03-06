@@ -1,5 +1,5 @@
 ---
-title: "Timeseries analysis (with Python)"
+title: "Timeseries analysis"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -120,6 +120,86 @@ t = inner_join(t, a, by = c("within_trial_TR"))
 
 t %>% ungroup() %>% gt() %>% 
   tab_header(title = "Timepoint p-values for ca23dg-body") %>%
+  fmt_number(
+    #columns = c(`valid-invalid`, `valid-valid`, paired,`invalid-invalid`),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-invalid`,
+      rows = `valid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-valid`,
+      rows = `valid-valid` < 0.05
+    )
+  )%>%
+#  tab_style(
+#    style = list(
+#      cell_fill(color = "lightcyan"),
+#      cell_text(weight = "bold",
+#                color = "red")
+#      ),
+#    locations = cells_body(
+#      columns = `invalid-invalid`,
+#      rows = `invalid-invalid` < 0.05
+#    )
+#  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
+```
+
+
+```{r}
+ca1 = sub_p1 %>% filter(roi == 'ca1-body')
+
+t = ca1 %>% 
+  group_by(within_trial_TR, valid) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$wp_ap)$p.value) %>% 
+  unnest(output) %>%
+  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
+  select(-data) %>% 
+  pivot_wider(names_from = valid,
+              values_from = output)
+
+a = ca1 %>% 
+  pivot_wider(names_from = valid,
+              values_from = wp_ap) %>% 
+  group_by(within_trial_TR) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(t, a, by = c("within_trial_TR"))
+
+t %>% ungroup() %>% gt() %>% 
+  tab_header(title = "Timepoint p-values for ca1-body") %>%
   fmt_number(
     #columns = c(`valid-invalid`, `valid-valid`, paired,`invalid-invalid`),
     columns = c(`valid-invalid`, `valid-valid`, paired),
