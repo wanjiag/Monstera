@@ -68,6 +68,9 @@ p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-
 
 ## n = `r length(unique(sub_p1$sub))`
 
+Early: first 5 rounds correlate with each other
+Late: last 5 rounds correlate with each other
+
 ```{r}
 
 figure = p1 %>% 

@@ -1,5 +1,5 @@
 ---
-title: "Segments analysis - early vs. late learning"
+title: "Segments analysis - first vs. second half"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -63,6 +63,14 @@ sub_p2 = norolling %>%
   summarise(m = mean(wp_ap),
             se = sd(wp_ap)/sqrt(n()),
             n = n())
+```
+
+## n = `r length(unique(sub_p2$sub))`
+
+Early: first 5 rounds correlate with each other
+Late: last 5 rounds correlate with each other
+
+```{r}
 p2 = sub_p2 %>% 
   group_by(valid, segment, roi, time) %>% 
   summarise(mean = mean(m),
