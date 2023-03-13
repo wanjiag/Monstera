@@ -96,7 +96,8 @@ else:
     #subs = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
     #subs = ['sub-MONSTERA38']
     #subs = ['sub-MONSTERA39']
-    subs = ['sub-MONSTERA40','sub-MONSTERA41','sub-MONSTERA42','sub-MONSTERA43']
+    #subs = ['sub-MONSTERA40','sub-MONSTERA41','sub-MONSTERA42','sub-MONSTERA43']
+    subs = ['sub-MONSTERA44','sub-MONSTERA45']
 
 session_list = []
 for i in range(1,11):
