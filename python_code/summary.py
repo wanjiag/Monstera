@@ -41,6 +41,8 @@ def group(df, li):
 rois_dict = {
     'ca23dg-body_thre_0.5_masked':'ca23dg-body',
     'ca1-body_thre_0.5_masked':'ca1-body',
+    #'ca23dg_thre_0.5_masked':'ca23dg',
+    #'ca1_thre_0.5_masked':'ca1',
     'evc_2_epi_thre_0.5_masked':'evc', 
     'ppa_mni_2_epi_thre_0.5_masked':'ppa'
 }

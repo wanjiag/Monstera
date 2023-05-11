@@ -1,0 +1,122 @@
+/home/wanjiag/.local/lib/python3.9/site-packages/nilearn/input_data/__init__.py:27: FutureWarning: The import path 'nilearn.input_data' is deprecated in version 0.9. Importing from 'nilearn.input_data' will be possible at least until release 0.13.0. Please import from 'nilearn.maskers' instead.
+  warnings.warn(message, FutureWarning)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
+/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/denoise_z-score.py:78: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
