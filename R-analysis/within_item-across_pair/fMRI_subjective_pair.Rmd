@@ -23,7 +23,7 @@ theme_set(theme_classic(12))
 
 library(ezPurrr)
 
-cbPalette <- c("#CC79A7","#0072B2","#009E73","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
+cbPalette <- c("#CC79A7","#009E73","#0072B2","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
 #pink, green, blue, yellow
 ```
 
@@ -43,6 +43,16 @@ rolling <- map_dfr(files, converting_read)
 
 files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary_with_destination.csv') %>% unlist()
 norolling <- map_dfr(files, converting_read)
+```
+
+```{r}
+bad = c('20', '24', '27')
+
+norolling = norolling %>% 
+  filter(!(sub %in% bad))
+
+rolling = rolling %>% 
+  filter(!(sub %in% bad))
 ```
 
 ```{r}
@@ -138,10 +148,8 @@ sub_dir = dir_ls(here::here("./csv_files/behavior"))
 postscan2_behav <- map(sub_dir, dir_ls, glob = '*postscan2*_behav*.csv') %>% unlist()
 postscan2_batch <- map_dfr(postscan2_behav, converting_read)
 
-bad = c('20', '24', '27')
 postscan2_batch <- postscan2_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34' & sub != '13' & sub != '23') %>% 
-  filter(!(sub %in% bad))
+  filter(sub != '14' & sub != '30' & sub != '34' & sub != '13' & sub != '23')
 
 postscan2_batch = postscan2_batch %>% 
   mutate(
@@ -204,7 +212,6 @@ f3 = p1 %>%
 plot_grid(f3, f2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
 
 ```
-
 ## No Rolling
 
 six seconds around avg response time (e.g. response at 7.8s, including 5-10 seconds data)
@@ -283,250 +290,14 @@ t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor, (f
 
 ```
 
-
-### Excluding 3 bad subjects
-
-```{r}
-bad = c('20', '24', '27')
-
-norolling_new = norolling %>% 
-  filter(!(sub %in% bad))
-
-```
-
-
-```{r include=FALSE}
-sub_across = norolling_new %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'across') %>% 
-  group_by(sub, roi, within_trial_TR, valid) %>% 
-    summarise(across = mean(cor), n = n())
-  
-sub_within = norolling_new %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'within') %>% 
-  mutate(pair = pair_x, within = cor) %>% 
-  select(-c(pair_x, pair_y, sub_x, cor))
-
-sub_p1 = left_join(sub_within, sub_across) %>% 
-  mutate(wp_ap = within - across) %>% 
-  select(-c(type, within, across, n))
-
-f3_sub =
-left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
-          tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
-  filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
-  group_by(roi, valid, sub) %>% 
-  summarise(cor = mean(wp_ap), n = n())
-
-f3_norolling = f3_sub %>% 
-  group_by(roi, valid) %>% 
-  summarise(m = mean(cor), 
-            se = sd(cor)/sqrt(n()),
-            n = n())
-```
-
-
-```{r}
-ggplot(f3_norolling, aes(x = valid, y = m)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = 'within_pair - across_pair')+ 
-      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
-      theme(legend.position = 'top',
-            legend.title = element_blank(),
-            strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
-
-t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid'))$cor)
-t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid'))$cor)
-
-t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
-t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor, (f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor, paired = TRUE)
-
-```
-
-
-
-
-```{r}
-f3_sub =
-left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
-          tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
-  filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
-  group_by(roi, valid, sub, destination_x, destination_y, pair) %>% 
-  mutate(rank = order(within_trial_TR)) %>% 
-  mutate(before_after = ifelse(rank <= 3, "prior","post")) %>% 
-  ungroup() %>% 
-  filter(before_after != 'na') %>% 
-  group_by(roi, valid, sub, before_after) %>%
-  summarise(cor = mean(wp_ap), n = n())
-
-f3_norolling = f3_sub %>% 
-  group_by(roi, valid, before_after) %>% 
-  summarise(m = mean(cor), 
-            se = sd(cor)/sqrt(n()),
-            n = n())
-
-f3_norolling$roi =  factor(f3_norolling$roi,
-                         levels = c('ca23dg-body',
-                                    'ca1-body', 
-                                    'ppa','evc'))
-f3_norolling$before_after =  factor(f3_norolling$before_after,
-                         levels = c('prior',
-                                    'post'))
-
-ggplot(f3_norolling,
-       aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(
-        y = "similarity scores",
-        x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+ 
-  facet_wrap(roi~valid, scales = "free_y", ncol = 2)+
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
-
-t.test(f3_sub %>% 
-         filter(valid == 'valid-valid' & roi == 'ca23dg-body' &
-                  before_after == 'post') %>% .$cor)
-
-ca23dg = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'ca23dg-body'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+ 
-  scale_y_continuous(limits = c(-0.0017, 0.00045))+
-  scale_fill_manual(values = cbPalette[1])+ 
-  scale_color_manual(values = cbPalette[1])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-ca1 = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'ca1-body'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+
-  scale_y_continuous(limits = c(-0.0017, 0.00045))+
-  scale_fill_manual(values = cbPalette[2])+ 
-  scale_color_manual(values = cbPalette[2])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-ppa = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'ppa'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+
-  scale_fill_manual(values = cbPalette[3])+ 
-  scale_color_manual(values = cbPalette[3])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-evc = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'evc'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+
-  scale_fill_manual(values = cbPalette[4])+ 
-  scale_color_manual(values = cbPalette[4])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-cowplot::plot_grid(ca23dg, ca1, ppa, evc, nrow = 1)
-
-paired_t =  f3_sub %>% 
-  pivot_wider(names_from = before_after, values_from = cor) %>% 
-  group_by(roi, valid) %>% 
-  nest() %>% 
-  broadcast(~t.test(.$prior, .$post, paired = TRUE)$p.value)
-
-paired_t
-
-t = f3_sub %>% 
-  group_by(roi, valid, before_after) %>% 
-  nest() %>% 
-  broadcast(~t.test(.$cor)$p.value)
-
-t %>% filter(valid == 'valid-invalid') %>% select(-data) %>% View()
-
-```
-
-```{r}
-
-f3_sub =
-left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
-          tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
-  filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
-  group_by(roi, valid, sub, destination_x, destination_y, pair) %>% 
-  mutate(rank = order(within_trial_TR)) %>% 
-  ungroup() %>% 
-  group_by(roi, valid, sub, rank) %>%
-  summarise(cor = mean(wp_ap), n = n())
-
-f3_norolling = f3_sub %>% 
-  group_by(roi, valid, rank) %>% 
-  summarise(m = mean(cor), 
-            se = sd(cor)/sqrt(n()),
-            n = n())
-
-ggplot(f3_norolling %>% filter(roi == 'ca1-body',
-                               valid == 'valid-invalid'), 
-       aes(x = rank, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = 'Similarity Scores',
-           x = 'relative time points (seconds)')+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+ 
-  scale_x_continuous(breaks = seq(0,6,1), limit = c(0,7))+
-  scale_fill_manual(values = cbPalette[2])+ 
-  scale_color_manual(values = cbPalette[2])
-
-t =  f3_sub %>% 
-  group_by(roi, valid, rank) %>% 
-  nest() %>% 
-  broadcast(~t.test(.$cor)$p.value)
-
-```
-
-
-3 seconds prior to response (if the response time is 7.8, 2-4 seconds data are included)
+3 seconds prior to response (if the response time is 7.8, 5-7 seconds data are included)
 
 ```{r include=FALSE}
 
 f3_sub =
 left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
           tmp, by = c("sub" = "sub", "pair" = "route")) %>%
-  filter(within_trial_TR < floor_tp & within_trial_TR >= floor_tp - 3) %>%
+  filter(within_trial_TR <= output & within_trial_TR >= floor_tp) %>% 
   group_by(roi, valid, sub) %>% 
   summarise(cor = mean(wp_ap), n = n())
 
@@ -558,14 +329,14 @@ t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
 t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor, (f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor, paired = TRUE)
 ```
 
-3 seconds post response (if the response time is 7.8, 11-13 seconds data are included)
+3 seconds post response (if the response time is 7.8, 8-10 seconds data are included)
 
 ```{r include=FALSE}
 
 f3_sub =
 left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
           tmp, by = c("sub" = "sub", "pair" = "route")) %>%
-  filter(within_trial_TR <= ceiling_tp + 3 & within_trial_TR > ceiling_tp) %>% 
+  filter(within_trial_TR <= ceiling_tp & within_trial_TR > output) %>% 
   group_by(roi, valid, sub) %>% 
   summarise(cor = mean(wp_ap), n = n())
 f3_norolling = f3_sub %>% 

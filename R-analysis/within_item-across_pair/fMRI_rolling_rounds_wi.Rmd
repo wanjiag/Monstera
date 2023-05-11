@@ -56,7 +56,7 @@ sub_p1 = rolling %>%
   filter(valid != 'invalid-invalid') %>% 
   filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
-  mutate(wp_ap = within - across) %>% 
+  mutate(wi_ap = same - across) %>% 
   select(-c(across, within, same))%>% 
   mutate('time' = ifelse((round_x <= 5 & round_y <= 5), 'early',
                          ifelse((round_x > 5 & round_y > 5), 'late',
@@ -65,8 +65,8 @@ sub_p1 = rolling %>%
 
 p1 = sub_p1 %>% 
   group_by(valid, within_trial_TR, roi, time) %>%
-  summarise(mean = mean(wp_ap),
-            se = sd(wp_ap)/sqrt(n()),
+  summarise(mean = mean(wi_ap),
+            se = sd(wi_ap)/sqrt(n()),
             n = n())
 
 p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
@@ -91,7 +91,7 @@ figure = p1 %>%
                 alpha = 0.2,
                 color = NA) +
     geom_line(size = 1)+
-    labs(y = 'within_pair - across_pair',
+    labs(y = 'within_item - across_pair',
          x = 'within trial timepoint') + 
     theme(legend.position = 'bottom',
           legend.title = element_blank(),
@@ -113,7 +113,7 @@ ca23dg = sub_p1 %>% filter(roi == 'ca23dg-body')
 t = ca23dg %>% 
   select(-c(round_x, round_y, sub_x)) %>% 
   group_by(sub, valid, within_trial_TR, time) %>% 
-  summarise(m = mean(wp_ap)) %>% 
+  summarise(m = mean(wi_ap)) %>% 
   pivot_wider(names_from = valid, values_from = m) %>% 
   group_by(within_trial_TR, time) %>% 
   nest() %>% 
@@ -125,7 +125,7 @@ t = ca23dg %>%
 a = ca23dg %>% 
   select(-c(round_x, round_y, sub_x)) %>% 
   group_by(sub, valid, within_trial_TR, time) %>% 
-  summarise(m = mean(wp_ap)) %>% 
+  summarise(m = mean(wi_ap)) %>% 
   pivot_wider(names_from = valid, values_from = m) %>% 
   group_by(within_trial_TR, time) %>% 
   nest() %>% 
@@ -195,7 +195,6 @@ t %>% ungroup() %>% gt(
 
 
 ```{r}
-
 figure = p1 %>% 
     ggplot(aes(x = within_trial_TR, y = mean, color = time)) +
     geom_hline(yintercept = 0, linetype="longdash") +
@@ -207,7 +206,7 @@ figure = p1 %>%
                 alpha = 0.2,
                 color = NA) +
     geom_line(size = 1)+
-    labs(y = 'within_pair - across_pair',
+    labs(y = 'within_item - across_pair',
          x = 'within trial timepoint') + 
     theme(legend.position = 'bottom',
           legend.title = element_blank(),
@@ -219,9 +218,7 @@ figure = p1 %>%
              nrow = 4)
 
 print(figure)
-
 ```
-
 
 ```{r}
 ca23dg = sub_p1 %>% filter(roi == 'ca23dg-body')
@@ -229,7 +226,7 @@ ca23dg = sub_p1 %>% filter(roi == 'ca23dg-body')
 t = ca23dg %>% 
   select(-c(round_x, round_y, sub_x)) %>% 
   group_by(sub, valid, within_trial_TR, time) %>% 
-  summarise(m = mean(wp_ap)) %>% 
+  summarise(m = mean(wi_ap)) %>% 
   pivot_wider(names_from = time, values_from = m) %>% 
   group_by(within_trial_TR, valid) %>% 
   nest() %>% 
@@ -241,7 +238,7 @@ t = ca23dg %>%
 a = ca23dg %>% 
   select(-c(round_x, round_y, sub_x)) %>% 
   group_by(sub, valid, within_trial_TR, time) %>% 
-  summarise(m = mean(wp_ap)) %>% 
+  summarise(m = mean(wi_ap)) %>% 
   pivot_wider(names_from = time, values_from = m) %>% 
   group_by(within_trial_TR, valid) %>% 
   nest() %>% 

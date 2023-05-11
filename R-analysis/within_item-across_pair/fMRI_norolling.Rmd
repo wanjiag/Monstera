@@ -27,8 +27,8 @@ theme_set(theme_classic(12))
 
 library(ezPurrr)
 
-cbPalette <- c("#CC79A7","#0072B2","#009E73","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
-#pink, blue, green, yellow
+cbPalette <- c("#CC79A7","#009E73","#0072B2","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
+#pink, green, blue, yellow
 ```
 
 ```{r reading in data, include=FALSE}
@@ -50,19 +50,10 @@ norolling <- map_dfr(files, converting_read)
 ```
 
 
-
-```{r}
-bad = c('13', '20', '23', '24', '27')
-
-norolling = norolling %>% 
-  filter(!(sub %in% bad))
-```
-
-## n = `r length(unique(norolling$sub))`
-
 ```{r early and late}
 sub_p1 = norolling %>% 
   filter(valid != 'invalid-invalid') %>% 
+  filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across,
          sp_ap = same - across) %>% 
@@ -310,6 +301,7 @@ t %>% ungroup() %>%
 ```{r together}
 sub_p2 = norolling %>% 
   filter(valid != 'invalid-invalid') %>% 
+  filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
   select(-c(across, within, same)) %>% 
@@ -345,67 +337,7 @@ ggplot(p2, aes(x = segment, y = mean, fill = roi)) +
             strip.background = element_blank())+ 
   scale_fill_manual(values = cbPalette)+ 
   scale_color_manual(values = cbPalette)
-```
 
-
-```{r poster, eval=FALSE, include=FALSE}
-p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
-
-ggplot(p2 %>% filter(valid == 'valid-valid'), 
-       aes(x = segment, y = mean, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = 'Similarity Scores')+ 
-      facet_wrap(~roi, ncol = 4, scales = 'free_y')+
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.text.x = element_blank(),
-            strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
-
-ggplot(p2 %>% filter(valid == 'valid-invalid'), 
-       aes(x = segment, y = mean, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = 'Similarity Scores')+ 
-      facet_wrap(~roi, ncol = 4, scales = 'free_y')+
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.text.x = element_blank(),
-            strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
-
-sub_p3$sub = as.numeric(sub_p3$sub)
-sub_p3 = sub_p3 %>% mutate(stage = ifelse(sub <= 18, 'early', 'late'))
-
-p3 = sub_p3 %>% 
-  group_by(valid, segment, roi, stage) %>% 
-  summarise(mean = mean(m),
-            se = sd(m)/sqrt(n()),
-            n = n())
-
-aggregate(sub~stage,sub_p3, function(x) length(unique(x)))
-
-p3$roi = factor(p3$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
-p3$segment = factor(p3$segment, levels = c('same', 'similar', 'different'))
-
-ggplot(p3 %>% filter(valid == 'valid-valid'), 
-       aes(x = segment, y = mean, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = 'Similarity Scores')+ 
-      facet_wrap(stage~roi, ncol = 4, scales = 'free_y')+
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            #strip.text.x = element_blank(),
-            strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
 ```
 
 ANOVA across ROI (ca23dg & ppa), segment, and valid
@@ -740,5 +672,131 @@ ggplot(p3, aes(x = segment, y = mean, fill = performance)) +
   scale_fill_manual(values = cbPalette)+ 
   scale_color_manual(values = cbPalette)
 
+```
+
+post-test1
+
+```{r}
+
+good = c('06', '07', '08', '09', '10', '11', '12', '15', '16', '17', '18', '19', '21', '22', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '39', '40', '41', '42', '43', '44', '45', '46', '47')
+
+bad = c('20', '24', '27')
+
+```
+
+
+```{r}
+sub_p4 = sub_p1 %>% 
+  filter(!(sub %in% bad))
+```
+
+There are `r length(unique(sub_p4$sub))` good subjects (with 100% accuracy and high confidence at differnet segment for post-test1)
+
+```{r}
+
+p4 = sub_p4 %>% 
+  group_by(valid, segment, roi) %>% 
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p4$segment = factor(p4$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p4$roi = factor(p4$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+p4$valid = factor(p4$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+ggplot(p4, aes(x = segment, y = mean, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+
+
+t = sub_p4 %>% 
+  group_by(segment, valid, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$m)$p.value) %>% 
+  unnest(output) %>% 
+  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
+  select(-data) %>% 
+  pivot_wider(names_from = valid,
+              values_from = output)
+
+a = sub_p4 %>% select(-c(se, n)) %>% 
+  pivot_wider(names_from = valid,
+              values_from = m) %>% 
+  group_by(segment, roi) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(t, a, by = c("segment", "roi"))
+
+t %>% ungroup() %>% 
+  gt(
+    rowname_col = "row",
+    groupname_col = "segment"
+  ) %>%
+  row_group_order(groups = c("same","early-similar","late-similar", "different")) %>%
+  tab_header(title = "Stats") %>%
+  
+  fmt_number(
+    #columns = c(`valid-invalid`, `valid-valid`, `invalid-invalid`, paired),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-invalid`,
+      rows = `valid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-valid`,
+      rows = `valid-valid` < 0.05
+    )
+  )%>%
+  #tab_style(
+  #  style = list(
+  #    cell_fill(color = "lightcyan"),
+  #    cell_text(weight = "bold",
+  #              color = "red")
+  #    ),
+  #  locations = cells_body(
+  #    columns = `invalid-invalid`,
+  #    rows = `invalid-invalid` < 0.05
+  #  )
+  #)%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
 ```
 

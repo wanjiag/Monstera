@@ -17,7 +17,7 @@ library(gt)
 library(fs)
 library(purrr)
 library(tidyverse)
-theme_set(theme_classic(25))
+theme_set(theme_classic(22))
 ```
 
 
@@ -56,14 +56,17 @@ Exclude subject 30: subject wanted to discontinue after round 7 because of disco
 Exclude subject 34: the participant perceived the peripheral nerve stimulation to be uncomfortable, so stopped the scan after Round 2.
 
 ```{r}
+
+#bad = c('13', '20', '23', '24', '27')
+
 prescan_batch <- prescan_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')
+  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
 scan_batch <- scan_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')
+  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
 postscan1_batch <- postscan1_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')
+  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
 postscan2_batch <- postscan2_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')
+  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
 ```
 
 ## n = `r nrow(prescan_batch)/24`
@@ -186,6 +189,29 @@ scan_batch %>% group_by(sub) %>% summarise(
       columns = vars(conf_correct)
     )
   )
+
+
+scan_batch %>% group_by(sub) %>% summarise(
+  correct = mean(correct, na.rm = TRUE),
+  conf = mean(confidence, na.rm = TRUE),
+  conf_correct = mean(cor_conf, na.rm = TRUE)
+) %>% ggplot(aes(x = correct)) + geom_histogram()
+
+scan_batch %>% group_by(sub) %>% 
+  filter(!(sub %in% c('13', '20', '23', '24', '27'))) %>% 
+  summarise(
+  correct = mean(correct, na.rm = TRUE),
+  conf = mean(confidence, na.rm = TRUE),
+  conf_correct = mean(cor_conf, na.rm = TRUE)
+) %>% ggplot(aes(x = correct)) + geom_histogram(bins = 15)
+
+scan_batch %>% group_by(sub) %>% 
+  filter(!(sub %in% c('13', '20', '23', '24', '27'))) %>% 
+  summarise(
+  correct = mean(correct, na.rm = TRUE),
+  conf = mean(confidence, na.rm = TRUE),
+  conf_correct = mean(cor_conf, na.rm = TRUE)
+) %>% ggplot(aes(x = conf_correct)) + geom_histogram(bins = 15)
 ```
 
 ### Posttest1
@@ -322,6 +348,7 @@ ggplot(curr_plot, aes(x = as.factor(nquestion), y = mean_cor_conf)) +
     name = 'segment',
     labels=c("1" = "same", "2" = "similar",
                             "3" = "different"))+
+  scale_y_continuous(breaks = seq(0,100,25), limit = c(0,100))+
   theme(strip.background = element_blank())
 
 sub_plot$round_text = factor(sub_plot$round_text)
@@ -382,6 +409,7 @@ prescan_batch_competitor %>%
     name = 'segment',
     labels=c("1" = "same", "2" = "similar",
                             "3" = "different"))+
+  scale_y_continuous(breaks = seq(0,100,25), limit = c(0,100))+
   theme(strip.background = element_blank())
   
 ```
