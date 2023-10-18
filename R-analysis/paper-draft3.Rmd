@@ -1,0 +1,626 @@
+---
+title: "paper-draft3: early vs. late rounds"
+author: "Wanjia Guo"
+date: '2023-09-25'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: journal
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("./utils.R")
+
+postscan2_batch = loading_postscan2_df()
+
+rolling = loading_rolling_rounds_df() %>% select(-sub_x)
+rolling = rolling %>% 
+  mutate('round' = ifelse((round_x <= 5 & round_y <= 5), 'early',
+                         ifelse((round_x > 5 & round_y > 5), 'late',
+                                'others')))
+rolling_sub = rolling %>%   
+group_by(type, valid, within_trial_TR, roi, sub, round) %>% 
+  summarise(m = mean(cor)) %>%
+  filter(valid != 'invalid-invalid'
+         & round != 'others') 
+
+```
+
+
+
+```{r}
+sub_p1 = rolling_sub %>%
+  pivot_wider(
+    names_from = type, values_from = m) %>%
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same))
+```
+
+
+## Timepoint by timepoint
+
+```{r}
+
+p1 = sub_p1 %>% 
+  group_by(valid, within_trial_TR, roi, round) %>%
+  summarise(mean = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p1$roi = factor(p1$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc', 'ca23dg', 'ca1'))
+p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+p1 %>% filter(round == 'early') %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = valid),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within_pair - across_pair',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette[7:8])+ 
+  scale_color_manual(values = cbPalette[7:8])+
+  facet_wrap(~roi,
+             scales = 'free_y',
+             nrow = 2)
+
+p1 %>% filter(valid == 'valid-valid') %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = round)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = round),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within_pair - across_pair',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = colorblindr::palette_OkabeIto)+ 
+  scale_color_manual(values = colorblindr::palette_OkabeIto)+
+  facet_wrap(~roi,
+             scales = 'free_y',
+             ncol = 2)
+
+
+p1 %>% filter(round == 'early') %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = valid),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within_pair - across_pair',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette[7:8])+ 
+  scale_color_manual(values = cbPalette[7:8])+
+  facet_wrap(~roi,
+             scales = 'free_y',
+             ncol = 2)
+```
+
+
+## Segments-based
+
+```{r}
+sub_p2 = sub_p1 %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  group_by(valid, segment, roi, sub, round) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p2 = sub_p2 %>% 
+  group_by(valid, segment, roi, round) %>%
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+ggplot(p2 %>% filter(round == 'early'& roi %in% c('ca23dg-body', 'ca1-body')), 
+       aes(x = segment, y = mean, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
+      #geom_point(data = sub_p1, aes(x = segment, y = m, color = roi, group = roi), 
+      #            position=position_jitterdodge(
+      #              jitter.width = 0.2,
+      #              dodge.width = 0.75)) + 
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~valid, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'bottom',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ggplot(p2 %>% filter(valid == 'valid-valid'), aes(x = segment, y = mean, fill = round)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
+      #geom_point(data = sub_p1, aes(x = segment, y = m, color = roi, group = roi), 
+      #            position=position_jitterdodge(
+      #              jitter.width = 0.2,
+      #              dodge.width = 0.75)) + 
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'bottom',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = colorblindr::palette_OkabeIto)+ 
+  scale_color_manual(values = colorblindr::palette_OkabeIto)
+
+ggplot(p2, aes(x = segment, y = mean, fill = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.5) +
+      #geom_point(data = sub_p1, aes(x = segment, y = m, color = roi, group = roi), 
+      #            position=position_jitterdodge(
+      #              jitter.width = 0.2,
+      #              dodge.width = 0.75)) + 
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(round~roi, ncol = 4, scales = 'free_y')+
+      theme(legend.position = 'bottom',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette[7:8])+ 
+  scale_color_manual(values = cbPalette[7:8])
+```
+
+### STATS
+
+ANOVA across ROI (ca23dg & ppa), segment, and valid
+
+```{r}
+ezANOVA(data=sub_p2 %>% filter(roi %in% c('ca1-body', 'ca23dg-body') & round == 'early' & segment == 'same'),
+        wid=sub,
+        within = .(valid, roi),
+        dv = m)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=sub_p2 %>% filter(roi %in% c('ca1-body') & round == 'early' & valid == 'valid-valid'),
+        wid=sub,
+        within = .(segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+```{r}
+
+ca23dg = sub_p2 %>% filter(roi == 'ca23dg-body')
+
+ca23dg$segment = factor(ca23dg$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+
+
+t = ca23dg %>% 
+  group_by(sub, valid, segment, round) %>% 
+  summarise(m = mean(m)) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  group_by(segment, round) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, paired = TRUE)$p.value) %>% 
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output))
+
+a = ca23dg %>% 
+  group_by(sub, valid, segment, round) %>% 
+  summarise(m = mean(m)) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  group_by(segment, round) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`)$p.value) %>%
+  unnest(output) %>%
+  mutate(valid = output) %>% 
+  broadcast(~t.test(.$`valid-invalid`)$p.value) %>%
+  unnest(output) %>%
+  mutate(invalid = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(a, t, by = c("segment", "round"))
+
+t %>% ungroup() %>% gt(
+    groupname_col = "round") %>%
+  row_group_order(groups = c("early", "late")) %>%
+  tab_header(title = "Timepoint p-values for ca23dg-body") %>%
+  fmt_number(
+    columns = c(valid, invalid, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid`,
+      rows = `valid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `invalid`,
+      rows = `invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
+
+
+ca23dg %>% 
+  group_by(sub, valid, segment, round) %>% 
+  summarise(m = mean(m)) %>% 
+  pivot_wider(names_from = round, values_from = m) %>% 
+  group_by(segment, valid) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`early`, .$`late`, paired = TRUE)$p.value) %>% 
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) %>% knitr::kable()
+```
+
+
+
+```{r}
+
+ca1 = sub_p2 %>% filter(roi == 'ca1-body')
+
+ca1$segment = factor(ca1$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+
+t = ca1 %>% 
+  group_by(sub, valid, segment, round) %>% 
+  summarise(m = mean(m)) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  group_by(segment, round) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, paired = TRUE)$p.value) %>% 
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output))
+
+a = ca1 %>% 
+  group_by(sub, valid, segment, round) %>% 
+  summarise(m = mean(m)) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  group_by(segment, round) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`)$p.value) %>%
+  unnest(output) %>%
+  mutate(valid = output) %>% 
+  broadcast(~t.test(.$`valid-invalid`)$p.value) %>%
+  unnest(output) %>%
+  mutate(invalid = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(a, t, by = c("segment", "round"))
+
+t %>% ungroup() %>% gt(
+    groupname_col = "round") %>%
+  row_group_order(groups = c("early", "late")) %>%
+  tab_header(title = "Timepoint p-values for ca1-body") %>%
+  fmt_number(
+    columns = c(valid, invalid, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid`,
+      rows = `valid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `invalid`,
+      rows = `invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
+
+
+ca1 %>% 
+  group_by(sub, valid, segment, round) %>% 
+  summarise(m = mean(m)) %>% 
+  pivot_wider(names_from = round, values_from = m) %>% 
+  group_by(segment, valid) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`early`, .$`late`, paired = TRUE)$p.value) %>% 
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) %>% knitr::kable()
+```
+
+```{r}
+t.test(ca23dg %>% filter(valid == 'valid-valid' & round == 'early' &  segment == 'same') %>% .$m, ca1 %>% filter(valid == 'valid-valid' & round == 'early' &  segment == 'same') %>% .$m, paired = TRUE)
+```
+
+
+# Pre- and Post- MoI
+
+```{r}
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp))
+
+postscan_summary = postscan2_batch_correct %>% 
+  group_by(route, sub) %>% 
+  summarize(m = mean(tp),
+            max = max(tp),
+            min = min(tp),
+            median = median(round(tp)),
+            range = max - min,
+            n = n())
+
+tmp = postscan2_batch_correct %>% 
+  mutate(tp = round(tp)) %>% 
+  group_by(route, sub) %>% 
+  nest() %>% 
+  broadcast(~max(Modes(.$tp))) %>% 
+  mutate(mode = as.numeric(output)) %>% 
+  select(-c(data, output))
+
+```
+
+```{r}
+sub_across = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid, round) %>% 
+    summarise(across = mean(cor), n = n())
+  
+sub_within = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor) %>% 
+  select(-c(pair_x, pair_y, cor))
+
+sub_together = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n))
+
+sub_p3 =
+left_join(sub_together %>% mutate(sub = as.numeric(sub)), 
+          tmp %>% mutate(sub = as.numeric(sub)), 
+          by = c("sub" = "sub", "pair" = "route")) %>%
+  mutate(segment = ifelse(within_trial_TR <= mode, 'pre', 'post')) %>% 
+  #filter(segment != 'MoI') %>%
+  group_by(roi, valid, sub, segment, round) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+p3 = sub_p3 %>% 
+  group_by(roi, valid, segment, round) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+```
+
+
+```{r}
+p3$segment = factor(p3$segment,levels = c('pre', 'post'))
+p3$roi = factor(p3$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa','evc'))
+p3$valid = factor(p3$valid, levels = c('valid-valid', 'valid-invalid'))
+
+ggplot(p3 %>% filter(round == 'early'), aes(x = segment, y = m, fill = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~roi, ncol = 4, scales = 'free_y')+
+      theme(legend.position = 'bottom',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette[7:8])+ 
+  scale_color_manual(values = cbPalette[7:8])
+
+
+ggplot(p3 %>% filter(round != 'others'), aes(x = segment, y = m, fill = round)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(valid~roi, ncol = 4, scales = 'free_y')+
+      theme(legend.position = 'bottom',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ggplot(p3 %>% filter(round == 'early' & roi %in% c('ca1-body', 'ca23dg-body')), aes(x = segment, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~valid, ncol = 4, scales = 'free_y')+
+      theme(legend.position = 'bottom',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+```
+
+
+
+# 3-3-3s around MoI
+
+
+```{r}
+tmp = tmp %>% 
+  mutate(
+    ceiling_tp = mode + 1,
+    floor_tp = mode - 1)
+```
+
+
+```{r}
+
+sub_p4 =
+left_join(sub_together %>% mutate(sub = as.numeric(sub)), 
+          tmp %>% mutate(sub = as.numeric(sub)), 
+          by = c("sub" = "sub", "pair" = "route")) %>%
+  filter(within_trial_TR <= ceiling_tp + 3 & within_trial_TR >= floor_tp - 3) %>% 
+  mutate(segment = ifelse(within_trial_TR < floor_tp, 'pre',
+                          ifelse(within_trial_TR > ceiling_tp, 'post', 'MoI'))) %>% 
+  group_by(roi, valid, sub, segment, round) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+p4 = sub_p4 %>% 
+  group_by(roi, valid, segment, round) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+```
+
+
+```{r}
+
+p4$segment = factor(p4$segment,levels = c('pre', 'MoI', 'post'))
+p4$roi = factor(p4$roi, levels = c('ca23dg-body', 'ca1-body','ppa',  'evc'))
+p4$valid = factor(p4$valid, levels = c('valid-valid', 'valid-invalid'))
+
+
+ggplot(p4 %>% filter(round == 'early' & roi %in% c('ca1-body', 'ca23dg-body')), aes(x = segment, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~valid, ncol = 4, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette) + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())
+
+ggplot(p4 %>% filter(round != 'others'), aes(x = segment, y = m, fill = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(round~roi, ncol = 4, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette[7:8])+ 
+  scale_color_manual(values = cbPalette[7:8]) + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())
+```
+
+```{r}
+ezANOVA(data=sub_p4 %>% filter(roi %in% c('ca1-body', 'ca23dg-body') & round == 'early' & valid == 'valid-valid'),
+        wid=sub,
+        within = .(roi, segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=sub_p4 %>% filter(roi %in% c('ca1-body', 'ca23dg-body') & round == 'early' & valid == 'valid-invalid'),
+        wid=sub,
+        within = .(roi, segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+
+t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre' & round == 'early'))$cor,
+       (sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-valid' & segment == 'pre' & round == 'early'))$cor,
+       paired = TRUE)
+
+t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'MoI' & round == 'early'))$cor,
+       (sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-valid' & segment == 'MoI' & round == 'early'))$cor,
+       paired = TRUE)
+
+t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'post' & round == 'early'))$cor,
+       (sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-valid' & segment == 'post' & round == 'early'))$cor,
+       paired = TRUE)
+
+t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre' & round == 'early'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-valid' & segment == 'post' & round == 'early'))$cor)
+t.test((sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-invalid' & segment == 'pre' & round == 'early'))$cor)
+t.test((sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-invalid' & segment == 'MoI' & round == 'early'))$cor)
+```
+

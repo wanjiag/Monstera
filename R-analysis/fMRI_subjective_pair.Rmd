@@ -45,89 +45,19 @@ files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary_with_destination.csv
 norolling <- map_dfr(files, converting_read)
 ```
 
-```{r}
-sub_across = rolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'across') %>% 
-  group_by(sub, roi, within_trial_TR, valid) %>% 
-    summarise(across = mean(cor), n = n())
-  
-  
-sub_within = rolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'within') %>% 
-  mutate(pair = pair_x, within = cor) %>% 
-  select(-c(pair_x, pair_y, sub_x, cor))
-
-sub_p1 = left_join(sub_within, sub_across) %>% 
-  mutate(wp_ap = within - across) %>% 
-  select(-c(type, within, across, n))
-
-p1 = sub_p1 %>% 
-  group_by(valid, within_trial_TR, roi, pair) %>%
-  summarise(mean = mean(wp_ap),
-            se = sd(wp_ap)/sqrt(n()),
-            n = n())
-
-p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
-p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
-```
-
-## n = `r length(unique(sub_p1$sub))`
 
 ```{r}
+bad = c('13', '20', '23', '24', '27')
 
-figure = p1 %>% 
-    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
-    geom_hline(yintercept = 0, linetype="longdash") +
-    geom_vline(xintercept=6, linetype="longdash") +
-    geom_vline(xintercept=18, linetype="longdash") +
-    geom_ribbon(aes(ymin = mean-se, 
-                    ymax = mean+se,
-                    fill = valid),
-                alpha = 0.2,
-                color = NA) +
-    geom_line(size = 1)+
-    labs(y = 'within_pair - across_pair',
-         x = 'within trial timepoint') + 
-    theme(legend.position = 'bottom',
-          legend.title = element_blank(),
-          strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)+
-  facet_wrap(roi~pair,
-             scales = 'free_y',
-             nrow = 4)
+rolling = rolling %>% 
+  filter(!(sub %in% bad))
 
-print(figure)
+norolling = norolling %>% 
+  filter(!(sub %in% bad))
 
+length(unique(rolling$sub))
+length(unique(norolling$sub))
 ```
-
-```{r}
-f1 = p1 %>% 
-    filter(roi == 'ca23dg-body') %>% 
-    ggplot(aes(x = within_trial_TR, y = mean)) +
-    geom_hline(yintercept = 0, linetype="longdash") +
-    geom_vline(xintercept=6, linetype="longdash") +
-    geom_vline(xintercept=18, linetype="longdash") +
-    geom_ribbon(aes(ymin = mean-se, 
-                    ymax = mean+se),
-                alpha = 0.2,
-                color = NA) +
-    geom_line(size = 1)+
-    labs(y = 'within_pair - across_pair',
-         x = 'within trial timepoint') + 
-    theme(legend.position = 'bottom',
-          legend.title = element_blank(),
-          strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)+
-  facet_wrap(valid~pair,
-             scales = 'free_y',
-             ncol = 4)
-```
-
-
 
 ```{r include=FALSE}
 converting_read <- function(curr_path){
@@ -138,20 +68,20 @@ sub_dir = dir_ls(here::here("./csv_files/behavior"))
 postscan2_behav <- map(sub_dir, dir_ls, glob = '*postscan2*_behav*.csv') %>% unlist()
 postscan2_batch <- map_dfr(postscan2_behav, converting_read)
 
-bad = c('20', '24', '27')
 postscan2_batch <- postscan2_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34' & sub != '13' & sub != '23') %>% 
+  filter(sub != '14' & sub != '30' & sub != '34') %>% 
   filter(!(sub %in% bad))
 
 postscan2_batch = postscan2_batch %>% 
   mutate(
   correct = ifelse(!is.na(post_first_resp_obj) & post_first_resp_obj == destination, 1, 0))
 
+length(unique(postscan2_batch$sub))
 ```
 
 
 ```{r}
-f2 = postscan2_batch %>%
+postscan2_batch %>%
   filter(correct == 1) %>%
   mutate(tp = npic * 0.24, ceiling_tp = ceiling(tp)) %>% 
   mutate(route = factor(route, levels = c('pair1_east','pair2_north','pair3_west','pair4_south')),
@@ -166,51 +96,29 @@ f2 = postscan2_batch %>%
         legend.position = 'none')
 ```
 
-CA23DG:
-
-```{r}
-library(cowplot)
-
-plot_grid(f1, f2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
-
-```
-
-
-CA1:
-
-```{r}
-f3 = p1 %>% 
-    filter(roi == 'ca1-body') %>% 
-    ggplot(aes(x = within_trial_TR, y = mean)) +
-    geom_hline(yintercept = 0, linetype="longdash") +
-    geom_vline(xintercept=6, linetype="longdash") +
-    geom_vline(xintercept=18, linetype="longdash") +
-    geom_ribbon(aes(ymin = mean-se, 
-                    ymax = mean+se),
-                alpha = 0.2,
-                color = NA) +
-    geom_line(size = 1)+
-    labs(y = 'within_pair - across_pair',
-         x = 'within trial timepoint') + 
-    theme(legend.position = 'bottom',
-          legend.title = element_blank(),
-          strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)+
-  facet_wrap(valid~pair,
-             scales = 'free_y',
-             ncol = 4)
-
-plot_grid(f3, f2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
-
-```
-
 ## No Rolling
 
-six seconds around avg response time (e.g. response at 7.8s, including 5-10 seconds data)
+### Pre- and Post-Moment of Insight
 
 ```{r}
+sub_across = norolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid) %>% 
+    summarise(across = mean(cor), n = n())
+  
+sub_within = norolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor) %>% 
+  select(-c(pair_x, pair_y, sub_x, cor))
 
+sub_p1 = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n))
+```
+
+```{r}
 getmode <- function(v) {
    uniqv <- unique(v)
    uniqv[which.max(tabulate(match(v, uniqv)))]
@@ -218,43 +126,102 @@ getmode <- function(v) {
 
 tmp = postscan2_batch %>% 
   filter(correct == 1) %>%
-  mutate(tp = npic * 0.24, floor_tp = floor(tp)) %>% 
+  mutate(tp = npic * 0.24) %>% 
+  group_by(route, sub) %>% 
+  nest() %>% 
+  broadcast(~median(.$tp)) %>% 
+  mutate(median = round(as.numeric(output)),
+         sub = as.numeric(sub)) %>% 
+  select(-c(data, output))
+  
+postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24) %>% 
+  ggplot(aes(x = rt, fill = pair)) + geom_histogram() + 
+  facet_wrap(~sub, ncol = 5)+ 
+  theme(
+  strip.background = element_blank(),
+  strip.text.x = element_blank()
+)
+
+tmp = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24, 
+         floor_tp = floor(tp), 
+         ceiling_tp = ceiling(tp)) %>% 
   group_by(route, sub) %>% 
   nest() %>% 
   broadcast(~getmode(.$floor_tp)) %>% 
+  mutate(floor_tp = as.numeric(output)) %>% 
+  broadcast(~max(.$ceiling_tp)) %>% 
+  mutate(max_tp = as.numeric(output)) %>% 
+  broadcast(~getmode(.$ceiling_tp)) %>% 
+  mutate(ceiling_tp = as.numeric(output),
+         sub = as.numeric(sub)) %>% 
+  select(-c(data, output))
+```
+
+```{r}
+f1_sub =
+left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
+          tmp, by = c("sub" = "sub", "pair" = "route")) %>%
+  mutate(segment = ifelse(within_trial_TR <= min, 'pre', 'post')) %>% 
+  group_by(roi, valid, sub, segment) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+f1_norolling = f1_sub %>% 
+  group_by(roi, valid, segment) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+```
+
+```{r}
+
+f1_norolling$segment = factor(f1_norolling$segment,
+                                 levels = c('pre', 'post'))
+
+ggplot(f1_norolling, aes(x = segment, y = m)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ezANOVA(data=f1_sub %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
+        wid=sub,
+        within = .(valid, roi, segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+t.test((f1_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre'))$cor)
+t.test((f1_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre'))$cor, (f1_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'post'))$cor, paired = TRUE)
+```
+
+
+six seconds around avg response time (e.g. response at 7.8s, including 5-10 seconds data)
+
+```{r}
+tmp = tmp %>% 
   mutate(
-    output = as.numeric(output),
-    ceiling_tp = output + 3,
-    floor_tp = output - 2,
-    sub = as.numeric(sub)) %>% 
-  select(-data)
+    ceiling_tp = max_tp + 3,
+    floor_tp = max_tp - 2)
 ```
 
 ```{r include=FALSE}
-sub_across = norolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'across') %>% 
-  group_by(sub, roi, within_trial_TR, valid) %>% 
-    summarise(across = mean(cor), n = n())
-  
-sub_within = norolling %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'within') %>% 
-  mutate(pair = pair_x, within = cor) %>% 
-  select(-c(pair_x, pair_y, sub_x, cor))
 
-sub_p1 = left_join(sub_within, sub_across) %>% 
-  mutate(wp_ap = within - across) %>% 
-  select(-c(type, within, across, n))
-
-f3_sub =
+f2_sub =
 left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
           tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
   filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
   group_by(roi, valid, sub) %>% 
   summarise(cor = mean(wp_ap), n = n())
 
-f3_norolling = f3_sub %>% 
+f2_norolling = f2_sub %>% 
   group_by(roi, valid) %>% 
   summarise(m = mean(cor), 
             se = sd(cor)/sqrt(n()),
@@ -263,7 +230,7 @@ f3_norolling = f3_sub %>%
 
 
 ```{r}
-ggplot(f3_norolling, aes(x = valid, y = m)) +
+ggplot(f2_norolling, aes(x = valid, y = m)) +
       geom_hline(yintercept = 0, linetype="longdash") +
       geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
       geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
@@ -275,79 +242,18 @@ ggplot(f3_norolling, aes(x = valid, y = m)) +
   scale_fill_manual(values = cbPalette)+ 
   scale_color_manual(values = cbPalette)
 
-t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid'))$cor)
-t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid'))$cor)
+ezANOVA(data=f2_sub %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
+        wid=sub,
+        within = .(valid, roi),
+        dv = cor)$ANOVA %>% knitr::kable()
 
-t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
-t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor, (f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor, paired = TRUE)
+t.test((f2_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid'))$cor)
+t.test((f2_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid'))$cor)
 
-```
-
-
-### Excluding 3 bad subjects
-
-```{r}
-bad = c('20', '24', '27')
-
-norolling_new = norolling %>% 
-  filter(!(sub %in% bad))
+t.test((f2_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor)
+t.test((f2_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
 
 ```
-
-
-```{r include=FALSE}
-sub_across = norolling_new %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'across') %>% 
-  group_by(sub, roi, within_trial_TR, valid) %>% 
-    summarise(across = mean(cor), n = n())
-  
-sub_within = norolling_new %>% 
-  filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23' & type == 'within') %>% 
-  mutate(pair = pair_x, within = cor) %>% 
-  select(-c(pair_x, pair_y, sub_x, cor))
-
-sub_p1 = left_join(sub_within, sub_across) %>% 
-  mutate(wp_ap = within - across) %>% 
-  select(-c(type, within, across, n))
-
-f3_sub =
-left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
-          tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
-  filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
-  group_by(roi, valid, sub) %>% 
-  summarise(cor = mean(wp_ap), n = n())
-
-f3_norolling = f3_sub %>% 
-  group_by(roi, valid) %>% 
-  summarise(m = mean(cor), 
-            se = sd(cor)/sqrt(n()),
-            n = n())
-```
-
-
-```{r}
-ggplot(f3_norolling, aes(x = valid, y = m)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = 'within_pair - across_pair')+ 
-      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
-      theme(legend.position = 'top',
-            legend.title = element_blank(),
-            strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
-
-t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid'))$cor)
-t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid'))$cor)
-
-t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
-t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor, (f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor, paired = TRUE)
-
-```
-
 
 
 
@@ -393,73 +299,33 @@ ggplot(f3_norolling,
   scale_fill_manual(values = cbPalette)+ 
   scale_color_manual(values = cbPalette)
 
+prior = f3_norolling %>% filter(before_after == 'prior')
+ggplot(prior,
+       aes(x = valid, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(
+        y = "similarity scores",
+        x = element_blank())+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  facet_wrap(~roi, scales = "free_y", ncol = 2)+
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ezANOVA(data=f3_sub %>% 
+          filter(roi %in% c('ca23dg-body', 'ca1-body')) %>% 
+          filter(before_after == 'prior'),
+        wid=sub,
+        within = .(valid, roi),
+        dv = cor)$ANOVA %>% knitr::kable()
+
 t.test(f3_sub %>% 
          filter(valid == 'valid-valid' & roi == 'ca23dg-body' &
                   before_after == 'post') %>% .$cor)
 
-ca23dg = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'ca23dg-body'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+ 
-  scale_y_continuous(limits = c(-0.0017, 0.00045))+
-  scale_fill_manual(values = cbPalette[1])+ 
-  scale_color_manual(values = cbPalette[1])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-ca1 = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'ca1-body'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+
-  scale_y_continuous(limits = c(-0.0017, 0.00045))+
-  scale_fill_manual(values = cbPalette[2])+ 
-  scale_color_manual(values = cbPalette[2])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-ppa = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'ppa'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+
-  scale_fill_manual(values = cbPalette[3])+ 
-  scale_color_manual(values = cbPalette[3])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-evc = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
-                                        roi == 'evc'), 
-                aes(x = before_after, y = m, fill = roi)) +
-      geom_hline(yintercept = 0, linetype="longdash") +
-      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
-      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
-      labs(y = element_blank(),
-           x = element_blank())+ 
-      theme(legend.position = 'none',
-            legend.title = element_blank(),
-            strip.background = element_blank())+
-  scale_fill_manual(values = cbPalette[4])+ 
-  scale_color_manual(values = cbPalette[4])+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
-cowplot::plot_grid(ca23dg, ca1, ppa, evc, nrow = 1)
 
 paired_t =  f3_sub %>% 
   pivot_wider(names_from = before_after, values_from = cor) %>% 
@@ -595,3 +461,197 @@ t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid'))$cor)
 t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
 t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor, (f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor, paired = TRUE)
 ```
+
+
+
+
+
+```{r}
+sub_across = rolling %>% 
+  filter(valid != 'invalid-invalid' & type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid) %>% 
+    summarise(across = mean(cor), n = n())
+  
+  
+sub_within = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor) %>% 
+  select(-c(pair_x, pair_y, sub_x, cor))
+
+sub_p1 = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n))
+
+p1 = sub_p1 %>% 
+  group_by(valid, within_trial_TR, roi, pair) %>%
+  summarise(mean = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+```
+
+## n = `r length(unique(sub_p1$sub))`
+
+```{r}
+
+figure = p1 %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = valid),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within_pair - across_pair',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  facet_wrap(roi~pair,
+             scales = 'free_y',
+             nrow = 4)
+
+print(figure)
+
+```
+
+```{r}
+f1 = p1 %>% 
+    filter(roi == 'ca23dg-body') %>% 
+    ggplot(aes(x = within_trial_TR, y = mean)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within_pair - across_pair',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  facet_wrap(valid~pair,
+             scales = 'free_y',
+             ncol = 4)
+```
+
+CA23DG:
+
+```{r}
+library(cowplot)
+
+plot_grid(f1, f2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
+
+```
+
+
+CA1:
+
+```{r}
+f3 = p1 %>% 
+    filter(roi == 'ca1-body') %>% 
+    ggplot(aes(x = within_trial_TR, y = mean)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'within_pair - across_pair',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  facet_wrap(valid~pair,
+             scales = 'free_y',
+             ncol = 4)
+
+plot_grid(f3, f2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
+
+```
+
+
+
+```{r}
+
+ca23dg = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
+                                        roi == 'ca23dg-body'), 
+                aes(x = before_after, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = element_blank(),
+           x = element_blank())+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_y_continuous(limits = c(-0.0017, 0.00045))+
+  scale_fill_manual(values = cbPalette[1])+ 
+  scale_color_manual(values = cbPalette[1])+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+
+ca1 = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
+                                        roi == 'ca1-body'), 
+                aes(x = before_after, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = element_blank(),
+           x = element_blank())+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+
+  scale_y_continuous(limits = c(-0.0017, 0.00045))+
+  scale_fill_manual(values = cbPalette[2])+ 
+  scale_color_manual(values = cbPalette[2])+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+
+ppa = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
+                                        roi == 'ppa'), 
+                aes(x = before_after, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = element_blank(),
+           x = element_blank())+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+
+  scale_fill_manual(values = cbPalette[3])+ 
+  scale_color_manual(values = cbPalette[3])+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+
+evc = ggplot(f3_norolling %>% filter(valid == 'valid-invalid' &
+                                        roi == 'evc'), 
+                aes(x = before_after, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = element_blank(),
+           x = element_blank())+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+
+  scale_fill_manual(values = cbPalette[4])+ 
+  scale_color_manual(values = cbPalette[4])+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+
+cowplot::plot_grid(ca23dg, ca1, ppa, evc, nrow = 1)
+```
+

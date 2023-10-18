@@ -17,7 +17,7 @@ library(gt)
 library(fs)
 library(purrr)
 library(tidyverse)
-theme_set(theme_classic(22))
+theme_set(theme_classic(18))
 ```
 
 
@@ -57,19 +57,21 @@ Exclude subject 34: the participant perceived the peripheral nerve stimulation t
 
 ```{r}
 
-#bad = c('13', '20', '23', '24', '27')
+bad = c('13', '20', '23', '24', '27')
 
 prescan_batch <- prescan_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
+  filter(sub != '14' & sub != '30' & sub != '34') %>% filter(!(sub %in% bad))
 scan_batch <- scan_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
+  filter(sub != '14' & sub != '30' & sub != '34') %>% filter(!(sub %in% bad))
 postscan1_batch <- postscan1_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
+  filter(sub != '14' & sub != '30' & sub != '34') %>% filter(!(sub %in% bad))
 postscan2_batch <- postscan2_batch %>% 
-  filter(sub != '14' & sub != '30' & sub != '34')# %>% filter(!(sub %in% bad))
+  filter(sub != '14' & sub != '30' & sub != '34') %>% filter(!(sub %in% bad))
 ```
 
 ## n = `r nrow(prescan_batch)/24`
+
+
 
 # QA
 
@@ -151,11 +153,23 @@ sub_plot %>% group_by(sub, nquestion) %>%
 ### Scan
 
 ```{r}
-scan_batch %>% group_by(sub) %>% summarise(
+scan_batch_summary = scan_batch %>% group_by(sub, round) %>% summarise(
   correct = mean(correct, na.rm = TRUE),
   conf = mean(confidence, na.rm = TRUE),
-  conf_correct = mean(cor_conf, na.rm = TRUE)
-) %>% gt() %>% 
+  conf_correct = mean(cor_conf, na.rm = TRUE))
+  
+scan_batch_count = scan_batch_summary %>% 
+  mutate(
+  all_correct = (correct >= 0.75),
+  all_conf_correct = (conf_correct >= 0.75)
+) %>% 
+  group_by(sub) %>% 
+  summarize(all_correct = sum(all_correct),
+            all_conf_correct = sum(all_conf_correct))
+
+sum(scan_batch_count$all_correct)
+
+scan_batch_summary %>% gt() %>% 
   tab_header(title = "Scan Performance") %>% 
   tab_style(
     style = list(
@@ -531,8 +545,8 @@ Accuracy per round:
 ```{r}
 
 curr_plot = scan_batch %>% group_by(round, sub) %>% summarise(
-  m_correct = mean(correct),
-  m_conf_correct = mean(cor_conf)
+  m_correct = mean(correct) * 100,
+  m_conf_correct = mean(cor_conf) * 100
 ) %>% 
   group_by(round) %>% summarise(
   se_correct = sd(m_correct)/sqrt(n()),
@@ -555,11 +569,40 @@ curr_plot = scan_batch %>% group_by(round, sub) %>% summarise(
 
 ggplot(curr_plot, aes(x = round, y = accuracy, color = type)) +
   geom_line(size = 1)+
-  geom_errorbar(aes(ymin=accuracy-se, ymax=ifelse(accuracy+se>1, 1, accuracy+se)), width=0.1, size=0.5)+
+  geom_errorbar(aes(ymin=accuracy-se, ymax=ifelse(accuracy+se>100, 100, accuracy+se)), width=0.1, size=0.5)+
   theme(legend.position = 'bottom')+
-  labs('')+
+  labs(y = 'Percentage',
+        x = 'Rounds') + 
   colorblindr::scale_color_OkabeIto()
 ```
+
+
+```{r}
+
+correct = scan_batch %>% mutate(round_type = 
+                            ifelse(round <= 5, 'early', 'late')) %>% 
+  group_by(sub, round_type) %>% 
+  summarise(m = mean(correct)*100, n = n())
+
+t.test(correct %>% filter(round_type == 'early') %>% .$m,
+       correct %>% filter(round_type == 'late') %>% .$m,
+       paired = TRUE)
+
+curr_plot = correct %>% group_by(round_type) %>% 
+  summarize(accuracy = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+
+ggplot(curr_plot, aes(x = round_type, y = accuracy)) + 
+  geom_point(stat = "identity")+
+  geom_errorbar(aes(ymin=accuracy-se, ymax=accuracy+se), width=0.1, size=0.5)+
+  labs(title = 'Correct for scan',
+       y = '% correct',
+       x = element_blank())+
+  theme(strip.background = element_blank())
+```
+
 
 Distribution of picture index:
 
@@ -689,24 +732,50 @@ avg = postscan2_batch %>% group_by(sub) %>%
 Average accuracy = `r avg`
 
 ```{r fig.width=12, fig.height=16}
-postscan2_batch %>%
+
+postscan2_batch_correct = postscan2_batch %>% 
   filter(correct == 1) %>%
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp))
+
+postscan2_batch_correct %>%
   mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
          destination = factor(destination, levels = c('bench','bikerack','shrub','pergola','pole','window','entrance','map'))) %>% 
-  ggplot(aes(x = npic, fill = sub)) +
+  ggplot(aes(x = tp, fill = destination)) +
   geom_histogram() +
-  geom_vline(xintercept=25) +
-  geom_vline(xintercept=75) +
-  labs(title = 'Picture index for correct trials')+
+  geom_vline(xintercept=6) +
+  geom_vline(xintercept=18) +
+  labs(title = 'Picture index for correct trials',
+       caption = 'different colors indicates different destiantions within a route pair',
+       x = 'Time (seconds)')+
   facet_wrap(~route, ncol = 2)+
   theme(strip.background = element_blank(),
         legend.position = 'none')
 ```
 
+```{r}
+
+postscan_summary = postscan2_batch_correct %>% 
+  group_by(route, sub) %>% 
+  summarize(m = mean(tp),
+            max = max(tp),
+            min = min(tp),
+            median = median(round(tp)),
+            range = max - min,
+            n = n())
+
+
+ggplot(postscan_summary, aes(x = range)) + 
+  geom_histogram() +
+  xlab('range (seconds)') + 
+  ylab('num subjects')
+
+```
+
+
 
 ```{r fig.width=12, fig.height=16}
-postscan2_batch %>% 
-  filter(correct == 0 & resp != -999) %>%
+postscan2_batch_correct %>% 
   mutate(route = factor(route, levels = c('pair1_east','pair3_west','pair2_north','pair4_south')),
          destination = factor(destination, levels = c('bench','bikerack','bush','pergola','pole','window','entrance','map'))) %>% 
   ggplot(aes(x = npic, fill = sub)) +
@@ -721,15 +790,14 @@ postscan2_batch %>%
 
 
 ```{r}
-postscan2_batch = postscan2_batch %>% mutate(tp = npic * 0.24, floor_tp = floor(tp), ceiling_tp = ceiling(tp))
+#postscan2_batch = postscan2_batch %>% mutate(tp = npic * 0.24, floor_tp = floor(tp), ceiling_tp = ceiling(tp))
 ```
 
 
 ```{r}
 postscan2_batch %>%
-  filter(correct == 1) %>%
-  ggplot(aes(x = ceiling_tp)) +
-  geom_histogram(binwidth = 1) +
+  ggplot(aes(x = tp)) +
+  geom_histogram(bins = 40) +
   geom_vline(xintercept=6) +
   geom_vline(xintercept=18) +
   labs(title = 'Timepoint for correct trials')+

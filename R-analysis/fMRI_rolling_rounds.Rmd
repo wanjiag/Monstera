@@ -1,5 +1,5 @@
 ---
-title: "Timeseries analysis - early vs. late learning"
+title: "Timeseries analysis - first vs. second half"
 author: "Wanjia Guo"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
@@ -45,16 +45,15 @@ rolling <- map_dfr(files, converting_read)
 ```
 
 ```{r}
-#bad = c('20', '24', '27')
+bad = c('13', '20', '23', '24', '27')
 
-#rolling = rolling %>% 
-#  filter(!(sub %in% bad))
+rolling = rolling %>% 
+  filter(!(sub %in% bad))
 ```
 
 ```{r}
 sub_p1 = rolling %>% 
   filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
   select(-c(across, within, same))%>% 

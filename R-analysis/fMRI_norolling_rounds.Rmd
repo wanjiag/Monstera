@@ -39,14 +39,14 @@ sub_dir = dir_ls(here::here("./csv_files/python_summary"))
 rois_names = c('ca23dg-body', 'ca1-body', 
                'evc', 'ppa')
 
-files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary_with_rounds.csv') %>% unlist()
+files <- map(sub_dir, dir_ls, glob = '*/*rolling3_*summary_with_rounds.csv') %>% unlist()
 
 norolling <- map_dfr(files, converting_read)
   
 ```
 
 ```{r}
-bad = c('20', '24', '27')
+bad = c('13', '20', '23', '24', '27')
 
 norolling = norolling %>% 
   filter(!(sub %in% bad))
@@ -55,7 +55,6 @@ norolling = norolling %>%
 ```{r together}
 sub_p2 = norolling %>% 
   filter(valid != 'invalid-invalid') %>% 
-  filter(sub != '13' & sub != '23') %>% 
   pivot_wider(names_from = type, values_from = cor) %>% 
   mutate(wp_ap = within - across) %>% 
   select(-c(across, within, same)) %>% 

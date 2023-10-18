@@ -1,0 +1,279 @@
+
+## behavioral results 
+
+```{r}
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp))
+
+
+postscan_summary = postscan2_batch_correct %>% 
+  group_by(route, sub) %>% 
+  summarize(m = mean(tp),
+            max = max(tp),
+            min = min(tp),
+            median = median(round(tp)),
+            range = max - min,
+            n = n())
+
+# return all modes
+Modes <- function(x) {
+  ux <- unique(x)
+  tab <- tabulate(match(x, ux))
+  ux[tab == max(tab)]
+}
+
+tmp = postscan2_batch_correct %>% 
+  mutate(tp = round(tp)) %>% 
+  group_by(route, sub) %>% 
+  nest() %>% 
+  broadcast(~max(Modes(.$tp))) %>% 
+  mutate(mode = as.numeric(output)) %>% 
+  select(-c(data, output))
+
+postscan_summary = left_join(postscan_summary, tmp)
+
+ggplot(postscan_summary, aes(x = range)) + 
+  geom_histogram() +
+  xlab('range (seconds)') + 
+  ylab('num subjects')
+
+ggplot(postscan2_batch_correct, aes(x = tp_int, y = sub, color = destination)) + 
+  #geom_line(aes(group = highest_education), size = 3, color = "dimgrey") + 
+  geom_point(alpha = 0.5) + 
+  geom_point(data = postscan_summary, aes(x = mode, y = sub), color = 'black', shape = 3) + 
+  facet_wrap(~route) +
+  theme(axis.text.y = element_blank())
+```
+
+
+# Rolling
+
+## Pre- and Post-Moment of Insight
+
+```{r}
+sub_across = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid) %>% 
+    summarise(across = mean(cor), n = n())
+  
+sub_within = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor) %>% 
+  select(-c(pair_x, pair_y, sub_x, cor))
+
+sub_p1 = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n))
+```
+
+### different creteria
+
+```{r}
+
+# only return the first appearance of mode
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# return all modes
+Modes <- function(x) {
+  ux <- unique(x)
+  tab <- tabulate(match(x, ux))
+  ux[tab == max(tab)]
+}
+
+tmp = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24) %>% 
+  group_by(route, sub) %>% 
+  nest() %>% 
+  broadcast(~median(.$tp)) %>% 
+  mutate(median = round(as.numeric(output)),
+         sub = as.numeric(sub)) %>% 
+  select(-c(data, output))
+
+tmp = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24,
+         tp = round(tp)) %>% 
+  group_by(route, sub) %>% 
+  nest() %>% 
+  broadcast(~max(Modes(.$tp))) %>% 
+  mutate(mode = as.numeric(output),
+         sub = as.numeric(sub)) %>% 
+  select(-c(data, output))
+```
+
+
+```{r}
+f1_sub =
+left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
+          tmp, by = c("sub" = "sub", "pair" = "route")) %>%
+  mutate(segment = ifelse(within_trial_TR < mode, 'pre',
+                          ifelse(within_trial_TR > mode, 'post', 'MoI'))) %>% 
+  filter(segment != 'MoI') %>% 
+  group_by(roi, valid, sub, segment) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+f1_norolling = f1_sub %>% 
+  group_by(roi, valid, segment) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+```
+
+```{r}
+
+f1_norolling$segment = factor(f1_norolling$segment,
+                                 levels = c('pre', 'post'))
+
+ggplot(f1_norolling, aes(x = segment, y = m)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(valid~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ezANOVA(data=f1_sub %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
+        wid=sub,
+        within = .(valid, roi, segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+t.test((f1_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre'))$cor)
+t.test((f1_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre'))$cor, (f1_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'post'))$cor, paired = TRUE)
+```
+
+## 9s around MoI
+
+```{r}
+tmp = tmp %>% 
+  mutate(
+    ceiling_tp = mode + 2,
+    floor_tp = mode - 2)
+```
+
+```{r}
+
+f2_sub =
+left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
+          tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
+  filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
+  group_by(roi, valid, sub) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+f2_norolling = f2_sub %>% 
+  group_by(roi, valid) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+```
+
+
+```{r}
+ggplot(f2_norolling, aes(x = valid, y = m)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'within_pair - across_pair')+ 
+      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ezANOVA(data=f2_sub %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
+        wid=sub,
+        within = .(valid, roi),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+t.test((f2_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid'))$cor)
+t.test((f2_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid'))$cor)
+
+t.test((f2_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid'))$cor)
+t.test((f2_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid'))$cor)
+
+```
+
+## split into prior and post within 6s
+
+```{r}
+f3_sub =
+left_join(sub_p1 %>% mutate(sub = as.numeric(sub)), 
+          tmp, by = c("sub" = "sub", "pair" = "route")) %>% 
+  filter(within_trial_TR <= ceiling_tp & within_trial_TR >= floor_tp) %>% 
+  group_by(roi, valid, sub, destination_x, destination_y, pair) %>% 
+  mutate(rank = order(within_trial_TR)) %>% 
+  mutate(before_after = ifelse(rank <= 3, "prior","post")) %>% 
+  ungroup() %>% 
+  filter(before_after != 'na') %>% 
+  group_by(roi, valid, sub, before_after) %>%
+  summarise(cor = mean(wp_ap), n = n())
+
+f3_norolling = f3_sub %>% 
+  group_by(roi, valid, before_after) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+
+f3_norolling$roi =  factor(f3_norolling$roi,
+                         levels = c('ca23dg-body',
+                                    'ca1-body', 
+                                    'ppa','evc'))
+f3_norolling$before_after =  factor(f3_norolling$before_after,
+                         levels = c('prior',
+                                    'post'))
+
+ggplot(f3_norolling,
+       aes(x = valid, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(
+        y = "similarity scores",
+        x = element_blank())+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  facet_wrap(before_after~roi, scales = "free_y", ncol = 2)+
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+ezANOVA(data=f3_sub %>% 
+          filter(roi %in% c('ca23dg-body', 'ca1-body')),
+        wid=sub,
+        within = .(valid, roi, before_after),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=f3_sub %>% 
+          filter(roi %in% c('ca23dg-body', 'ca1-body')) %>% 
+          filter(before_after == 'prior'),
+        wid=sub,
+        within = .(valid, roi),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=f3_sub %>% 
+          filter(roi %in% c('ca23dg-body', 'ca1-body')) %>% 
+          filter(before_after == 'post'),
+        wid=sub,
+        within = .(valid, roi),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & before_after == 'prior'))$cor)
+t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & before_after == 'post'))$cor)
+
+t.test((f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & before_after == 'prior'))$cor, (f3_sub %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid' & before_after == 'prior'))$cor, paired = TRUE)
+
+t.test((f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-valid' & before_after == 'prior'))$cor, (f3_sub %>% filter(roi == 'ca1-body' & valid == 'valid-invalid' & before_after == 'prior'))$cor, paired = TRUE)
+```
+
