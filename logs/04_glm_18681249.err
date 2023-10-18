@@ -1,4 +1,0 @@
-/home/wanjiag/.local/lib/python3.6/site-packages/nilearn/datasets/__init__.py:96: FutureWarning: Fetchers from the nilearn.datasets module will be updated in version 0.9 to return python strings instead of bytes and Pandas dataframes instead of Numpy arrays.
-  "Numpy arrays.", FutureWarning)
-/packages/miniconda/20190102/envs/anaconda-tensorflow-gpu/lib/python3.6/site-packages/statsmodels/tools/_testing.py:19: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
-  import pandas.util.testing as tm

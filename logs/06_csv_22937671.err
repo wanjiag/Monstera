@@ -1,3 +1,0 @@
-  File "/gpfs/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/scripts/python_code/extract_values.py", line 40
-    if (subnum == 'sub-MONSTERA29' and session == 'task-02'):
-TabError: inconsistent use of tabs and spaces in indentation
