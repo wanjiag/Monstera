@@ -41,6 +41,8 @@ def group(df, li):
 rois_dict = {
     'ca23dg-body_thre_0.5_masked':'ca23dg-body',
     'ca1-body_thre_0.5_masked':'ca1-body',
+    #'ca23dg_thre_0.5_masked':'ca23dg',
+    #'ca1_thre_0.5_masked':'ca1',
     'evc_2_epi_thre_0.5_masked':'evc', 
     'ppa_mni_2_epi_thre_0.5_masked':'ppa'
 }
@@ -94,4 +96,7 @@ for k,roi in rois_dict.items():
     summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'pair_x', 'pair_y', 'destination_x', 'destination_y'])
     summary_df['roi'] = roi
     summary_df.to_csv(opj(summary_dir, roi, '{}_rolling3_summary_with_destination.csv'.format(roi)), index=False) 
-    
+   
+    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'pair_x', 'pair_y', 'round_x', 'round_y'])
+    summary_df['roi'] = roi
+    summary_df.to_csv(opj(summary_dir, roi, '{}_rolling3_summary_with_pairs_and_rounds.csv'.format(roi)), index=False) 

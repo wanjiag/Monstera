@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/wanjiag/projects/MONSTERA/derivatives/scripts/python_code/summary.py", line 100, in <module>
+    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'pair_x', 'pair_y', 'pair_x', 'pair_y'])
+  File "/home/wanjiag/projects/MONSTERA/derivatives/scripts/python_code/summary.py", line 35, in group
+    df = df.groupby(li)['cor'].mean().reset_index()
+  File "/home/wanjiag/.local/lib/python3.6/site-packages/pandas/core/series.py", line 1305, in reset_index
+    return df.reset_index(level=level, drop=drop)
+  File "/home/wanjiag/.local/lib/python3.6/site-packages/pandas/core/frame.py", line 4859, in reset_index
+    new_obj.insert(0, name, level_values)
+  File "/home/wanjiag/.local/lib/python3.6/site-packages/pandas/core/frame.py", line 3628, in insert
+    self._mgr.insert(loc, column, value, allow_duplicates=allow_duplicates)
+  File "/home/wanjiag/.local/lib/python3.6/site-packages/pandas/core/internals/managers.py", line 1186, in insert
+    raise ValueError(f"cannot insert {item}, already exists")
+ValueError: cannot insert pair_y, already exists

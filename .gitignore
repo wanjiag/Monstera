@@ -1,6 +1,7 @@
 # data files
 R-analysis/csv_files/*
 !R-analysis/csv_files/README
+logs/*
 
 # History files
 .Rhistory
