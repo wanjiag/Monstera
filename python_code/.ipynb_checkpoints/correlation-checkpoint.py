@@ -4,6 +4,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 from glob import glob 
 from os.path import join as opj
 import os
+import re
 
 def cleaning(df):
     '''
@@ -22,6 +23,7 @@ def cleaning(df):
     df['valid'] = pd.to_numeric(tmp1[[1]].squeeze(), errors='coerce').apply(lambda x: {0: True, 1: False}.get(x, None))
     df['catch'] = tmp1[[3]].squeeze().notnull()
     
+    '''
     def segment(x):
         if x <= 25:
             return 'same'
@@ -34,6 +36,7 @@ def cleaning(df):
 
     df['n_int'] = pd.to_numeric(df['npic'], errors='coerce')
     df['segment'] = df['n_int'].apply(segment)
+    '''
     
     return df
 
@@ -44,15 +47,28 @@ def cleaning2(df):
     '''
     
     df = df.loc[df['catch'] == False]
-    df = df.loc[df['segment'].notnull()]
+    df = df.loc[df['n_int'].notnull()]
     df = df.drop(columns=['onset', 'design_onset', 'design_end', 'n_pic', 'npic', 'condition', 'n_int', 'catch'])
     
     df = df.drop_duplicates()
     df['within_trial_TR'] = df.groupby(['sub','round','trial'])['TR'].rank(method = 'dense').astype('int')
-    #df['odd_even'] = df['round'].apply(lambda x: 'even' if x%2 == 0 else 'odd')
     
     df['round'] = df['round'].astype('int')
     df['trial'] = df['trial'].astype('int')
+    
+    if subnum == 47:
+        df = df.loc[df['within_trial_TR']!=25]
+        
+        problem_trial = df.loc[(df['round']==1)&(df['trial']==1)]
+        added_sec = pd.DataFrame([[47,1,1,50,'pair2_north','pole','False','similar', 'na']], columns = problem_trial.columns)
+        problem_trial = pd.concat([problem_trial, added_sec])
+        problem_trial['within_trial_TR'] = problem_trial.groupby(['sub','round','trial'])['TR'].rank(method = 'dense').astype('int')
+        problem_trial = problem_trial.sort_values(by=['within_trial_TR'])
+        
+        print(df.shape)
+        df = df.loc[(df['round']!=1)|(df['trial']!=1)]
+        print(df.shape)
+        df = pd.concat([df, problem_trial])
 
     return df
 
@@ -105,32 +121,32 @@ def save_file(subnum, output_df, file_name):
 rois_dict = {
     'ca23dg-body_thre_0.5_masked':'ca23dg-body',
     'ca1-body_thre_0.5_masked':'ca1-body',
-    'ca23dg_thre_0.5_masked':'ca23dg',
-    'ca1_thre_0.5_masked':'ca1', 
+    #'ca23dg_thre_0.5_masked':'ca23dg',
+    #'ca1_thre_0.5_masked':'ca1', 
     'evc_2_epi_thre_0.5_masked':'evc', 
     'ppa_mni_2_epi_thre_0.5_masked':'ppa'
 }
 
+preprocess_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess'
 fMRI_dir = "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI/"
-all_subs = os.listdir(fMRI_dir)
-
 output_dir = "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/python/"
-processed_subs = os.listdir(output_dir)
-
-todo_subs = list(set(all_subs) - set(processed_subs))
-todo_subs.remove('sub-MONSTERA14')
-
 behav_dir = "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/behavior/"
-sub_dir = os.listdir(behav_dir)
 
-behav_subnums = [x[-2:] for x in sub_dir]
-todo_subnums = [x[-2:] for x in todo_subs]
+f_list = [x for x in glob(os.path.join(preprocess_dir, '*sub-MONSTERA*/'))]
+subs = list(map(lambda f: f[len(os.path.commonpath(f_list))+1:-1], f_list))
+subs.sort()
+print(subs)
 
-todo_subnums = list(set(behav_subnums) & set(todo_subnums))
+bad = ['sub-MONSTERA01', 'sub-MONSTERA02', 'sub-MONSTERA03', 'sub-MONSTERA04', 'sub-MONSTERA05',
+        'sub-MONSTERA13', 'sub-MONSTERA14', 'sub-MONSTERA20', 'sub-MONSTERA23', 'sub-MONSTERA24', 
+       'sub-MONSTERA27', 'sub-MONSTERA30', 'sub-MONSTERA34']
 
-print(todo_subnums)
+todo_subs = list(set(subs) - set(bad))
+todo_subs.sort()
+print(todo_subs)
 
-for subnum in todo_subnums:
+for sub in todo_subs:
+    subnum = re.findall('\d+', sub)[0]
     print('---{}---'.format(subnum))
     
     behav_file_dir = opj(behav_dir, 'sub{}'.format(subnum))
@@ -150,9 +166,9 @@ for subnum in todo_subnums:
         fmri_df = cleaning3(fmri_df)
         
         # calculating no rolling data
-        df = behav_df.merge(fmri_df, on=['sub', 'round', 'TR'], how='left')
-        output_df = per_tr_calculation(df)
-        save_file(subnum, output_df, 'sub-MONSTERA{}_norolling_{}.csv'.format(subnum, roi))
+        # df = behav_df.merge(fmri_df, on=['sub', 'round', 'TR'], how='left')
+        # output_df = per_tr_calculation(df)
+        # save_file(subnum, output_df, 'sub-MONSTERA{}_norolling_{}.csv'.format(subnum, roi))
         
         #calculating rolling data
         rolling_df = fmri_df.groupby(['sub','round']).rolling(3, center = True, method = 'table').mean()

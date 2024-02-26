@@ -57,27 +57,6 @@ file_dir = []
 
 for k,roi in rois_dict.items():
     print(roi)
-    file_dir = glob(opj(output_dir, '*', 'sub-MONSTERA*_norolling_{}.csv'.format(roi)))
-    print(len(file_dir))
-    df = pd.concat((pd.read_csv(f) for f in file_dir), ignore_index=True)
-
-    output_df = summarize(df)
-    
-    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x'])
-    summary_df['roi'] = roi
-    os.makedirs(opj(summary_dir, roi), exist_ok=True) 
-    summary_df.to_csv(opj(summary_dir, roi, '{}_norolling_summary.csv'.format(roi)), index=False) 
-
-    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'round_x', 'round_y'])
-    summary_df['roi'] = roi
-    summary_df.to_csv(opj(summary_dir, roi, '{}_norolling_summary_with_rounds.csv'.format(roi)), index=False) 
-
-    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'pair_x', 'pair_y', 'destination_x', 'destination_y'])
-    summary_df['roi'] = roi
-    summary_df.to_csv(opj(summary_dir, roi, '{}_norolling_summary_with_destination.csv'.format(roi)), index=False) 
-    
-for k,roi in rois_dict.items():
-    print(roi)
     file_dir = glob(opj(output_dir, '*', 'sub-MONSTERA*_rolling3_{}.csv'.format(roi)))
     print(len(file_dir))
     df = pd.concat((pd.read_csv(f) for f in file_dir), ignore_index=True)
@@ -100,3 +79,28 @@ for k,roi in rois_dict.items():
     summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'pair_x', 'pair_y', 'round_x', 'round_y'])
     summary_df['roi'] = roi
     summary_df.to_csv(opj(summary_dir, roi, '{}_rolling3_summary_with_pairs_and_rounds.csv'.format(roi)), index=False) 
+
+    
+    
+'''
+for k,roi in rois_dict.items():
+    print(roi)
+    file_dir = glob(opj(output_dir, '*', 'sub-MONSTERA*_norolling_{}.csv'.format(roi)))
+    print(len(file_dir))
+    df = pd.concat((pd.read_csv(f) for f in file_dir), ignore_index=True)
+
+    output_df = summarize(df)
+    
+    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x'])
+    summary_df['roi'] = roi
+    os.makedirs(opj(summary_dir, roi), exist_ok=True) 
+    summary_df.to_csv(opj(summary_dir, roi, '{}_norolling_summary.csv'.format(roi)), index=False) 
+
+    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'round_x', 'round_y'])
+    summary_df['roi'] = roi
+    summary_df.to_csv(opj(summary_dir, roi, '{}_norolling_summary_with_rounds.csv'.format(roi)), index=False) 
+
+    summary_df = group(output_df, ['sub_x','type','valid','within_trial_TR_x', 'pair_x', 'pair_y', 'destination_x', 'destination_y'])
+    summary_df['roi'] = roi
+    summary_df.to_csv(opj(summary_dir, roi, '{}_norolling_summary_with_destination.csv'.format(roi)), index=False) 
+'''

@@ -2,22 +2,32 @@ from nipype.interfaces import fsl
 from nilearn.masking import intersect_masks
 from os.path import join as opj
 import os
+import glob
 
 subfields = {'ca1':1,
              'ca23dg':[2,4] #choosing 2 to 4, including ca2, dg, and ca3
             }
 
-#sub_list = ['sub-MONSTERA06', 'sub-MONSTERA07', 'sub-MONSTERA08', 'sub-MONSTERA09', 'sub-MONSTERA10']
-#sub_list = ['sub-MONSTERA11']
-#sub_list = ['sub-MONSTERA14','sub-MONSTERA15','sub-MONSTERA16','sub-MONSTERA17','sub-MONSTERA18']
-#sub_list = ['sub-MONSTERA19']
-#sub_list = ['sub-MONSTERA20', 'sub-MONSTERA21']
-#sub_list = ['sub-MONSTERA22', 'sub-MONSTERA23']
-#sub_list = ['sub-MONSTERA24', 'sub-MONSTERA25', 'sub-MONSTERA26']
-#sub_list = ['sub-MONSTERA27', 'sub-MONSTERA28']
-#sub_list = ['sub-MONSTERA29', 'sub-MONSTERA31', 'sub-MONSTERA32', 'sub-MONSTERA33']
-sub_list = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
-sub_list = ['sub-MONSTERA38']
+ALL_SUBS = True
+
+if ALL_SUBS:
+    
+    preprocess_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess'
+    f_list = [x for x in glob.glob(os.path.join(preprocess_dir, '*sub-MONSTERA*/'))]
+    subs = list(map(lambda f: f[len(os.path.commonpath(f_list))+1:-1], f_list))
+    subs.sort()
+    print(subs)
+
+    bad = ['sub-MONSTERA01', 'sub-MONSTERA02', 'sub-MONSTERA03', 'sub-MONSTERA04', 'sub-MONSTERA05',
+            'sub-MONSTERA13', 'sub-MONSTERA14', 'sub-MONSTERA20', 'sub-MONSTERA23', 'sub-MONSTERA24', 'sub-MONSTERA27', 
+            'sub-MONSTERA30', 'sub-MONSTERA34']
+
+    todo_subs = list(set(subs) - set(bad))
+    todo_subs.sort()
+    print(todo_subs)
+else:
+    todo_subs = ['sub-MONSTERA53']
+
 
 # first num = Starting slices in ITK-snap; second num = how many slices to include (inclusive of the last one)
 
@@ -52,7 +62,23 @@ left_body = {#'01':[30,10],
              'sub-MONSTERA35':[33,8],
              'sub-MONSTERA36':[33,9],
              'sub-MONSTERA37':[33,9],
-             'sub-MONSTERA38':[32,12]}
+             'sub-MONSTERA38':[32,12],
+             'sub-MONSTERA39':[33,9],
+             'sub-MONSTERA40':[32,11],
+             'sub-MONSTERA41':[32,9],
+             'sub-MONSTERA42':[34,10],
+             'sub-MONSTERA43':[32,10],
+             'sub-MONSTERA44':[31,11],
+             'sub-MONSTERA45':[33,10],
+             'sub-MONSTERA46':[33,10],
+             'sub-MONSTERA47':[32,8],
+             'sub-MONSTERA48':[31,12],
+             'sub-MONSTERA49':[33,9],
+             'sub-MONSTERA50':[33,10],
+             'sub-MONSTERA51':[33,10],
+             'sub-MONSTERA52':[33,9],
+             'sub-MONSTERA53':[31,10]
+}
 
 right_body = {#'01':[30,10],
               'sub-MONSTERA06':[31,11],
@@ -85,8 +111,23 @@ right_body = {#'01':[30,10],
               'sub-MONSTERA35':[30,11],
               'sub-MONSTERA36':[32,10],
               'sub-MONSTERA37':[32,10],
-              'sub-MONSTERA38':[32,12]}
-
+              'sub-MONSTERA38':[32,12],
+              'sub-MONSTERA39':[33,9],
+              'sub-MONSTERA40':[33,10],
+              'sub-MONSTERA41':[32,9],
+              'sub-MONSTERA42':[34,10],
+              'sub-MONSTERA43':[33,9],
+              'sub-MONSTERA44':[31,11],
+              'sub-MONSTERA45':[32,11],
+              'sub-MONSTERA46':[34,9],
+              'sub-MONSTERA47':[31,9],
+              'sub-MONSTERA48':[32,11],
+              'sub-MONSTERA49':[33,9],
+              'sub-MONSTERA50':[33,10],
+              'sub-MONSTERA51':[33,10],
+              'sub-MONSTERA52':[33,9],
+              'sub-MONSTERA53':[31,10]
+}
 
 epi_mask_threshold = 0.5
 
@@ -196,7 +237,7 @@ def hippo_body(left, right, subnum, output_dir):
 
 ################## Hippocampus Body #################
 
-for subnum in sub_list:
+for subnum in todo_subs:
     
     # Getting brain mask
     brain_mask = opj('/home/wanjiag/projects/MONSTERA/derivatives/preprocess/',subnum, '{}_space-T1w_desc-brain_intersect_mask.nii.gz'.format(subnum))

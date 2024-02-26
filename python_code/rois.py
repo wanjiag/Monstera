@@ -75,34 +75,23 @@ def calculate_mean(in_file, file_name):
 derivative_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/'
 preprocess_base_dir = opj(derivative_dir, 'preprocess/')
 fmriprep_base_dir = opj(derivative_dir, 'fmriprep/')
-automatic_detecting_subjects = False
+ALL_SUBS = True
 
-if automatic_detecting_subjects:
-    f_list = [x for x in glob(os.path.join(fmriprep_base_dir, '*sub-MONSTERA*/'))]
+if ALL_SUBS:
+    f_list = [x for x in glob(os.path.join(preprocess_base_dir, '*sub-MONSTERA*/'))]
     subs = list(map(lambda f: f[len(os.path.commonpath(f_list))+1:-1], f_list))
     subs.sort()
     print(subs)
+
+    bad = ['sub-MONSTERA01', 'sub-MONSTERA02', 'sub-MONSTERA03', 'sub-MONSTERA04', 'sub-MONSTERA05',
+            'sub-MONSTERA13', 'sub-MONSTERA14', 'sub-MONSTERA20', 'sub-MONSTERA23', 'sub-MONSTERA24', 'sub-MONSTERA27', 
+            'sub-MONSTERA30', 'sub-MONSTERA34']
+
+    todo_subs = list(set(subs) - set(bad))
+    todo_subs.sort()
+    print(todo_subs)
 else:
-    #subs = ['sub-MONSTERA06', 'sub-MONSTERA07', 'sub-MONSTERA08', 'sub-MONSTERA09', 'sub-MONSTERA10']
-    #subs = ['sub-MONSTERA11']    
-    #subs = ['sub-MONSTERA12', 'sub-MONSTERA13']
-    #subs = ['sub-MONSTERA14', 'sub-MONSTERA15','sub-MONSTERA16','sub-MONSTERA17','sub-MONSTERA18']
-    #subs = ['sub-MONSTERA19']
-    #subs = ['sub-MONSTERA20', 'sub-MONSTERA21']
-    #subs = ['sub-MONSTERA22', 'sub-MONSTERA23']
-    #subs = ['sub-MONSTERA24', 'sub-MONSTERA25', 'sub-MONSTERA26']
-    #subs = ['sub-MONSTERA27', 'sub-MONSTERA28']
-    #subs = ['sub-MONSTERA29', 'sub-MONSTERA31', 'sub-MONSTERA32', 'sub-MONSTERA33']
-    #subs = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
-    #subs = ['sub-MONSTERA38']
-    #subs = ['sub-MONSTERA39']
-    #subs = ['sub-MONSTERA40','sub-MONSTERA41','sub-MONSTERA42','sub-MONSTERA43']
-    #subs = ['sub-MONSTERA44','sub-MONSTERA45']
-    #subs = ['sub-MONSTERA46','sub-MONSTERA47']
-    #subs = ['sub-MONSTERA48']
-    #subs = ['sub-MONSTERA49', 'sub-MONSTERA50']
-    #subs = ['sub-MONSTERA51','sub-MONSTERA52']
-    subs = ['sub-MONSTERA53']
+    todo_subs = ['sub-MONSTERA53']
 
 session_list = []
 for i in range(1,11):
@@ -110,7 +99,7 @@ for i in range(1,11):
 
 epi_mask_threshold = 0.5
 
-for subnum in subs:
+for subnum in todo_subs:
 
     output_dir = opj(derivative_dir, 'rois', subnum)
 
@@ -241,7 +230,7 @@ for subnum in subs:
                          output_image = opj(output_dir, 'ppa_mni_2_epi.nii.gz')
                         )
     print(at.cmdline)
-    command = "module load singularity; singularity exec --bind /projects/kuhl_lab/wanjiag/MONSTERA/derivatives:/projects/kuhl_lab/wanjiag/MONSTERA/derivatives /gpfs/projects/kuhl_lab/shared/containers/fmriprep-21.0.1.simg {}".format(at.cmdline)
+    command = "module load singularity; singularity exec --bind /projects/kuhl_lab/wanjiag/MONSTERA/derivatives:/projects/kuhl_lab/wanjiag/MONSTERA/derivatives /gpfs/projects/kuhl_lab/shared/fmriprep-v23.1.4.sif {}".format(at.cmdline)
 
     p = subprocess.run(command, shell=True, stdout=subprocess.PIPE)
     p.stdout
@@ -284,7 +273,7 @@ for subnum in subs:
                              output_image = at_out_file
                             )
         print(at.cmdline)
-        command = "module load singularity;singularity exec --bind /projects/kuhl_lab/wanjiag/MONSTERA/derivatives:/projects/kuhl_lab/wanjiag/MONSTERA/derivatives /gpfs/projects/kuhl_lab/shared/containers/fmriprep-21.0.1.simg {}".format(at.cmdline)
+        command = "module load singularity;singularity exec --bind /projects/kuhl_lab/wanjiag/MONSTERA/derivatives:/projects/kuhl_lab/wanjiag/MONSTERA/derivatives /gpfs/projects/kuhl_lab/shared/fmriprep-v23.1.4.sif {}".format(at.cmdline)
         p = subprocess.run(command, shell=True, stdout=subprocess.PIPE)
         p.stdout
 

@@ -23,7 +23,15 @@ subs = list(map(lambda f: f[len(os.path.commonpath(f_list))+1:-1], f_list))
 subs.sort()
 print(subs)
 
-for sub in subs:
+bad = ['sub-MONSTERA01', 'sub-MONSTERA02', 'sub-MONSTERA03', 'sub-MONSTERA04', 'sub-MONSTERA05',
+        'sub-MONSTERA13', 'sub-MONSTERA14', 'sub-MONSTERA20', 'sub-MONSTERA23', 'sub-MONSTERA24', 'sub-MONSTERA27', 
+        'sub-MONSTERA30', 'sub-MONSTERA34']
+
+todo_subs = list(set(subs) - set(bad))
+todo_subs.sort()
+print(todo_subs)
+
+for sub in todo_subs:
     file_list = [x for x in glob.glob(opj(preprocess_dir, sub, '*_space-T1w_desc-preproc_bold_trim6TRs_centered-masked*'))] 
 
     file_list.sort()
@@ -76,9 +84,10 @@ for sub in subs:
                          'a_comp_cor_00', 'a_comp_cor_01','a_comp_cor_02','a_comp_cor_03','a_comp_cor_04','a_comp_cor_05', 
                          'csf']]
         mc['big_fd'] = np.where(mc['framewise_displacement']>0.5, 1, 0)
-        dm = Design_Matrix(pd.concat([mc, spikes.drop(labels='TR', axis=1)], axis=1), sampling_freq=1/tr)
-        dm = dm.add_poly(order=2, include_lower=True) # Add Intercept, Linear and Quadratic Trends
-        dm_trim = dm.iloc[n_trunc: , :]
+        mc_trim = mc.iloc[n_trunc: , :].reset_index(drop = True)
+        dm_trim = Design_Matrix(pd.concat([mc_trim, spikes.drop(labels='TR', axis=1)], axis=1), sampling_freq=1/tr)
+        dm_trim = dm_trim.add_poly(order=2, include_lower=True) # Add Intercept, Linear and Quadratic Trends
+        #dm_trim = dm.iloc[n_trunc: , :]
         
         print('transform next...')
         print(type(f))

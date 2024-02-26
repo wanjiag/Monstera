@@ -4,30 +4,37 @@ from os.path import join as opj
 import pandas as pd
 import numpy as np
 
-derivative_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/'
-rois = ['angular_gyrus_2_epi_thre_0.5_masked', 'evc_2_epi_thre_0.5_masked', 'hippocampus_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked']
-hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_thre_0.5_masked',
-                   'ashs/whole/ca1_thre_0.5_masked', 'ashs/whole/ca23dg_thre_0.5_masked']
-#sublist = ['sub-MONSTERA06','sub-MONSTERA07','sub-MONSTERA08','sub-MONSTERA09', 'sub-MONSTERA10', 'sub-MONSTERA11']
-#sublist = ['sub-MONSTERA12', 'sub-MONSTERA13']
-#sublist = ['sub-MONSTERA14','sub-MONSTERA15','sub-MONSTERA16','sub-MONSTERA17','sub-MONSTERA18']
-#sublist = ['sub-MONSTERA19']
-#sublist = ['sub-MONSTERA20', 'sub-MONSTERA21']
-#sublist = ['sub-MONSTERA22', 'sub-MONSTERA23']
-#sublist = ['sub-MONSTERA24', 'sub-MONSTERA25', 'sub-MONSTERA26']
-#sublist = ['sub-MONSTERA27', 'sub-MONSTERA28']
-#sublist = ['sub-MONSTERA29', 'sub-MONSTERA31', 'sub-MONSTERA32', 'sub-MONSTERA33']
-#sublist = ['sub-MONSTERA35', 'sub-MONSTERA36', 'sub-MONSTERA37']
-#sublist = ['sub-MONSTERA38']
-#sublist = ['sub-MONSTERA39']
-#sublist = ['sub-MONSTERA40','sub-MONSTERA41','sub-MONSTERA42','sub-MONSTERA43']
-#sublist = ['sub-MONSTERA44','sub-MONSTERA45']
-#sublist = ['sub-MONSTERA46','sub-MONSTERA47']
-#sublist = ['sub-MONSTERA48']
-#sublist = ['sub-MONSTERA49', 'sub-MONSTERA50']
-#sublist = ['sub-MONSTERA51','sub-MONSTERA52']
-sublist = ['sub-MONSTERA53']
+ALL_SUB = True
 
+derivative_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/'
+rois = ['evc_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked']
+hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_thre_0.5_masked']
+
+#rois = ['angular_gyrus_2_epi_thre_0.5_masked', 'evc_2_epi_thre_0.5_masked', 'hippocampus_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked']
+#hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_thre_0.5_masked',
+#                   'ashs/whole/ca1_thre_0.5_masked', 'ashs/whole/ca23dg_thre_0.5_masked']
+
+
+if ALL_SUB:
+    preprocess_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess'
+    f_list = [x for x in glob.glob(os.path.join(preprocess_dir, '*sub-MONSTERA*/'))]
+    subs = list(map(lambda f: f[len(os.path.commonpath(f_list))+1:-1], f_list))
+    subs.sort()
+    print(subs)
+
+    bad = ['sub-MONSTERA01', 'sub-MONSTERA02', 'sub-MONSTERA03', 'sub-MONSTERA04', 'sub-MONSTERA05',
+            'sub-MONSTERA13', 'sub-MONSTERA14', 'sub-MONSTERA20', 'sub-MONSTERA23', 'sub-MONSTERA24', 'sub-MONSTERA27', 
+            'sub-MONSTERA30', 'sub-MONSTERA34']
+
+    sublist = list(set(subs) - set(bad))
+    sublist.sort()
+    
+    print(sublist)
+else:
+    sublist = ['sub-MONSTERA53']
+
+    
+print(sublist)
 session_list = []
 for i in range(1,11):
     session_list.append('task-{:02d}'.format(i))
