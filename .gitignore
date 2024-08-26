@@ -2,6 +2,8 @@
 R-analysis/csv_files/*
 !R-analysis/csv_files/README
 logs/*
+python_code/tmp_ca23dg-body.csv
+python_code/.ipynb_checkpoints/*
 
 # History files
 .Rhistory
