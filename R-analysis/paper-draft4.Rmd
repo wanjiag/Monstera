@@ -1,0 +1,684 @@
+---
+title: "paper-draft4: destination correlations"
+author: "Wanjia Guo"
+date: '2023-11-27'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(fs)
+library(ezPurrr)
+theme_set(theme_minimal(15))
+
+cbPalette <- c("#CC79A7","#0072B2","#009E73","#E69F00","#56B4E9","#F0E442","#D55E00","#999999")
+
+
+converting_read <- function(curr_path){
+  print(curr_path)
+  read_csv(curr_path) %>% mutate(sub = as.character(sub))
+}
+```
+
+
+```{r setup, include=FALSE}
+destination_cor= converting_read(here::here("csv_files/destinations_within_trials_correlations.csv")) %>%  mutate(type = 'destination')
+destination_cor2= converting_read(here::here("csv_files/MoI_within_trials_correlations.csv")) %>% mutate(type = 'MoI')
+df = rbind(destination_cor, destination_cor2)
+
+
+
+destination_cor3= converting_read(here::here("csv_files/destinations_within_trials_avg_then_correlations.csv")) %>%  mutate(type = 'destination')
+destination_cor4= converting_read(here::here("csv_files/MoI_within_trials_avg_then_correlations.csv")) %>% mutate(type = 'MoI')
+destination_cor5= converting_read(here::here("csv_files/3s_post_MoI_within_trials_avg_then_correlations.csv")) %>% mutate(type = '3s_post_MoI')
+
+
+df = rbind(destination_cor3, destination_cor4, destination_cor5)
+
+
+```
+
+
+         &
+           !(sub == '6' & pair == 'pair1_east') &
+         !(sub == '11' & pair == 'pair4_south') &
+         !(sub == '17' & pair == 'pair4_south') &
+         !(sub == '38' & pair == 'pair1_east') &
+         !(sub == '48' & pair == 'pair1_east')
+
+```{r}
+sub_cor = df %>% 
+  filter(!(sub == '29' & round == 2)) %>% 
+  #filter(! sub %in% c('6','11','17','38','48')) %>% 
+  group_by(sub, roi, valid, type) %>% 
+  summarise(m = mean(cor)) %>% 
+  mutate(valid = ifelse(valid, 'valid', 'invalid')) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  mutate(valid_invalid = valid - invalid) 
+
+p1 = sub_cor %>% 
+  group_by(roi, type) %>% 
+  summarise(cor = mean(valid_invalid),
+            se = sd(valid_invalid)/sqrt(n()),
+            n = n())
+
+p1$type = factor(p1$type, levels = c('MoI', '3s_post_MoI', 'destination'))
+
+ggplot(p1, aes(x = roi, y = cor, fill = type)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = cor-se, ymax = cor+se), position = position_dodge(width = 0.9), width=0.5) + 
+      labs(y = 'valid - invalid')+ 
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+m1 <- lmer(valid_invalid ~ type * roi + (1 | sub), sub_cor %>% filter(roi %in% c('ca23dg-body', 'ca1-body')))
+anova(m1)
+summary(m1)
+
+m2 <- lmer(valid_invalid ~ type + (1 | sub), sub_cor %>% filter(roi %in% c('ca1-body')))
+anova(m2)
+summary(m2)
+
+t.test(sub_cor %>% filter(roi %in% c('ca1-body') & type == 'MoI') %>% .$valid_invalid)
+
+t.test(sub_cor %>% filter(roi %in% c('ca1-body') & type == 'MoI') %>% .$valid_invalid,
+       sub_cor %>% filter(roi %in% c('ca1-body') & type == '3s_post_MoI') %>% .$valid_invalid,
+       paired = TRUE)
+```
+
+
+```{r}
+sub_cor_combined = sub_cor %>% 
+  mutate(combined_type = ifelse(type == '3s_post_MoI', 'Neither', 'M/D')) %>% 
+  group_by(sub, roi, combined_type) %>% 
+  summarise(valid_invalid = mean(valid_invalid)) 
+
+p2 = sub_cor_combined %>% 
+  group_by(roi, combined_type) %>% 
+  summarise(cor = mean(valid_invalid),
+            se = sd(valid_invalid)/sqrt(n()),
+            n = n())
+
+ggplot(p2, aes(x = roi, y = cor, fill = combined_type)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = cor-se, ymax = cor+se), position = position_dodge(width = 0.9), width=0.5) + 
+      labs(y = 'valid - invalid')+ 
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+m2 <- lmer(valid_invalid ~ combined_type + (1 | sub), sub_cor_combined %>% filter(roi %in% c('ca1-body')))
+anova(m2)
+summary(m2)
+
+m1 <- lmer(valid_invalid ~ roi + (1 | sub), sub_cor_combined %>% filter(roi %in% c('ca23dg-body', 'ca1-body')))
+anova(m1)
+
+t.test(sub_cor_combined %>% filter(roi %in% c('ca1-body') & combined_type == 'M/D') %>% .$valid_invalid)
+
+t.test(sub_cor_combined %>% filter(roi %in% c('ca1-body') & combined_type == 'M/D') %>% .$valid_invalid,
+       sub_cor_combined %>% filter(roi %in% c('ca1-body') & combined_type == 'Neither') %>% .$valid_invalid,
+       paired = TRUE)
+```
+
+
+
+
+```{r}
+sub_cor = df %>% 
+  filter(!(sub == '29' & round == 2)) %>%
+  group_by(sub, roi, valid, type) %>% 
+  summarise(m = mean(cor)) %>% 
+  mutate(valid = ifelse(valid, 'valid', 'invalid')) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  mutate(valid_invalid = valid - invalid) 
+
+p4 = sub_cor %>% 
+  group_by(roi) %>% 
+  summarise(cor = mean(valid_invalid),
+            se = sd(valid_invalid)/sqrt(n()),
+            n = n())
+```
+
+```{r}
+
+t.test(sub_cor %>% 
+  filter(roi == 'ca1-body') %>% .$m
+  )
+
+t.test(
+  sub_cor %>% 
+  filter(roi == 'ca1-body' ) %>% .$m,
+  sub_cor %>% 
+  filter(roi == 'ca23dg-body') %>% .$m,
+  paired = TRUE
+  )
+
+p4$roi = factor(p4$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc'))
+
+
+ggplot(p4, aes(x = roi, y = cor, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = cor-se, ymax = cor+se), position = position_dodge(width = 0.9), width=0.5) + 
+      #geom_point(data = sub_p1, aes(x = segment, y = m, color = roi, group = roi), 
+      #            position=position_jitterdodge(
+      #              jitter.width = 0.2,
+      #              dodge.width = 0.75)) + 
+      labs(y = 'valid - invalid')+ 
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)
+
+```
+
+
+```{r}
+sub_cor = destination_cor3 %>% 
+  filter(!(sub == '29' & round == 2)) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  mutate(segment = ifelse(within_trial_TR <= 6, 'same',
+                          ifelse(within_trial_TR <= 12, 'early-similar',
+                                 ifelse(within_trial_TR <=18, 'late-similar', 'different')))) %>% 
+  group_by(sub, valid, within_trial_TR, roi, segment) %>% 
+  summarise(m = mean(cor)) %>% 
+  mutate(valid = ifelse(valid, 'valid', 'invalid')) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  mutate(valid_invalid = valid - invalid) 
+
+p3 = sub_cor %>% 
+  group_by(within_trial_TR, roi) %>% 
+  summarise(cor = mean(valid_invalid),
+            se = sd(valid_invalid)/sqrt(n()),
+            n = n())
+```
+
+
+```{r}
+
+p3$roi = factor(p3$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc'))
+
+p3 %>% 
+    ggplot(aes(x = within_trial_TR, y = cor, color = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_ribbon(aes(ymin = cor-se, 
+                    ymax = cor+se,
+                    fill = roi),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'valid - invalid',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  facet_wrap(~roi,
+             #scales = 'free_y',
+             nrow = 2)
+```
+
+```{r}
+
+sub_cor_segment = sub_cor %>% group_by(sub, roi) %>% summarise(m = mean(`valid_invalid`))
+
+t.test(sub_cor_segment %>% 
+  filter(roi == 'ca1-body') %>% .$m
+  )
+
+t.test(
+  sub_cor_segment %>% 
+  filter(roi == 'ca1-body' & segment == 'same') %>% .$m,
+  sub_cor_segment %>% 
+  filter(roi == 'ca23dg-body' & segment == 'same') %>% .$m,
+  paired = TRUE
+  )
+```
+
+
+```{r}
+sub_cor = destination_cor2 %>% 
+  filter(!(sub == '29' & round == 2)) %>% 
+  group_by(sub, valid, segment, roi, type) %>% 
+  summarise(m = mean(cor)) %>% 
+  mutate(valid = ifelse(valid, 'valid', 'invalid')) %>% 
+  pivot_wider(names_from = type, values_from = m) %>% 
+  mutate(pair_across_pair = same - across) %>% 
+  select(-c(across, within, same)) %>% 
+  pivot_wider(names_from = valid, values_from = pair_across_pair) %>% 
+  mutate(valid_invalid = valid - invalid) 
+
+
+p2 = sub_cor %>% 
+  group_by(segment, roi) %>% 
+  summarise(cor = mean(valid_invalid),
+            se = sd(valid_invalid)/sqrt(n()),
+            n = n())
+```
+
+
+```{r}
+
+p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+#p1$valid = factor(p1$valid, levels = c('valid', 'invalid'))
+
+
+ggplot(p2, aes(x = segment, y = cor, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = cor-se, ymax = cor+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'valid - invalid')+ 
+      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette) + 
+    theme(legend.position = 'top',
+          legend.title = element_blank(),
+          strip.background = element_blank())
+```
+
+
+```{r}
+t.test(sub_cor %>% 
+  filter(roi == 'ca1-body' & segment == 'same') %>% .$`valid_invalid`
+  )
+
+t.test(sub_cor %>% 
+  filter(roi == 'ca1-body' & segment == 'same') %>% .$`valid_invalid`,
+  sub_cor %>% 
+  filter(roi == 'ca23dg-body' & segment == 'same') %>% .$`valid_invalid`,
+  paired = TRUE
+  )
+```
+
+
+
+```{r}
+sub_cor = destination_cor %>% 
+  group_by(sub, valid, within_trial_TR, roi) %>% 
+  filter(!(sub == '29' & round == 2) & within_trial_TR != 25) %>% 
+  summarise(m = mean(cor)) %>% 
+  mutate(valid = ifelse(valid, 'valid', 'invalid')) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  mutate(valid_invalid = valid - invalid)
+
+p1 = sub_cor %>% 
+  group_by(within_trial_TR, roi) %>% 
+  summarise(cor = mean(valid_invalid),
+            se = sd(valid_invalid)/sqrt(n()),
+            n = n())
+```
+
+```{r}
+p1$roi = factor(p1$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc'))
+
+p1 %>% 
+    ggplot(aes(x = within_trial_TR, y = cor, color = roi)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = cor-se, 
+                    ymax = cor+se,
+                    fill = roi),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(linewidth = 1)+
+    labs(y = 'valid - invalid',
+         x = 'within trial timepoint') + 
+    theme(legend.position = 'bottom',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  facet_wrap(~roi,
+             scales = 'free_y',
+             nrow = 2)
+```
+
+
+```{r}
+
+p1$segment = factor(p1$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p1$roi = factor(p1$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+#p1$valid = factor(p1$valid, levels = c('valid', 'invalid'))
+
+
+ggplot(p1, aes(x = segment, y = cor, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = cor-se, ymax = cor+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'valid - invalid')+ 
+      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette) + 
+    theme(legend.position = 'top',
+          legend.title = element_blank(),
+          strip.background = element_blank())
+```
+
+
+
+```{r}
+t.test(sub_cor %>% 
+  filter(roi == 'ca1-body' & segment == 'same') %>% .$`valid_invalid`
+  )
+```
+
+
+```{r}
+destination_files = timing_batch %>% 
+  filter(grepl("destination",npic)) %>% 
+  # Remove _ from npic
+  separate(npic, 
+           into ='n_pic', 
+           sep = '_', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting name for pair and route
+    separate(condition, 
+           into =c('pair', 'route'), 
+           sep = '/', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting trial type (valid vs. invalid; catch vs. non-catch)
+    separate(route, 
+           into =c('route', 'valid', 'trial_type'), 
+           extra = 'drop', 
+           sep = ',',
+           remove = FALSE) %>% 
+  mutate(pair = stringr::str_sub(pair, start = 3),
+         route = stringr::str_extract(route, "[a-z]+"),
+         catch = stringr::str_extract(trial_type, "[0-1]+")) %>% 
+  select(-c(trial_type, npic, condition)) %>% 
+  filter(catch == 0) %>% 
+  mutate(valid = as.integer(valid))
+#test 
+
+
+event_files = timing_batch %>% 
+  filter(!is.na(as.numeric(npic))) %>% 
+  #  calculate TR. as.integer's default is flooring.
+  mutate(TR = as.integer(design_onset)) %>% 
+  # Getting name for pair and route
+    separate(condition, 
+           into =c('pair', 'route'), 
+           sep = '/', 
+           extra = 'drop', 
+           remove = FALSE) %>% 
+  # Getting trial type (valid vs. invalid; catch vs. non-catch)
+    separate(route, 
+           into =c('route', 'valid', 'trial_type'), 
+           extra = 'drop', 
+           sep = ',',
+           remove = FALSE) %>% 
+  mutate(pair = stringr::str_sub(pair, start = 3),
+         route = stringr::str_extract(route, "[a-z]+"),
+         catch = stringr::str_extract(trial_type, "[0-1]+")) %>% 
+  select(-c(trial_type, npic, condition)) %>% 
+  filter(catch == 0) %>% 
+  # Getting segment
+  mutate(int_pic = as.integer(n_pic)) %>% 
+  mutate(segment = ifelse(int_pic <= 25, 'same',
+                    ifelse(int_pic <= 50,  'early-similar',
+                            ifelse(int_pic <= 75, 'late-similar',
+                                   'different')))) %>% 
+  select(-int_pic) %>% 
+  mutate(valid = as.integer(valid))
+
+event = event_files %>% 
+  mutate(round = as.integer(round)) %>%
+  group_by(sub, round, trial, pair, route, segment, valid, catch) %>% 
+  summarize(TR = min(design_onset) %>% round() %>% as.integer()) %>%
+  mutate(end_TR = TR+5) %>% 
+  mutate(behav_TR = map2(TR, end_TR, ~ seq(from = .x, to = .y))) %>%
+  unnest(behav_TR) %>% 
+  mutate(within_trial_TR = behav_TR - TR) %>% 
+  mutate(within_trial_TR = ifelse(segment == 'early-similar',
+         within_trial_TR+7, 
+         ifelse(segment == 'late-similar',
+                within_trial_TR + 13,
+                ifelse(segment == 'different', 
+                       within_trial_TR + 19,
+                       within_trial_TR + 1)
+         )),
+         valid = ifelse(valid == 0, 'valid', 'invalid')) %>% 
+  select(-c(TR, end_TR, catch))
+
+```
+
+
+```{r}
+rois= c('ca23dg-body_thre_0.5_masked',
+        'ca1-body_thre_0.5_masked',
+        'ppa_mni_2_epi_thre_0.5_masked',
+        'evc_2_epi_thre_0.5_masked')
+
+rois_names = c('ca23dg-body', 'ca1-body', 
+               'ppa', 'evc')
+
+sub_dir = dir_ls(here::here("./csv_files/fMRI"))
+rdata_dir = here::here("./csv_files/RDS")
+roi_dir = dir_ls(here::here("./csv_files/RDS/"),  type = "directory")
+```
+
+
+
+```{r}
+## ----Supporting Functions-----------------------------------------------------------------------------------------------
+individual_cor <- function(df1, df2){
+  df1 <- df1[complete.cases(df1[ , 'value']), ] 
+  df2 <- df2[complete.cases(df2[ , 'value']), ] 
+  
+  cor(df1$value, df2$value)
+}
+
+summarise_type <- function(sample){
+  
+  remove('output_df')
+  
+  for (row1 in 1:nrow(sample)) {
+    
+    output_df_row = sample[row1, ] %>% select(-c(`0`:last_col()))
+    
+    curr_row = sample[row1, ] %>% 
+    pivot_longer(cols = c(`0`:last_col()),
+                 names_to = 'voxels',
+                 values_to = 'value'
+                 )
+    
+    curr_df = sample %>% filter(round != unique(curr_row$round))
+    curr_df_nest = curr_df %>% 
+                  pivot_longer(cols = c(`0`:last_col()),
+                               names_to = 'voxels',
+                               values_to = 'value'
+                               ) %>% 
+                    group_by(round, trial, pair, route, valid) %>% 
+                    nest()
+    
+    curr_df_nest$r = map_dbl(.x = curr_df_nest$data,
+                             .f = ~individual_cor(df1 = curr_row, df2 = .x))
+    curr_df_nest = curr_df_nest %>% mutate(type = ifelse(pair != unique(curr_row$pair),
+                    'across_pair',
+                    ifelse(route == unique(curr_row$route),
+                           'within_item',
+                           'within_pair'))) %>% 
+                   mutate(valid = paste0(unique(curr_row$valid), '-', valid)) %>% 
+      select(-data)
+    
+    output_df_row = output_df_row %>% 
+      select(-valid) %>% 
+      rename_with( ~ paste0(.x, '1'))
+    
+    output_df_row = cbind(output_df_row, curr_df_nest)
+    
+    output_df_row = output_df_row %>% 
+      group_by(round1, trial1, pair1, route1) %>% 
+      nest()
+    
+    if (exists('output_df')){
+      output_df = rbind(output_df, output_df_row)
+    } else(
+      output_df = output_df_row
+    )
+    
+  }
+  
+  output_df
+  
+}
+
+calculating_rolling <- function(sample){
+  
+  #Filter(function(x)!all(is.na(x)), df)
+  
+  rolling_mean = sample %>% zoo::rollmean(k = 3)
+  
+  # First TR = (first + second) / 2
+  first_TR = colMeans(sample[1:2,]) %>% t() %>% as.tibble()
+  first_TR$TR = 0
+  
+  # Last TR = (last + second to last) / 2
+  last_TR = colMeans(sample[(nrow(sample)-1):nrow(sample),]) %>% t() %>% as.tibble()
+  last_TR$TR = nrow(sample)
+  
+  rolling_mean = rbind(rolling_mean, first_TR)
+  rolling_mean = rbind(rolling_mean, last_TR)
+  
+  rolling_mean[order(rolling_mean$TR),]
+  
+}
+```
+
+
+```{r}
+
+if (on_cluster){
+  sub_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI"))
+  rdata_dir = here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/RDS")
+  roi_dir = dir_ls(here::here("/home/wanjiag/projects/MONSTERA/derivatives/csv_files/RDS/"),  
+                   type = "directory")
+}else{
+
+}
+
+processed_sub_roi_list = map(roi_dir, dir_ls) %>% unlist() %>% 
+  map_chr(~gsub('.*/sub-([0-9]+.*).RDS','\\1', .x)) %>% 
+  as.data.frame()
+
+if (nrow(processed_sub_roi_list) == 0){
+  processed_sub_roi_df <- data.frame(matrix(ncol = 2, nrow = 0))
+  colnames(processed_sub_roi_df) <- c("sub", "roi")
+}else{
+  processed_sub_roi_df = stringr::str_split(processed_sub_roi_list[[1]], '_') %>% 
+  plyr::ldply(rbind) %>% 
+  mutate(sub = `1`,
+         roi = ifelse(
+           is.na(`3`),
+           `2`,
+           paste0(`2`, '_', `3`))) %>%
+  select(-c(`1`,`2`,`3`))
+}
+
+
+for (i in c(1:length(rois))){
+  
+  print(paste0('-----------', rois[i], '-----------'))
+  
+  all_files <- map(sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  
+  # Getting the subjects with csv files needed for this ROI
+  curr_roi_can_be_processed_subs = all_files %>% unlist() %>% 
+  map_chr(~gsub('.*fMRI/sub-MONSTERA([0-9]+).*','\\1', .x)) %>% 
+    unique()
+  
+  # Getting the subjects that already has the RDS files
+  processed_subs_for_curr_roi = processed_sub_roi_df %>% filter(roi == rois_names[i]) %>% .$sub
+  
+  # Subjects with csv files and doesnt have the RDS files are to be processed
+  to_be_processed = 
+    curr_roi_can_be_processed_subs[
+    !curr_roi_can_be_processed_subs %in% processed_subs_for_curr_roi]
+  
+  if(length(to_be_processed) == 0){
+    next
+  }
+  
+  curr_sub_dir = c()
+  for (curr_sub in to_be_processed){
+    if (on_cluster){
+      curr_sub_dir = append(curr_sub_dir, 
+                          dir_ls(here::here(paste0(
+                            "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/fMRI/sub-MONSTERA",
+                            curr_sub)),
+                            glob = paste0('*/',rois[i],'*.csv')))
+    }else{
+      curr_sub_dir = append(curr_sub_dir,
+                            dir_ls(here::here(paste0("./csv_files/fMRI/sub-MONSTERA", curr_sub)),
+                            glob = paste0('*/',rois[i],'*.csv')))}
+  }
+  
+  #curr_files <- map(curr_sub_dir, dir_ls, glob = paste0('*/',rois[i],'*.csv')) %>% unlist()
+  curr_df <- map_dfr(curr_sub_dir, converting_read)
+  
+  colnames(curr_df)[1] <- 'TR'
+  curr_df <- curr_df %>% mutate(
+      run = as.integer(stringr::str_extract(run, "\\d+")),
+      sub = as.factor(stringr::str_extract(sub, "\\d+"))) %>% 
+    select(-roi)
+  
+  curr_df_nest = curr_df %>% 
+    group_by(sub, run) %>% 
+    nest()
+  
+  curr_df_nest = curr_df_nest %>% broadcast(calculating_rolling)
+  
+  curr_df = curr_df_nest %>% select(-data) %>% unnest(cols = c(output))
+  
+  nest_df = inner_join(event, curr_df, by = c('behav_TR' = 'TR',
+                                     'sub' = 'sub',
+                                     'round' = 'run')) %>%
+  select(-c(behav_TR, odd.even)) %>% 
+  group_by(sub, segment, within_trial_TR) %>% 
+    nest()
+  
+  #nest_df$n = map_dbl(.x = nest_df$data, .f = ~nrow(.x))
+  
+  warning("-----------This will take VERY VERY long to run-----------")
+  
+  start_time <- Sys.time()
+  correlation_df = nest_df %>% broadcast(summarise_type)
+  end_time <- Sys.time()
+  
+  print(paste0('-----------', rois_names[i], ': ', end_time - start_time, '-----------'))
+  
+  correlation_df = correlation_df %>% select(-data)
+  
+  output_path = file.path(rdata_dir, rois_names[i])
+  dir.create(output_path)
+  
+  correlation_df %>% 
+    group_by(sub) %>% 
+    group_walk(~ saveRDS(.x, file = paste0(output_path, '/sub-', .y$sub,'_', rois_names[i], ".RDS")))
+  
+}
+
+```
+

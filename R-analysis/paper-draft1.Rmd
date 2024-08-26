@@ -92,7 +92,7 @@ p1$roi = factor(p1$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc', 'ca2
 p1$valid = factor(p1$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
 
 p1 %>% 
-    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    ggplot(aes(x = within_trial_TR , y = mean, color = valid)) +
     geom_hline(yintercept = 0, linetype="longdash") +
     geom_vline(xintercept=6, linetype="longdash") +
     geom_vline(xintercept=18, linetype="longdash") +
@@ -135,28 +135,166 @@ p1 %>% filter(valid == 'valid-valid') %>%
              scales = 'free_y',
              nrow = 2)
 
-p1 %>% filter(roi == 'ca23dg-body') %>% 
-    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
-    geom_hline(yintercept = 0, linetype="longdash") +
-    geom_vline(xintercept=6, linetype="longdash") +
-    geom_vline(xintercept=18, linetype="longdash") +
-    geom_ribbon(aes(ymin = mean-se, 
-                    ymax = mean+se,
-                    fill = valid),
-                alpha = 0.2,
-                color = NA) +
-    geom_line(size = 1)+
-    labs(y = 'within_pair - across_pair',
-         x = 'within trial timepoint') + 
-    theme(legend.position = 'bottom',
-          legend.title = element_blank(),
-          strip.background = element_blank())+ 
-  scale_fill_manual(values = cbPalette[7:8])+ 
-  scale_color_manual(values = cbPalette[7:8])+
-  facet_wrap(~roi,
-             scales = 'free_y',
-             nrow = 2)
+```
 
+
+```{r}
+ca23dg = sub_p1 %>% filter(roi == 'ca23dg-body')
+
+t = ca23dg %>% 
+  group_by(within_trial_TR, valid) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$wp_ap)$p.value) %>% 
+  unnest(output) %>%
+  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
+  select(-data) %>% 
+  pivot_wider(names_from = valid,
+              values_from = output)
+
+a = ca23dg %>% 
+  pivot_wider(names_from = valid,
+              values_from = wp_ap) %>% 
+  group_by(within_trial_TR) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(t, a, by = c("within_trial_TR"))
+
+t %>% ungroup() %>% gt() %>% 
+  tab_header(title = "Timepoint p-values for ca23dg-body") %>%
+  fmt_number(
+    #columns = c(`valid-invalid`, `valid-valid`, paired,`invalid-invalid`),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-invalid`,
+      rows = `valid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-valid`,
+      rows = `valid-valid` < 0.05
+    )
+  )%>%
+#  tab_style(
+#    style = list(
+#      cell_fill(color = "lightcyan"),
+#      cell_text(weight = "bold",
+#                color = "red")
+#      ),
+#    locations = cells_body(
+#      columns = `invalid-invalid`,
+#      rows = `invalid-invalid` < 0.05
+#    )
+#  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
+```
+
+
+```{r}
+ca1 = sub_p1 %>% filter(roi == 'ca1-body')
+
+t = ca1 %>% 
+  group_by(within_trial_TR, valid) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$wp_ap)$p.value) %>% 
+  unnest(output) %>%
+  #mutate(sig = ifelse(output <= 0.05, TRUE, FALSE)) %>% 
+  select(-data) %>% 
+  pivot_wider(names_from = valid,
+              values_from = output)
+
+a = ca1 %>% 
+  pivot_wider(names_from = valid,
+              values_from = wp_ap) %>% 
+  group_by(within_trial_TR) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  unnest(output) %>%
+  mutate(paired = output) %>% 
+  select(-c(data, output)) 
+
+t = inner_join(t, a, by = c("within_trial_TR"))
+
+t %>% ungroup() %>% gt() %>% 
+  tab_header(title = "Timepoint p-values for ca1-body") %>%
+  fmt_number(
+    #columns = c(`valid-invalid`, `valid-valid`, paired,`invalid-invalid`),
+    columns = c(`valid-invalid`, `valid-valid`, paired),
+    decimals = 3
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-invalid`,
+      rows = `valid-invalid` < 0.05
+    )
+  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `valid-valid`,
+      rows = `valid-valid` < 0.05
+    )
+  )%>%
+#  tab_style(
+#    style = list(
+#      cell_fill(color = "lightcyan"),
+#      cell_text(weight = "bold",
+#                color = "red")
+#      ),
+#    locations = cells_body(
+#      columns = `invalid-invalid`,
+#      rows = `invalid-invalid` < 0.05
+#    )
+#  )%>%
+  tab_style(
+    style = list(
+      cell_fill(color = "lightcyan"),
+      cell_text(weight = "bold",
+                color = "red")
+      ),
+    locations = cells_body(
+      columns = `paired`,
+      rows = `paired` < 0.05
+    )
+  )
 ```
 
 ## Segments-based
@@ -168,6 +306,8 @@ sub_p2 = sub_p1 %>%
                                    ifelse(within_trial_TR <= 18, 'late-similar',
                                           'different')
                                    ))) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  #filter(!within_trial_TR %in% c(6, 12, 18)) %>% 
   group_by(valid, segment, roi, sub) %>% 
   summarise(m = mean(wp_ap),
             se = sd(wp_ap)/sqrt(n()),
@@ -180,7 +320,7 @@ p2 = sub_p2 %>%
             n = n())
 
 p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
-p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
 p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
 
 sub_p2$segment = factor(sub_p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
@@ -212,13 +352,15 @@ ggplot(p2 %>% filter(valid == 'valid-valid'), aes(x = segment, y = mean, fill = 
       #            position=position_jitterdodge(
       #              jitter.width = 0.2,
       #              dodge.width = 0.75)) + 
-      labs(y = 'within_pair - across_pair')+ 
-      facet_wrap(~roi, ncol = 2, scales = 'free_y')+
+      labs(y = 'Similarity Scores')+ 
+      facet_wrap(~roi, ncol = 4, scales = 'free_y')+
       theme(legend.position = 'none',
             legend.title = element_blank(),
             strip.background = element_blank())+ 
   scale_fill_manual(values = cbPalette)+ 
-  scale_color_manual(values = cbPalette)
+  scale_color_manual(values = cbPalette)+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different'))
+
 
 ggplot(p2 %>% filter(roi == 'ca23dg-body'), aes(x = segment, y = mean, fill = valid)) +
       geom_hline(yintercept = 0, linetype="longdash") +
@@ -228,7 +370,7 @@ ggplot(p2 %>% filter(roi == 'ca23dg-body'), aes(x = segment, y = mean, fill = va
       #            position=position_jitterdodge(
       #              jitter.width = 0.2,
       #              dodge.width = 0.75)) + 
-      labs(y = 'within_pair - across_pair')+ 
+      labs(y = 'Similarity Scores')+ 
       #facet_wrap(~roi, ncol = 2, scales = 'free_y')+
       theme(legend.position = 'none',
             legend.title = element_blank(),
@@ -239,40 +381,61 @@ ggplot(p2 %>% filter(roi == 'ca23dg-body'), aes(x = segment, y = mean, fill = va
 
 ### STATS
 
-ANOVA across ROI (ca23dg & ppa), segment, and valid
+ANOVA across ROI (ca23dg & ca1), segment, and valid
 
-```{r}
-ezANOVA(data=sub_p2 %>% filter(roi %in% c('evc', 'ppa')),
+```{r eval=FALSE, include=FALSE}
+ezANOVA(data=sub_p2 %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
         wid=sub,
         within = .(valid, segment, roi),
         dv = m)$ANOVA %>% knitr::kable()
-```
 
-ANOVA across segment and valid for PPA
-
-```{r}
 ezANOVA(data=sub_p2 %>% filter(roi == 'ppa'),
         wid=sub,
         within = .(valid, segment),
         dv = m)$ANOVA %>% knitr::kable()
-```
 
-ANOVA across segment and valid for CA23DG
-
-```{r}
 ezANOVA(data=sub_p2 %>% filter(roi == 'ca23dg-body'),
         wid=sub,
         within = .(valid, segment),
         dv = m)$ANOVA %>% knitr::kable()
-```
 
-ANOVA across segment and valid for CA1
-
-```{r}
 ezANOVA(data=sub_p2 %>% filter(roi == 'ca1-body'),
         wid=sub,
         within = .(valid, segment),
         dv = m)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=sub_p2 %>% filter(roi %in% c('ca1-body', 'ca23dg-body') & valid == 'valid-valid'),
+        wid=sub,
+        within = .(roi, segment),
+        dv = m)$ANOVA %>% knitr::kable()
+```
+
+### lmer
+
+```{r}
+
+m1 <- lmer(m ~ segment * valid * roi + (1 | sub), sub_p2 %>% filter(roi %in% c('ca23dg-body', 'ca1-body')))
+anova(m1)
+
+m2 <- lmer(m ~ segment * roi + (1 | sub), sub_p2 %>% filter(roi %in% c('ca23dg-body', 'ca1-body') & valid == 'valid-valid'))
+anova(m2)
+
+```
+
+Valid related
+
+```{r}
+m1 <- lmer(m ~ segment * valid + (1 | sub), sub_p2 %>% filter(roi %in% c('ca23dg-body')))
+anova(m1)
+summary(m1)$coefficients
+
+m2 <- lmer(m ~ segment * valid + (1 | sub), sub_p2 %>% filter(roi %in% c('ca23dg-body') & segment %in% c('same', 'early-similar')))
+anova(m2)
+summary(m2)$coefficients
+
+m3 <- lmer(m ~ segment * valid + (1 | sub), sub_p2 %>% filter(roi %in% c('ca1-body')))
+summary(m3)$coefficients
+anova(m3)
 ```
 
 t-tests
@@ -372,8 +535,8 @@ postscan2_batch_correct = postscan2_batch %>%
 postscan_summary = postscan2_batch_correct %>% 
   group_by(route, sub) %>% 
   summarize(m = mean(tp),
-            max = max(tp),
-            min = min(tp),
+            max = ceiling(max(tp)),
+            min = floor(min(tp)),
             median = median(round(tp)),
             range = max - min,
             n = n())
@@ -388,6 +551,11 @@ tmp = postscan2_batch_correct %>%
 
 postscan_summary = left_join(postscan_summary, tmp)
 
+ggplot(postscan_summary, aes())
+```
+
+
+```{r eval=FALSE, include=FALSE}
 ggplot(postscan2_batch_correct, aes(x = tp_int, y = sub, color = destination)) + 
   #geom_line(aes(group = highest_education), size = 3, color = "dimgrey") + 
   geom_point(alpha = 0.5) + 
@@ -415,14 +583,18 @@ sub_within = rolling %>%
 sub_together = left_join(sub_within, sub_across) %>% 
   mutate(wp_ap = within - across) %>% 
   select(-c(type, within, across, n))
+```
 
+
+```{r eval=FALSE, include=FALSE}
 sub_p3 =
 left_join(sub_together %>% mutate(sub = as.numeric(sub)), 
-          tmp %>% mutate(sub = as.numeric(sub)), 
+          postscan_summary %>% mutate(sub = as.numeric(sub)), 
           by = c("sub" = "sub", "pair" = "route")) %>%
-  mutate(segment = ifelse(within_trial_TR <= mode, 'pre',
-                          ifelse(within_trial_TR > mode, 'post', 'MoI'))) %>% 
-  filter(segment != 'MoI') %>%
+  #filter(within_trial_TR >= min - 5 & within_trial_TR <= max + 5 ) %>% 
+  mutate(segment = ifelse(within_trial_TR < min, 'pre',
+                          ifelse(within_trial_TR > max, 'post', 'MoI'))) %>% 
+  #filter(segment != 'MoI') %>%
   group_by(roi, valid, sub, segment) %>% 
   summarise(cor = mean(wp_ap), n = n())
 
@@ -431,10 +603,8 @@ p3 = sub_p3 %>%
   summarise(m = mean(cor), 
             se = sd(cor)/sqrt(n()),
             n = n())
-```
 
-```{r}
-p3$segment = factor(p3$segment,levels = c('pre', 'post'))
+p3$segment = factor(p3$segment,levels = c('pre', 'MoI', 'post'))
 p3$roi = factor(p3$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa','evc'))
 p3$valid = factor(p3$valid, levels = c('valid-valid', 'valid-invalid'))
 
@@ -442,6 +612,11 @@ ggplot(p3, aes(x = segment, y = m, fill = valid)) +
       geom_hline(yintercept = 0, linetype="longdash") +
       geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
       geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      geom_point(data = sub_p3, alpha = 0.3,
+                   aes(x = segment, y = cor, color = valid), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.2,
+                    dodge.width = 0.8)) + 
       labs(y = 'within_pair - across_pair')+ 
       facet_wrap(~roi, ncol = 4, scales = 'free_y')+
       theme(legend.position = 'bottom',
@@ -450,22 +625,25 @@ ggplot(p3, aes(x = segment, y = m, fill = valid)) +
   scale_fill_manual(values = cbPalette[7:8])+ 
   scale_color_manual(values = cbPalette[7:8])
 
-ggplot(p3 %>% filter(valid == 'valid-valid'), aes(x = segment, y = m, fill = roi)) +
+ggplot(p3 %>% filter(valid == 'valid-valid' & roi %in% c('ca23dg-body', 'ca1-body')), aes(x = segment, y = m, fill = roi)) +
       geom_hline(yintercept = 0, linetype="longdash") +
       geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
       geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      geom_point(data = sub_p3 %>% filter(roi %in% c('ca23dg-body', 'ca1-body'), valid == 'valid-valid'), alpha = 0.3,
+                   aes(x = segment, y = cor, color = roi), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.2,
+                    dodge.width = 0.8)) + 
       labs(y = 'within_pair - across_pair')+ 
-      facet_wrap(~roi, ncol = 4, scales = 'free_y')+
+      #facet_wrap(~roi, ncol = 4, scales = 'free_y')+
       theme(legend.position = 'none',
             legend.title = element_blank(),
             strip.background = element_blank())+ 
   scale_fill_manual(values = cbPalette)+ 
   scale_color_manual(values = cbPalette)
-```
 
 ## STATS
 
-```{r}
 ezANOVA(data=sub_p3 %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
         wid=sub,
         within = .(valid, roi, segment),
@@ -564,10 +742,56 @@ p4_random %>% filter(segment == 'MoI' & random_sample != 'cor') %>%
 
 
 ```{r}
-tmp = tmp %>% 
+tmp = postscan_summary %>% 
   mutate(
     ceiling_tp = mode + 1,
     floor_tp = mode - 1)
+```
+
+
+```{r}
+fig1 = p1 %>% filter(roi %in% c('ca23dg-body')) %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = valid),
+                alpha = 0.2,
+                color = NA) +
+    geom_line(size = 1)+
+    labs(y = 'Similarity Scores',
+         x = element_blank()) + 
+    theme(legend.position = 'top',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  facet_wrap(~roi, ncol = 1) +
+  scale_fill_manual(values = cbPalette[7:8],
+                    labels = c('expect different', 'expect same'))+ 
+  scale_color_manual(values = cbPalette[7:8],
+                     labels = c('expect different', 'expect same'))+
+  scale_x_continuous(breaks = seq(0,24,2), limit = c(1,24))
+
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp))
+
+fig2 = tmp %>%
+  ggplot(aes(x = mode)) +
+  geom_histogram(bins = 35) +
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+  #labs(title = 'Timepoint for correct trials')+
+  scale_x_continuous(breaks = seq(0,24,2), limit = c(0,25))+
+  xlab("Within Trial Timepoints (seconds)")+
+  ylab("MoI")
+
+cowplot::plot_grid(fig1, fig2, ncol=1, align='v', rel_heights = c(2/3, 1/3))
+
 ```
 
 
@@ -577,7 +801,7 @@ sub_p4 =
 left_join(sub_together %>% mutate(sub = as.numeric(sub)), 
           tmp %>% mutate(sub = as.numeric(sub)), 
           by = c("sub" = "sub", "pair" = "route")) %>%
-  filter(within_trial_TR <= ceiling_tp + 3 & within_trial_TR >= floor_tp - 3) %>% 
+  #filter(within_trial_TR <= ceiling_tp + 3 & within_trial_TR >= floor_tp - 3) %>% 
   mutate(segment = ifelse(within_trial_TR < floor_tp, 'pre',
                           ifelse(within_trial_TR > ceiling_tp, 'post', 'MoI'))) %>% 
   group_by(roi, valid, sub, segment) %>% 
@@ -594,7 +818,7 @@ p4 = sub_p4 %>%
 ```{r}
 
 p4$segment = factor(p4$segment,levels = c('pre', 'MoI', 'post'))
-p4$roi = factor(p4$roi, levels = c('ca23dg-body', 'ppa', 'ca1-body', 'evc'))
+p4$roi = factor(p4$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
 p4$valid = factor(p4$valid, levels = c('valid-valid', 'valid-invalid'))
 
 
@@ -627,14 +851,45 @@ ggplot(p4 %>% filter(roi == 'ca23dg-body'), aes(x = segment, y = m, fill = valid
     theme(legend.position = 'none',
           legend.title = element_blank(),
           strip.background = element_blank())
+
+ggplot(p4 %>% filter(roi %in% c('ca23dg-body', 'ca1-body'), valid == 'valid-valid'), aes(x = segment, y = m, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+      geom_bar(stat = 'identity', alpha = 0.5, position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.5) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank())+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette) + 
+    theme(legend.position = 'top',
+          legend.title = element_blank(),
+          strip.background = element_blank())+
+  scale_x_discrete(labels = c('prior', 'MoI', 'post'))
+
 ```
 
 ## STATS
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 ezANOVA(data=sub_p4 %>% filter(roi %in% c('ca23dg-body', 'ca1-body')),
         wid=sub,
         within = .(valid, roi, segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=sub_p4 %>% filter(roi %in% c('ca23dg-body', 'ca1-body') & valid == 'valid-valid'),
+        wid=sub,
+        within = .(roi, segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=sub_p4 %>% filter(roi %in% c('ca1-body') & valid == 'valid-valid'),
+        wid=sub,
+        within = .(segment),
+        dv = cor)$ANOVA %>% knitr::kable()
+
+ezANOVA(data=sub_p4 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid'),
+        wid=sub,
+        within = .(segment),
         dv = cor)$ANOVA %>% knitr::kable()
 
 t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'MoI'))$cor)
@@ -642,6 +897,7 @@ t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segmen
 t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'post'))$cor)
 
 t.test((sub_p4 %>% filter(roi == 'ca1-body' & valid == 'valid-invalid' & segment == 'post'))$cor)
+
 
 t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'MoI'))$cor,
        (sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'pre'))$cor,
@@ -654,6 +910,22 @@ t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segmen
 t.test((sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-valid' & segment == 'MoI'))$cor,
        (sub_p4 %>% filter(roi == 'ca23dg-body' & valid == 'valid-invalid' & segment == 'MoI'))$cor,
        paired = TRUE)
+```
+
+#### lmer
+```{r}
+m5 <- lmer(cor ~ segment * roi + (1 | sub), sub_p4 %>% filter(roi %in% c('ca23dg-body', 'ca1-body') & valid == 'valid-valid'))
+anova(m5)
+
+
+m6 <- lmer(cor ~ segment + (1 | sub), sub_p4 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid'))
+anova(m6)
+
+m7 <- lmer(cor ~ segment + (1 | sub), sub_p4 %>% filter(roi %in% c('ca1-body') & valid == 'valid-valid'))
+anova(m7)
+
+m8 <- lmer(cor ~ segment * valid + (1 | sub), sub_p4 %>% filter(roi %in% c('ca23dg-body')))
+anova(m8)
 ```
 
 

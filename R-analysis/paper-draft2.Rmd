@@ -16,26 +16,136 @@ editor_options:
 ```{r setup, include=FALSE}
 source("./utils.R")
 
-postscan2_batch = loading_postscan2_df()
+#postscan2_batch = loading_postscan2_df()
 
-filter_wrong_rounds = FALSE
+rolling1 = loading_rolling_trial_df() %>% select(-sub_x)
 
-rolling = loading_rolling_df() %>% select(-sub_x)
+rolling2 =  rolling1
+rolling2$round_x = rolling1$round_y
+rolling2$round_y = rolling1$round_x
+rolling2$trial_x = rolling1$trial_y
+rolling2$trial_y = rolling1$trial_x
+
+rolling = rbind(rolling1, rolling2)
+
+unique(rolling$segment)
+
 rolling_sub = rolling %>% 
-  group_by(type, valid, within_trial_TR, roi, sub) %>% 
-  summarise(m = mean(cor)) %>%
-  filter(valid != 'invalid-invalid') 
+  filter(round_x <= 5 | round_y <=5) %>% 
+  group_by(type, segment, round_x, trial_x, roi, sub) %>% 
+  summarise(m = mean(cor))
 
+rolling_type = rolling_sub %>% 
+  pivot_wider(names_from = 'type', values_from = m) %>% 
+  mutate(m = across-within) %>% 
+  select(-c(across, within)) %>% 
+  filter(roi %in% c('ca23dg-body', 'ca1-body')) %>% 
+  pivot_wider(names_from = c(segment, roi), values_from = m)
+
+
+correlation <- function(df){
+  mat = cor(df, method='spearman')
+  mat %>% rstatix::cor_gather() %>% filter(var1 != var2)
+}
+
+corr = rolling_type %>% group_by(sub) %>% 
+  select(-c(round_x, trial_x)) %>% 
+  nest() %>% 
+  broadcast(~correlation(.))%>%
+  unnest(output) %>% 
+  select(-data) %>% 
+  group_by(var1, var2) %>% 
+  summarise(cor = mean(cor), .groups = 'rowwise')
+
+corr$var1 = factor(corr$var1, levels = c("same_ca23dg-body", "same_ca1-body",
+                                         "early-similar_ca23dg-body","early-similar_ca1-body",
+                                         "late-similar_ca23dg-body","late-similar_ca1-body",
+                                         "different_ca1-body","different_ca23dg-body"))
+  
+corr$var2 = factor(corr$var2, levels = c("same_ca23dg-body", "same_ca1-body",
+                                         "early-similar_ca23dg-body","early-similar_ca1-body",
+                                         "late-similar_ca23dg-body","late-similar_ca1-body",
+                                         "different_ca1-body","different_ca23dg-body"))
+
+
+ggplot(corr %>% filter(str_detect(var1, 'ca23dg')) %>% filter(str_detect(var2, 'ca1')), 
+       aes(x=var1, y=var2, fill=cor)) + 
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-0.15,0.15), space = "Lab", 
+   name="Spearman\nCorrelation") +
+  theme_minimal()+ 
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()+
+  labs(x = element_blank(),
+       y = element_blank())+
+  geom_text(aes(x=var1, y=var2, 
+                label = round(cor,3)),
+            color = "black",
+            size = 3)
+
+
+ggplot(corr %>% filter(str_detect(var1, 'ca23dg')) %>% filter(str_detect(var2, 'ca23dg')), 
+       aes(x=var1, y=var2, fill=cor)) + 
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-0.15,0.15), space = "Lab", 
+   name="Spearman\nCorrelation") +
+  theme_minimal()+ 
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()+
+  labs(x = element_blank(),
+       y = element_blank()) +
+  geom_text(aes(x=var1, y=var2, 
+                label = round(cor,3)),
+            color = "black",
+            size = 3)
+
+ggplot(corr %>% filter(str_detect(var1, 'ca1')) %>% filter(str_detect(var2, 'ca1')), 
+       aes(x=var1, y=var2, fill=cor)) + 
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-0.15,0.15), space = "Lab", 
+   name="Spearman\nCorrelation") +
+  theme_minimal()+ 
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()+
+  labs(x = element_blank(),
+       y = element_blank()) +
+  geom_text(aes(x=var1, y=var2, 
+                label = round(cor,3)),
+            color = "black",
+            size = 3)
+  
+  
+  summarize(same_ca23dg_early = cor(`same_ca23dg-body`, `early-similar_ca23dg-body`, method='spearman'),
+            same_ca1_early = cor(`same_ca23dg-body`,`early-similar_ca1-body`, method='spearman'),
+            same_ca23dg_late = cor(`same_ca23dg-body`, `late-similar_ca23dg-body`, method='spearman'),
+            same_ca1_late = cor(`same_ca23dg-body`,`late-similar_ca1-body`, method='spearman'),
+            early_ca23dg_late = cor(`early-similar_ca23dg-body`, `late-similar_ca23dg-body`, method='spearman'),
+            early_ca1_late = cor(`early-similar_ca23dg-body`,`late-similar_ca1-body`, method='spearman'))
+
+mean(corr$same_ca23dg_early)
+mean(corr$same_ca1_early)
+mean(corr$same_ca23dg_late)
+mean(corr$same_ca1_late)
+mean(corr$early_ca23dg_late)
+mean(corr$early_ca1_late)
+
+t.test(corr$same_ca23dg_early)
+t.test(corr$same_ca1_early)
+t.test(corr$same_ca23dg_late)
+t.test(corr$same_ca1_late)
+t.test(corr$early_ca23dg_late)
+t.test(corr$early_ca1_late)
 ```
 
 
 ```{r}
 sub_p2 = rolling_sub %>% 
-  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
-                            ifelse(within_trial_TR <= 12, 'early-similar',
-                                   ifelse(within_trial_TR <= 18, 'late-similar',
-                                          'different')
-                                   ))) %>% 
   group_by(valid, segment, roi, sub, type) %>% 
   summarise(mean = mean(m),
             se = sd(m)/sqrt(n()),

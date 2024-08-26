@@ -1,0 +1,111 @@
+---
+title: "permutation"
+author: "Wanjia Guo"
+date: '2024-08-21'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("./utils.R")
+```
+
+```{r}
+postscan2_batch = loading_postscan2_df()
+
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  group_by(sub, route) %>% 
+  summarise(npic = mean(npic)) %>% 
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp)) %>% 
+  mutate(early_late = ifelse(npic < 50, 'early', 'late'))
+
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  #group_by(sub, route) %>% 
+  #summarise(npic = mean(npic)) %>% 
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp)) %>% 
+  mutate(early_late = ifelse(npic >= 25 & npic < 50, 'early-similar', ifelse(npic >= 50 & npic < 75, 'late-similar', 'others')))
+
+postscan_summary = postscan2_batch_correct %>% 
+  group_by(route, sub) %>% 
+  summarize(m = mean(tp),
+            max = round(max(tp)),
+            min = round(min(tp)),
+            range = max - min,
+            n = n())
+
+```
+
+```{r}
+rolling = loading_rolling_df() %>% select(-sub_x)
+
+sub_across = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid) %>% 
+    summarise(across = mean(cor), n = n())
+  
+sub_within = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor) %>% 
+  select(-c(pair_x, pair_y, cor))
+
+sub_together = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n))%>% 
+  filter(valid == 'valid-valid')
+
+sub_together_ca23dg = sub_together %>% filter(roi == 'ca23dg-body')
+```
+
+```{r}
+sub_p4_ca23dg =
+left_join(sub_together_ca23dg %>% mutate(sub = as.numeric(sub)), 
+          postscan_summary %>% mutate(sub = as.numeric(sub)), 
+          by = c("sub" = "sub", "pair" = "route"))
+
+permutations = sub_p4_ca23dg %>% group_by(sub, pair, destination_x, destination_y) %>%   
+  mutate(segment = ifelse(within_trial_TR < min, 'pre',
+                          ifelse(within_trial_TR > max, 'post', 'MoI'))) %>% 
+  group_by(roi, valid, sub, segment) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+
+for (x in 1:10000) {
+  t1 = sub_p4_ca23dg %>% group_by(sub, pair, destination_x, destination_y) %>%   
+    mutate(s1=sample(within_trial_TR)) %>% 
+  mutate(segment = ifelse(s1 < min, 'pre',
+                          ifelse(s1 > max, 'post', 'MoI'))) %>% 
+  group_by(roi, valid, sub, segment) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+  
+  permutations[ , paste0("cor", x)] = t1$cor
+}
+
+```
+
+
+```{r}
+
+clean = permutations %>% ungroup() %>% filter(segment == 'MoI') %>% select(-c('roi', 'valid', 'n', 'segment')) 
+
+clean_long = clean %>% pivot_longer(cols = starts_with("cor"), names_to = 'permu', values_to = 'm')
+
+
+clean_summary = clean_long %>% group_by(permu) %>% summarise(m = mean(m)) 
+
+clean_summary %>% filter(permu == 'cor') %>% .$m
+
+
+ggplot(clean_summary %>% filter(permu != 'cor') , aes(x = m)) + geom_histogram() + geom_vline(xintercept = clean_summary %>% filter(permu == 'cor') %>% .$m, color = 'red')
+
+clean_summary %>% mutate(lower = ifelse(m<-0.001745344, TRUE, FALSE)) %>% group_by(lower) %>% summarise(n = n())
+
+t.test(clean_summary %>% filter(permu != 'cor') %>% .$m, mu = -0.001745344)
+```
+

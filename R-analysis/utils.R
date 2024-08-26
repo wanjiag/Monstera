@@ -10,9 +10,12 @@ library(gt)
 
 library(ezPurrr)
 
-theme_set(theme_classic(12))
+library(lme4)
+library(lmerTest)
 
-cbPalette <- c("#CC79A7","#0072B2","#009E73","#E69F00","#56B4E9","#F0E442","#999999","#D55E00")
+theme_set(theme_classic(7))
+
+cbPalette <- c("#CC79A7","#0072B2","#009E73","#E69F00","#56B4E9","#F0E442","#D55E00","#999999")
 #pink, green, blue, yellow
 
 converting_read <- function(curr_path){
@@ -38,9 +41,8 @@ Modes <- function(x) {
   ux[tab == max(tab)]
 }
 
-
 # project specific setup
-sub_dir = dir_ls(here::here("./csv_files/python_summary"))
+sub_dir = dir_ls(here::here("./csv_files/python_summary_z-scores/"))
 sub_behav_dir = dir_ls(here::here("./csv_files/behavior"))
 
 rois_names = c('ca23dg-body', 'ca1-body', 
@@ -69,6 +71,15 @@ loading_rolling_rounds_df <- function(){
   rolling
 }
 
+loading_rolling_trial_df <- function(){
+  files <- map(sub_dir, dir_ls, glob = '*/*rolling3_*summary_with_trials.csv') %>% unlist()
+  rolling <- map_dfr(files, converting_read)
+  rolling = rolling %>% 
+    filter(!(sub %in% bad))
+  print(length(unique(rolling$sub)))
+  rolling
+}
+
 loading_norolloing_df <- function(){
   files <- map(sub_dir, dir_ls, glob = '*/*norolling_*summary_with_destination.csv') %>% unlist()
   norolling <- map_dfr(files, converting_read)
@@ -76,6 +87,17 @@ loading_norolloing_df <- function(){
     filter(!(sub %in% bad))
   print(length(unique(norolling$sub)))
   norolling
+}
+
+loading_postscan1_df <- function(){
+  postscan1_behav <- map(sub_behav_dir, dir_ls, glob = '*postscan1*_behav*.csv') %>% unlist()
+  postscan1_batch <- map_dfr(postscan1_behav, converting_read2)
+  postscan1_batch <- postscan1_batch %>% 
+    filter(!(sub %in% bad))
+  postscan1_batch = postscan1_batch %>% 
+    mutate(
+      correct = ifelse(resp_obj == destination, 1, 0),
+      conf = abs(resp))
 }
 
 loading_postscan2_df <- function(){
@@ -105,3 +127,19 @@ loading_scan_behav_df <- function(){
                                                                 conf_resp== 6), 1, 0))
 }
 
+loading_prescan_behav_df <- function(){
+  sub_dir = dir_ls(here::here("./csv_files/behavior"))
+  prescan_behav <- map(sub_dir, dir_ls, glob = '*prescan*_behav*.csv') %>% unlist()
+  prescan_batch <- map_dfr(prescan_behav, converting_read2)
+  prescan_batch <- prescan_batch %>% 
+    filter(sub != '14' & sub != '30' & sub != '34') %>% filter(!(sub %in% bad))
+  print(length(unique(prescan_batch$sub)))
+  prescan_batch = prescan_batch %>% 
+    mutate(
+      nquestion = rep(c(1, 2, 3), times = nrow(prescan_batch)/3),
+      correct = ifelse(!is.na(resp_obj) & resp_obj == destination, 1, 0),
+      confidence = ifelse(!is.na(conf_resp) & conf_resp == 6, 1, 0),
+      cor_conf = ifelse((!is.na(resp_obj) & !is.na(conf_resp) &
+                           resp_obj == destination & 
+                           conf_resp== 6), 1, 0))
+}

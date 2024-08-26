@@ -1,0 +1,617 @@
+---
+title: "Figures with individual subject points"
+author: "Wanjia Guo"
+date: '2024-08-15'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r setup, include=FALSE}
+
+source("./utils.R")
+
+```
+
+# Figure 1C
+```{r include=FALSE}
+prescan_batch = loading_prescan_behav_df()
+```
+
+```{r stats}
+sub_plot = prescan_batch %>% 
+  mutate(round_text = paste0('Round',round)) %>% 
+  group_by(sub, nquestion, round_text, round) %>% 
+  summarise(m = mean(correct), conf = mean(confidence),
+            cor_conf = mean(cor_conf)) 
+
+anova(lmer(cor_conf ~ nquestion * round_text + (1 | sub), sub_plot))
+
+anova(lmer(m ~ nquestion * round_text + (1 | sub), sub_plot))
+
+
+combine_sub_plot = sub_plot %>% group_by(sub, nquestion) %>% summarize(m = mean(m), cor_conf = mean(cor_conf))
+
+t.test(combine_sub_plot %>% filter(nquestion == 1) %>% .$cor_conf,
+       combine_sub_plot %>% filter(nquestion == 2) %>% .$cor_conf,
+       paired = TRUE)
+
+t.test(combine_sub_plot %>% filter(nquestion == 2) %>% .$cor_conf,
+       combine_sub_plot %>% filter(nquestion == 3) %>% .$cor_conf,
+       paired = TRUE)
+```
+
+
+```{r}
+route_df <- data.frame(route=rep(c('pair1_east', 
+                             'pair2_north', 
+                             'pair3_west', 
+                             'pair4_south'), each=2),
+                 destination=c('bench', 'bikerack', 
+                               'pole', 'window', 
+                               'shrub', 'pergola', 
+                               'entrance', 'map'),
+                 competitor=c('bikerack','bench',
+                               'window', 'pole', 
+                               'pergola', 'shrub', 
+                               'map', 'entrance'))
+
+prescan_batch_competitor = prescan_batch %>% 
+  inner_join(route_df, by = c('route', 'destination')) %>% 
+  mutate(type = ifelse(resp_obj == destination, 'target',
+                       ifelse(resp_obj == competitor, 'competitor',
+                              'non-competitor')))
+
+prescan_batch_competitor$type[is.na(prescan_batch$resp_obj)] = 'no-response'
+
+prescan_batch_competitor$type = factor(prescan_batch_competitor$type,
+                                             levels = c('target',
+                                                        'competitor',
+                                                        'non-competitor',
+                                                        'no-response'))
+
+
+
+sub_fig1  = prescan_batch_competitor %>% 
+  mutate(sub = as.factor(sub),
+         nquestion = as.factor(nquestion),
+         round = as.factor(round),
+         type = as.factor(type)) %>% 
+  count(sub, nquestion, round, type, .drop=FALSE) %>% 
+  mutate(percentage = n / 4)  %>% 
+  group_by(nquestion, type, sub) %>% 
+  summarise(percentage = mean(percentage),
+            n = n()) 
+
+sub_fig1$nquestion = factor(sub_fig1$nquestion)
+anova(lmer(percentage ~ nquestion * type + (1 | sub), sub_fig1))
+
+t.test(sub_fig1 %>% filter(nquestion == 2 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 3 & type == 'target') %>% .$percentage,
+       paired = TRUE)
+
+t.test(sub_fig1 %>% filter(nquestion == 1 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 1 & type == 'competitor') %>% .$percentage,
+       paired = TRUE)
+
+t.test(sub_fig1 %>% filter(nquestion == 3 & type == 'competitor') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 3 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+```
+
+
+```{r fig.width=unit(6,"cm"), fig.height=unit(4,"cm")}
+
+sub_fig1$type = factor(sub_fig1$type,
+                                             levels = c('target',
+                                                        'competitor',
+                                                        'non-competitor',
+                                                        'no-response'))
+
+summary_fig1 = sub_fig1 %>% 
+  group_by(nquestion, type) %>% 
+  summarise(m = mean(percentage),
+            se = sd(percentage)/sqrt(n()),
+            n = n()) %>% 
+  filter(!is.na(type)) %>% 
+  filter(type != 'no-response')
+
+
+summary_fig1$nquestion = factor(summary_fig1$nquestion,
+                                labels = c('1' = 'same segment',
+                                           '2' = 'similar segment',
+                                           '3' = 'different segment'))
+
+sub_fig1$nquestion = factor(sub_fig1$nquestion,
+                                labels = c('1' = 'same segment',
+                                           '2' = 'similar segment',
+                                           '3' = 'different segment'))
+
+f1 = ggplot(summary_fig1, aes(x = type, y = m*100, fill = nquestion, color = nquestion)) + 
+  geom_bar(stat = 'identity', position = position_dodge(0.9), alpha = 0.6)+
+  geom_point(shape = 21, fill = NA, data = sub_fig1 %>% 
+  filter(type != 'no-response'), aes(x = type,y = percentage*100),
+             alpha = 0.8,
+             size = 0.8,
+             stroke = 0.5,
+             position = position_jitterdodge(
+               dodge.width = 0.9,
+               jitter.width = 0.4,
+               jitter.height = 0
+             )
+             ) + 
+  geom_errorbar(aes(ymin=m*100-se*100, ymax=m*100+se*100), width=0.2, size=0.5,color = "black",
+                position = position_dodge(0.9))+
+  theme(legend.position = 'none',
+        legend.title = element_blank())+
+  labs(y = 'percentage')+
+  scale_fill_manual(values = c("#E69F00","#CC79A7","#56B4E9"))+ 
+  scale_color_manual(values = c("#E69F00","#CC79A7","#56B4E9"))+ 
+  scale_x_discrete(
+    name = element_blank(),
+   labels=c("target" = "T", "competitor" = "C",
+                            "non-competitor" = "NC"))+
+  scale_y_continuous(breaks = seq(0,100,25), limit = c(0,100))+
+  theme(strip.background = element_blank(),
+        axis.title.x = element_blank(),
+        strip.placement = "outside")+
+  facet_wrap(~nquestion,strip.position="bottom")
+
+ggsave(filename = "~/Desktop/monstera/fig1C.png", f1, width = 66, height = 30, dpi = 300, units = "mm", device='png')
+
+```
+
+# Figure 1D
+
+```{r}
+postscan2_batch = loading_postscan2_df()
+
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  group_by(sub, route) %>% 
+  summarise(npic = mean(npic)) %>% 
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp)) %>% 
+  mutate(early_late = ifelse(npic < 50, 'early', 'late'))
+
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  #group_by(sub, route) %>% 
+  #summarise(npic = mean(npic)) %>% 
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp)) %>% 
+  mutate(early_late = ifelse(npic >= 25 & npic < 50, 'early-similar', ifelse(npic >= 50 & npic < 75, 'late-similar', 'others')))
+
+post2_early_late = postscan2_batch_correct %>% group_by(sub, early_late) %>% summarise(n = n()) %>% pivot_wider(names_from = early_late, values_from = n, values_fill = 0)
+
+mean(post2_early_late$'early-similar')
+sd(post2_early_late$'early-similar')
+mean(post2_early_late$'late-similar')
+sd(post2_early_late$'late-similar')
+mean(post2_early_late$'others')
+sd(post2_early_late$'others')
+
+t.test(post2_early_late %>%  .$'early-similar',
+       post2_early_late %>%  .$'late-similar',
+       paired = TRUE)
+
+postscan_summary = postscan2_batch_correct %>% 
+  group_by(route, sub) %>% 
+  summarize(m = mean(tp),
+            max = round(max(tp)),
+            min = round(min(tp)),
+            range = max - min,
+            n = n())
+
+f2 = postscan_summary %>%
+  ggplot(aes(x = m)) +
+  geom_histogram(bins = 35) +
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+  #labs(title = 'Timepoint for correct trials')+
+  scale_x_continuous(breaks = seq(0,24,3), limit = c(0,25))+
+  xlab("Time (s)")+
+  ylab("Count")
+
+ggsave(filename = "~/Desktop/monstera/fig1D.png", f2, width = 92, height = 25, dpi = 300, units = "mm", device='png')
+```
+
+# Figure 2B
+
+```{r include=FALSE}
+scan_batch = loading_scan_behav_df()
+
+results = scan_batch %>% group_by(sub) %>% summarise(
+  cor = mean(correct),
+  conf_cor = mean(cor_conf)
+) %>% 
+  summarise(
+  avg_cor = mean(cor),
+  se = sd(cor)/sqrt(n()),
+  avg_conf_cor = mean(conf_cor),
+  conf_cor_se = sd(conf_cor)/sqrt(n()),
+  n = n()
+) 
+```
+
+Performance during scan has a mean accuracy of `r round(results$avg_cor,2)` with a standard error of `r round(results$se,2)`. The average percentage for confident correct is `r round(results$avg_conf_cor,2)`, with a standard error of `r round(results$conf_cor_se,2)`.
+
+```{r include=FALSE}
+rolling = loading_rolling_df() %>% select(-sub_x)
+
+rolling_sub = rolling %>% 
+  group_by(type, valid, within_trial_TR, roi, sub) %>% 
+  summarise(m = mean(cor)) %>%
+  filter(valid != 'invalid-invalid') 
+
+sub_p1 = rolling_sub %>%
+  pivot_wider(
+    names_from = type, values_from = m) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same))
+```
+
+
+```{r}
+sub_p2 = sub_p1 %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  group_by(valid, segment, roi, sub) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p2 = sub_p2 %>% 
+  group_by(valid, segment, roi) %>%
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+sub_p2$segment = factor(sub_p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+sub_p2$roi = factor(sub_p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+sub_p2$valid = factor(sub_p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+```
+
+```{r}
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p2 %>% filter(valid == 'valid-valid' & roi == cur_roi), aes(x = segment, y = mean)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette[color_index])+ 
+  scale_color_manual(values = cbPalette[color_index])+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different'))
+  
+  if (indivdual){
+      p = p + geom_point(data = sub_p2 %>% filter(roi == cur_roi), 
+                 alpha = 0.3, size = 1,
+                   aes(x = segment, y = m, color = roi, group = segment), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.4,
+                    dodge.width = 0.75))
+  }
+  p
+}
+
+#p2.1 <- drawing_each_roi('ca23dg-body', 1, indivdual = TRUE) + ylim(-0.011, #0.011) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+#p2.2 <- drawing_each_roi('ca1-body',2, indivdual = TRUE) + ylim(-0.011, 0.011)+
+#  theme(axis.title.y=element_blank(),
+#        plot.margin = unit(c(0,0,0,-0.5), "cm"))
+#p2.3 <- drawing_each_roi('ppa',4, indivdual = TRUE) + ylim(-0.012, 0.024)+
+#  theme(axis.title.y=element_blank(),
+#        plot.margin = unit(c(0,0,0,-0.5), "cm"))
+#p2.4 <- drawing_each_roi('evc',3, indivdual = TRUE) + ylim(-0.065, 0.13)+
+#  theme(axis.title.y=element_blank(),
+#        plot.margin = unit(c(0,0,0,-0.5), "cm"))
+
+#cowplot::plot_grid(p2.1, p2.2, p2.3, p2.4, align = 'hv', ncol = 4)
+
+
+p2.1 <- drawing_each_roi('ca23dg-body', 1) + ylim(-0.002, 0.002) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p2.2 <- drawing_each_roi('ca1-body',2) + ylim(-0.002, 0.002)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p2.3 <- drawing_each_roi('ppa',4) + ylim(-0.006, 0.008)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p2.4 <- drawing_each_roi('evc',3) + ylim(-0.037, 0.05)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+
+#f4 = cowplot::plot_grid(p2.1, p2.2, p2.3, p2.4, align = 'hv', ncol = 4)
+#f4
+
+ggsave(filename = "~/Desktop/monstera/fig2B.1.png", p2.1, width = 36, height = 48, dpi = 300, units = "mm", device='png')
+
+ggsave(filename = "~/Desktop/monstera/fig2B.2.png", p2.2, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+ggsave(filename = "~/Desktop/monstera/fig2B.3.png", p2.3, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+ggsave(filename = "~/Desktop/monstera/fig2B.4.png", p2.4, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+```
+
+
+# Figure 3A
+
+```{r}
+
+p4 = postscan_summary %>% select(-c(range, n, m))
+p4 = arrange(p4, min, max) %>%
+  group_by(route) %>%
+  mutate(sequence = 1:n())
+
+p4.1 = p4 %>% mutate(max = min, min = 0)
+p4.2 = p4 %>% mutate(min = max, max = 24)
+
+p4 = p4 %>% pivot_longer(cols = c(max, min), names_to = 'properties', values_to = 'num')
+p4.1 = p4.1 %>% pivot_longer(cols = c(max, min), names_to = 'properties', values_to = 'num')
+p4.2 = p4.2 %>% pivot_longer(cols = c(max, min), names_to = 'properties', values_to = 'num')
+
+p4$route = factor(p4$route, levels = c('pair1_east', 'pair3_west', 'pair2_north', 'pair4_south'),
+                  labels = c('pair1_east' = 'East pair',
+                             'pair3_west' = 'West pair',
+                             'pair2_north' = 'North pair',
+                  'pair4_south' = 'South pair'))
+p4.1$route = factor(p4.1$route, levels = c('pair1_east', 'pair3_west', 'pair2_north', 'pair4_south'),
+                  labels = c('pair1_east' = 'East pair',
+                             'pair3_west' = 'West pair',
+                             'pair2_north' = 'North pair',
+                  'pair4_south' = 'South pair'))
+p4.2$route = factor(p4.2$route, levels = c('pair1_east', 'pair3_west', 'pair2_north', 'pair4_south'),
+                  labels = c('pair1_east' = 'East pair',
+                             'pair3_west' = 'West pair',
+                             'pair2_north' = 'North pair',
+                  'pair4_south' = 'South pair'))
+
+
+p3 = ggplot(p4, aes(x = num, y = reorder(sequence, -num))) + 
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+  geom_line(data = p4.1, aes(group = sequence), size = 1, alpha = 1, color = '#328784') +
+  geom_line(data = p4.2, aes(group = sequence), size = 1, alpha = 1, color = '#09524f') +
+  geom_line(data = p4, aes(group = sequence), size = 1, alpha = 1, color = '#F08000') +
+  geom_point(data = p4, color = '#F08000', size = 0.7, alpha = 1, shape = 15) +
+  labs(y = "Participant ID",
+       x = "Within Trial Timepoints (seconds)") + 
+  scale_x_continuous(breaks = seq(0,24,3), limit = c(0,24)) +
+  theme(axis.text.y=element_blank(),
+        #axis.ticks.y=element_blank(),
+        strip.background = element_blank(),
+        legend.position="bottom",
+        legend.title=element_blank())+ 
+    #guides(fill = guide_legend(nrow = 2, byrow = TRUE), color = guide_legend(nrow = 2, byrow = TRUE))+
+  facet_wrap(~route)
+
+p3
+
+ggsave(filename = "~/Desktop/monstera/fig3A.png", p3, width = 75, height = 75, dpi = 300, units = "mm", device='png')
+
+```
+
+# Figure 3B
+
+```{r include=FALSE}
+sub_across = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid) %>% 
+    summarise(across = mean(cor), n = n())
+  
+sub_within = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor) %>% 
+  select(-c(pair_x, pair_y, cor))
+
+sub_together = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n)) 
+```
+
+```{r}
+
+sub_p4 =
+left_join(sub_together %>% mutate(sub = as.numeric(sub)), 
+          postscan_summary %>% mutate(sub = as.numeric(sub)), 
+          by = c("sub" = "sub", "pair" = "route")) %>%
+  mutate(segment = ifelse(within_trial_TR < min, 'pre',
+                          ifelse(within_trial_TR > max, 'post', 'MoI'))) %>% 
+  group_by(roi, valid, sub, segment) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+p4 = sub_p4 %>% 
+  group_by(roi, valid, segment) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+```
+
+
+```{r fig.width=unit(8.5,"cm"), fig.height=unit(12,"cm")}
+
+p4$segment = factor(p4$segment,levels = c('pre', 'MoI', 'post'))
+p4$roi = factor(p4$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+p4$valid = factor(p4$valid, levels = c('valid-valid', 'valid-invalid'))
+
+sub_p4$segment = factor(sub_p4$segment,levels = c('pre', 'MoI', 'post'))
+sub_p4$roi = factor(sub_p4$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+sub_p4$valid = factor(sub_p4$valid, levels = c('valid-valid', 'valid-invalid'))
+
+```
+
+
+
+```{r}
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p4 %>% filter(valid == 'valid-valid' & roi == cur_roi), aes(x = segment, y = m)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette[color_index])+ 
+  scale_color_manual(values = cbPalette[color_index])
+
+  p
+}
+
+p4.1 <- drawing_each_roi('CA23DG', 1) + ylim(-0.0023, 0.0023) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p4.1 
+p4.2 <- drawing_each_roi('CA1',2) + ylim(-0.0023, 0.0023)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p4.2 
+p4.3 <- drawing_each_roi('PPA',4) + ylim(-0.001, 0.006)+
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+p4.3 
+p4.4 <- drawing_each_roi('EVC',3) + ylim(-0.01, 0.05)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.1.png", p4.1, width = 40, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.2.png", p4.2, width = 37, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.3.png", p4.3, width = 40, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.4.png", p4.4, width = 35, height = 25, dpi = 300, units = "mm", device='png')
+
+
+```
+
+# Permutation
+```{r}
+
+```
+
+
+
+# Figure 4B
+
+```{r}
+sub_p3 = sub_p2 %>% 
+  select(-c(se, n)) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  mutate(diff = `valid-valid` - `valid-invalid`)
+
+p3 = sub_p3 %>% 
+  group_by(segment, roi) %>%
+  summarise(m = mean(diff),
+            se = sd(diff)/sqrt(n()),
+            n = n())
+
+sub_p3_early_late = sub_p3 %>% mutate(early_late = ifelse((segment == "same" | segment == "early-similar"), "early", "late")) %>% select(-diff) %>% pivot_longer(cols = c('valid-valid', 'valid-invalid'), names_to = 'valid') %>% group_by(valid, early_late, roi, sub) %>% summarize(value = mean(value), n = n())
+
+p3_early_late = sub_p3_early_late %>% group_by(valid, early_late, roi) %>% summarize(m = mean(value), se = sd(value)/sqrt(n()))
+
+p3_early_late$valid = factor(p3_early_late$valid, levels = c('valid-valid', 'valid-invalid'))
+
+p3_early_late$roi = factor(p3_early_late$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p3_early_late %>% filter(roi == cur_roi), aes(x = early_late, y = m, fill = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = valid), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se),
+                    position = position_dodge(width = 0.8),
+                    width=0.4, size = 0.4
+                    ) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = c(cbPalette[color_index],cbPalette[8]))+ 
+  scale_color_manual(values = c(cbPalette[color_index],cbPalette[8]))
+
+  p
+}
+
+p5.1 <- drawing_each_roi('CA23DG', 1) + ylim(-0.0015, 0.0015) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p5.1 
+
+p5.2 <- drawing_each_roi('CA1',2) + ylim(-0.0015, 0.0015)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p5.2 
+p5.3 <- drawing_each_roi('PPA',4) + ylim(-0.0054, 0.0054)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p5.3
+p5.4 <- drawing_each_roi('EVC',3) + ylim(-0.043, 0.043)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p5.4
+
+#ggsave(filename = "~/Desktop/monstera/fig4B.1.png", p5.1, width = 24, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig4B.2.png", p5.2, width = 19, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig4B.3.png", p5.3, width = 19, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig4B.4.png", p5.4, width = 19, height = 25, dpi = 300, units = "mm", device='png')
+
+```
+
+
+# Figure 4C
+
+```{r echo=FALSE}
+p1 = sub_p1 %>% 
+  group_by(valid, within_trial_TR, roi) %>%
+  summarise(mean = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p1$roi = factor(p1$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc', 'ca23dg', 'ca1'))
+p1$valid = factor(p1$valid, levels = c('valid-invalid', 'valid-valid', 'invalid-invalid'))
+```
+
+```{r fig.width=unit(11,"cm"), fig.height=unit(6,"cm")}
+p6 = p1 %>% filter(roi %in% c('ca23dg-body')) %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = valid),
+                alpha = 0.4,
+                color = NA) +
+    geom_line(linewidth = 1)+
+    labs(y = 'Similarity Scores',
+         x = element_blank()) + 
+    theme(legend.position = 'none',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = c(cbPalette[8], cbPalette[1]),
+                    labels = c('Valid-invalid', 'Valid-valid'))+ 
+  scale_color_manual(values = c(cbPalette[8], cbPalette[1]),
+                     labels = c('Valid-invalid', 'Valid-valid'))+
+  scale_x_continuous(breaks = seq(0,24,3), limit = c(0,25))
+
+ggsave(filename = "~/Desktop/monstera/fig4C.png", p6,
+       width = 82, height = 30, dpi = 300, units = "mm", device='png')
+```

@@ -55,7 +55,7 @@ Exclude subject 14: squeezed emergency ball while in the scanner.
 Exclude subject 30: subject wanted to discontinue after round 7 because of discomfort caused by glasses
 Exclude subject 34: the participant perceived the peripheral nerve stimulation to be uncomfortable, so stopped the scan after Round 2.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 bad = c('13', '20', '23', '24', '27')
 
@@ -259,6 +259,15 @@ postscan1_batch %>%
     )
   )
 
+postscan1_batch %>% 
+  mutate(
+  correct = ifelse(resp_obj == destination, 1, 0),
+  conf = abs(resp)) %>% 
+  group_by(sub, npic) %>% 
+  summarise(m = mean(correct),
+            conf = mean(conf)) %>% 
+  filter(npic == 75 & m != 1) %>% View()
+
 ```
 
 ### Posttest2
@@ -389,8 +398,8 @@ prescan_batch_competitor = prescan_batch %>%
                        ifelse(resp_obj == competitor, 'competitor',
                               'non-competitor')
                        ))
-prescan_batch_competitor$type_no_na = prescan_batch_competitor$type %>% replace_na('non-competitor')
-prescan_batch_competitor$type_no_na = factor(prescan_batch_competitor$type_no_na,
+#prescan_batch_competitor$type_no_na = prescan_batch_competitor$type %>% replace_na('non-competitor')
+prescan_batch_competitor$type = factor(prescan_batch_competitor$type,
                                              levels = c('non-competitor',
                                                         'competitor',
                                                         'target'))
@@ -399,15 +408,16 @@ prescan_batch_competitor %>%
   mutate(sub = as.factor(sub),
          nquestion = as.factor(nquestion),
          round = as.factor(round),
-         type_no_na = as.factor(type_no_na)) %>% 
-  count(sub, nquestion, round, type_no_na, .drop=FALSE) %>% 
+         type = as.factor(type)) %>% 
+  count(sub, nquestion, round, type, .drop=FALSE) %>% 
   mutate(percentage = n / 4) %>% 
-  group_by(nquestion, type_no_na) %>% 
+  group_by(nquestion, type) %>% 
   summarise(m = mean(percentage),
             se = sd(percentage)/sqrt(n()),
             n = n()) %>% 
+  filter(!is.na(type)) %>% 
   #mutate(round_text = paste0('Round',round)) %>% 
-  ggplot(aes(x = as.factor(nquestion), y = m*100, fill = type_no_na)) + 
+  ggplot(aes(x = as.factor(nquestion), y = m*100, fill = type)) + 
   geom_histogram(stat = "identity", position = 'dodge')+
   geom_errorbar(aes(ymin=m*100-se*100, ymax=m*100+se*100), color="black", width=0.1, size=0.5,
                 position = position_dodge(0.9))+
@@ -416,7 +426,7 @@ prescan_batch_competitor %>%
         legend.title = element_blank())+
   labs(title = 'Correct for pre-scan,\nspearated by answer type',
        y = 'percentage',
-       caption = '*non-competitor includes no response trials.'
+       caption = '*non-competitor are excluded from the percentage.'
        )+
   colorblindr::scale_fill_OkabeIto()+
   scale_x_discrete(
@@ -544,6 +554,11 @@ Accuracy per round:
 
 ```{r}
 
+scan_batch %>% summarise(
+  m_correct = mean(correct) * 100,
+  m_conf_correct = mean(cor_conf) * 100
+) 
+
 curr_plot = scan_batch %>% group_by(round, sub) %>% summarise(
   m_correct = mean(correct) * 100,
   m_conf_correct = mean(cor_conf) * 100
@@ -574,6 +589,7 @@ ggplot(curr_plot, aes(x = round, y = accuracy, color = type)) +
   labs(y = 'Percentage',
         x = 'Rounds') + 
   colorblindr::scale_color_OkabeIto()
+
 ```
 
 
