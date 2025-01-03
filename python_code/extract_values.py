@@ -7,13 +7,14 @@ import numpy as np
 ALL_SUB = True
 
 derivative_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/'
-rois = ['evc_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked']
-hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_thre_0.5_masked']
+#rois = ['evc_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked']
+#hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_thre_0.5_masked']
 
-#rois = ['angular_gyrus_2_epi_thre_0.5_masked', 'evc_2_epi_thre_0.5_masked', 'hippocampus_2_epi_thre_0.5_masked', 'ppa_mni_2_epi_thre_0.5_masked']
-#hippo_subfields = ['ashs/body/ca1-body_thre_0.5_masked', 'ashs/body/ca23dg-body_thre_0.5_masked',
-#                   'ashs/whole/ca1_thre_0.5_masked', 'ashs/whole/ca23dg_thre_0.5_masked']
-
+rois = []
+hippo_subfields = ['ashs/whole/subiculum_thre_0.5_masked', 
+                   'ashs/whole/ERC_thre_0.5_masked', 
+                   'ashs/whole/PRC_thre_0.5_masked',
+                   'ashs/whole/PHC_thre_0.5_masked']
 
 if ALL_SUB:
     preprocess_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess'

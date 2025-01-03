@@ -117,12 +117,16 @@ def save_file(subnum, output_df, file_name):
     output_df.to_csv(out_file, index=False)
     
 rois_dict = {
-    'ca23dg-body_thre_0.5_masked':'ca23dg-body',
-    'ca1-body_thre_0.5_masked':'ca1-body',
+    #'ca23dg-body_thre_0.5_masked':'ca23dg-body',
+    #'ca1-body_thre_0.5_masked':'ca1-body',
     #'ca23dg_thre_0.5_masked':'ca23dg',
     #'ca1_thre_0.5_masked':'ca1', 
-    'evc_2_epi_thre_0.5_masked':'evc', 
-    'ppa_mni_2_epi_thre_0.5_masked':'ppa'
+    #'evc_2_epi_thre_0.5_masked':'evc', 
+    #'ppa_mni_2_epi_thre_0.5_masked':'ppa',
+    'subiculum_thre_0.5_masked': 'sub', 
+    'ERC_thre_0.5_masked': 'erc', 
+    'PRC_thre_0.5_masked': 'prc',
+    'PHC_thre_0.5_masked': 'phc',
 }
 
 preprocess_dir = '/projects/kuhl_lab/wanjiag/MONSTERA/derivatives/preprocess'

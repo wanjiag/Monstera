@@ -39,12 +39,16 @@ def group(df, li):
     return df
     
 rois_dict = {
-    'ca23dg-body_thre_0.5_masked':'ca23dg-body',
-    'ca1-body_thre_0.5_masked':'ca1-body',
+    #'ca23dg-body_thre_0.5_masked':'ca23dg-body',
+    #'ca1-body_thre_0.5_masked':'ca1-body',
     #'ca23dg_thre_0.5_masked':'ca23dg',
     #'ca1_thre_0.5_masked':'ca1',
-    'evc_2_epi_thre_0.5_masked':'evc', 
-    'ppa_mni_2_epi_thre_0.5_masked':'ppa'
+    #'evc_2_epi_thre_0.5_masked':'evc', 
+    #'ppa_mni_2_epi_thre_0.5_masked':'ppa',
+    'subiculum_thre_0.5_masked': 'sub', 
+    'ERC_thre_0.5_masked': 'erc', 
+    'PRC_thre_0.5_masked': 'prc',
+    'PHC_thre_0.5_masked': 'phc',
 }
 
 output_dir = "/home/wanjiag/projects/MONSTERA/derivatives/csv_files/python/"

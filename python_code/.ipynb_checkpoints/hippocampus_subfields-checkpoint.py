@@ -4,9 +4,12 @@ from os.path import join as opj
 import os
 import glob
 
-subfields = {'ca1':1,
-             'ca23dg':[2,4] #choosing 2 to 4, including ca2, dg, and ca3
-            }
+subfields = {'ca1':[1],
+             'ca23dg':[2,4], #choosing 2 to 4, including ca2, dg, and ca3'
+             'subiculum':[8],
+             'ERC':[10],
+             'PRC':[11,12], #BA35 and BA36
+             'PHC':[13]}
 
 ALL_SUBS = True
 
@@ -272,10 +275,12 @@ for subnum in todo_subs:
         os.makedirs(output_dir)  
         
     for i in subfields:
-        if i == 'ca1':
-            op_string = '-thr {} -uthr {} -bin'.format(subfields[i],subfields[i])
-        if i == 'ca23dg':
+        if len(subfields[i]) == 1:
+            op_string = '-thr {} -uthr {} -bin'.format(subfields[i][0],subfields[i][0])
+        if len(subfields[i]) == 2:
             op_string = '-thr {} -uthr {} -bin'.format(subfields[i][0],subfields[i][1])
+        else:
+            print('================={} should have max length of 2 for value================='.format(i))
                 
         left_out_file = opj(output_dir, 'left-{}_T2w-space.nii.gz'.format(i))
         maths = fsl.ImageMaths(in_file=left, 
@@ -323,10 +328,12 @@ for subnum in todo_subs:
     left, right = hippo_body(left, right, subnum, output_dir)
 
     for i in subfields:
-        if i == 'ca1':
-            op_string = '-thr {} -uthr {} -bin'.format(subfields[i],subfields[i])
-        if i == 'ca23dg':
+        if len(subfields[i]) == 1:
+            op_string = '-thr {} -uthr {} -bin'.format(subfields[i][0],subfields[i][0])
+        if len(subfields[i]) == 2:
             op_string = '-thr {} -uthr {} -bin'.format(subfields[i][0],subfields[i][1])
+        else:
+            print('================={} should have max length of 2 for value================='.format(i))
             
         left_out_file = opj(output_dir, 'left-{}-body_T2w-space.nii.gz'.format(i))
         maths = fsl.ImageMaths(in_file=left, 
