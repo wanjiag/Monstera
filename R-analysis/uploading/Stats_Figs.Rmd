@@ -1,0 +1,1406 @@
+---
+title: "Stats and Figs"
+author: "Wanjia Guo"
+date: '2024-08-15'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+source("./utils.R")
+
+```
+
+# Prescan behavior
+
+```{r include=FALSE}
+prescan_batch = loading_prescan_behav_df()
+
+route_df <- data.frame(route=rep(c('pair1_east', 
+                             'pair2_north', 
+                             'pair3_west', 
+                             'pair4_south'), each=2),
+                 destination=c('bench', 'bikerack', 
+                               'pole', 'window', 
+                               'shrub', 'pergola', 
+                               'entrance', 'map'),
+                 competitor=c('bikerack','bench',
+                               'window', 'pole', 
+                               'pergola', 'shrub', 
+                               'map', 'entrance'))
+
+prescan_batch_competitor = prescan_batch %>% 
+  inner_join(route_df, by = c('route', 'destination')) %>% 
+  mutate(type = ifelse(resp_obj == destination, 'target',
+                       ifelse(resp_obj == competitor, 'competitor',
+                              'non-competitor')))
+
+prescan_batch_competitor$type[is.na(prescan_batch$resp_obj)] = 'no-response'
+
+prescan_batch_competitor$type = factor(prescan_batch_competitor$type,
+                                             levels = c('target',
+                                                        'competitor',
+                                                        'non-competitor',
+                                                        'no-response'))
+
+sub_fig1  = prescan_batch_competitor %>% 
+  mutate(sub = as.factor(sub),
+         nquestion = as.factor(nquestion),
+         round = as.factor(round),
+         type = as.factor(type)) %>% 
+  count(sub, nquestion, round, type, .drop=FALSE) %>% 
+  mutate(percentage = n / 4)  %>% 
+  select(-n) %>% 
+  pivot_wider(names_from = type, values_from = percentage, values_fill = 0) %>%
+  pivot_longer(cols = `target`:`no-response`, names_to = 'type') %>% 
+  group_by(nquestion, type, sub) %>% 
+  summarise(percentage = mean(value),
+            n = n())
+
+sub_fig1$nquestion = factor(sub_fig1$nquestion)
+```
+
+## Stats
+
+```{r}
+prescan_batch %>% group_by(sub, nquestion) %>% 
+  summarize(cor = mean(correct)*100,
+            conf_cor = mean(cor_conf)*100) %>% 
+  ungroup() %>% 
+  group_by(nquestion) %>% 
+  summarize(
+    sd_cor = sd(cor),
+    cor = mean(cor),
+    sd_conf = sd(conf_cor),
+    conf_cor = mean(conf_cor)) 
+```
+
+```{r}
+prescan_batch_competitor %>% 
+  group_by(sub, nquestion, type, confidence) %>% 
+  summarize(n = n()/8) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = type, values_from = n, values_fill = 0) %>% 
+  pivot_longer(cols = `target`:`non-competitor`, names_to = 'type') %>% 
+  group_by(nquestion,confidence, type) %>% 
+  summarise(m = mean(value), sd = sd(value)) %>% 
+  filter(confidence == 1) 
+
+
+prescan_batch_competitor %>% 
+  group_by(sub, nquestion, type, correct) %>% 
+  summarize(n = n()/8) %>% 
+  ungroup() %>% select(-correct) %>% 
+  pivot_wider(names_from = type, values_from = n, values_fill = 0) %>%  
+  pivot_longer(cols = `target`:`non-competitor`, names_to = 'type') %>% 
+  group_by(nquestion, type) %>% 
+  summarise(m = mean(value), sd = sd(value)) 
+```
+
+
+```{r}
+t.test(sub_fig1 %>% filter(nquestion == 1 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 2 & type == 'target') %>% .$percentage,
+       paired = TRUE)
+
+t.test(sub_fig1 %>% filter(nquestion == 2 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 3 & type == 'target') %>% .$percentage,
+       paired = TRUE)
+
+```
+
+
+### Same Segment
+
+```{r}
+# Target vs. non-overlapping
+t.test(sub_fig1 %>% filter(nquestion == 1 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 1 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+
+# Competitor vs. non-overlapping
+t.test(sub_fig1 %>% filter(nquestion == 1 & type == 'competitor') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 1 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+
+# Target vs. Competitor
+t.test(sub_fig1 %>% filter(nquestion == 1 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 1 & type == 'competitor') %>% .$percentage,
+       paired = TRUE)
+```
+
+### Similar Segment
+
+```{r}
+
+# Target vs. non-overlapping
+t.test(sub_fig1 %>% filter(nquestion == 2 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 2 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+
+# Target vs. Competitor
+t.test(sub_fig1 %>% filter(nquestion == 2 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 2 & type == 'competitor') %>% .$percentage,
+       paired = TRUE)
+
+# Competitor vs. non-overlapping
+t.test(sub_fig1 %>% filter(nquestion == 2 & type == 'competitor') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 2 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+```
+
+### Different Segment
+
+```{r}
+# Target vs. non-overlapping
+t.test(sub_fig1 %>% filter(nquestion == 3 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 3 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+
+# Target vs. Competitor
+t.test(sub_fig1 %>% filter(nquestion == 3 & type == 'target') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 3 & type == 'competitor') %>% .$percentage,
+       paired = TRUE)
+
+# Competitor vs. non-overlapping
+t.test(sub_fig1 %>% filter(nquestion == 3 & type == 'competitor') %>% .$percentage,
+       sub_fig1 %>% filter(nquestion == 3 & type == 'non-competitor') %>% .$percentage,
+       paired = TRUE)
+```
+
+### High confidence
+
+```{r}
+sub_plot = prescan_batch %>% 
+  mutate(round_text = paste0('Round',round)) %>% 
+  group_by(sub, nquestion, round_text, round) %>% 
+  summarise(m = mean(correct), conf = mean(confidence),
+            cor_conf = mean(cor_conf)) 
+
+combine_sub_plot = sub_plot %>% group_by(sub, nquestion) %>% summarize(m = mean(m), cor_conf = mean(cor_conf))
+
+combine_sub_plot %>% group_by(nquestion) %>% summarise(mean_conf = mean(cor_conf), sd = sd(cor_conf)) 
+
+t.test(combine_sub_plot %>% filter(nquestion == 1) %>% .$cor_conf,
+       combine_sub_plot %>% filter(nquestion == 2) %>% .$cor_conf,
+       paired = TRUE)
+
+t.test(combine_sub_plot %>% filter(nquestion == 2) %>% .$cor_conf,
+       combine_sub_plot %>% filter(nquestion == 3) %>% .$cor_conf,
+       paired = TRUE)
+```
+
+## Figure 1C
+
+```{r}
+
+sub_fig1$type = factor(sub_fig1$type,
+                                             levels = c('target',
+                                                        'competitor',
+                                                        'non-competitor',
+                                                        'no-response'))
+
+summary_fig1 = sub_fig1 %>% 
+  group_by(nquestion, type) %>% 
+  summarise(m = mean(percentage)*100,
+            sd = sd(percentage)*100,
+            se = sd/sqrt(n()),
+            n = n()) %>% 
+  filter(!is.na(type)) %>% 
+  filter(type != 'no-response')
+
+
+summary_fig1$nquestion = factor(summary_fig1$nquestion,
+                                labels = c('1' = 'same segment',
+                                           '2' = 'similar segment',
+                                           '3' = 'different segment'))
+
+sub_fig1$nquestion = factor(sub_fig1$nquestion,
+                                labels = c('1' = 'same segment',
+                                           '2' = 'similar segment',
+                                           '3' = 'different segment'))
+
+f1 = ggplot(summary_fig1, aes(x = type, y = m, fill = nquestion, color = nquestion)) + 
+  geom_bar(stat = 'identity', position = position_dodge(0.9), alpha = 0.6)+
+  geom_point(shape = 21, fill = NA, data = sub_fig1 %>% 
+  filter(type != 'no-response'), aes(x = type,y = percentage*100),
+             alpha = 0.8,
+             size = 0.8,
+             stroke = 0.5,
+             position = position_jitterdodge(
+               dodge.width = 0.9,
+               jitter.width = 0.4,
+               jitter.height = 0
+             )
+             ) + 
+  geom_errorbar(aes(ymin=m-se, ymax=m+se), width=0.2, size=0.5,color = "black",
+                position = position_dodge(0.9))+
+  theme(legend.position = 'none',
+        legend.title = element_blank())+
+  labs(y = 'percentage')+
+  scale_fill_manual(values = c("#E69F00","#CC79A7","#56B4E9"))+ 
+  scale_color_manual(values = c("#E69F00","#CC79A7","#56B4E9"))+ 
+  scale_x_discrete(
+    name = element_blank(),
+   labels=c("target" = "T", "competitor" = "C",
+                            "non-competitor" = "NO"))+
+  scale_y_continuous(breaks = seq(0,100,25), limit = c(0,100))+
+  theme(strip.background = element_blank(),
+        axis.title.x = element_blank(),
+        strip.placement = "outside")+
+  facet_wrap(~nquestion,strip.position="bottom")
+
+ggsave(filename = "~/Desktop/monstera/fig1C.png", f1, width = 66, height = 30, dpi = 300, units = "mm", device='png')
+
+```
+
+# Post Test 1
+
+```{r include=FALSE}
+postscan1_batch = loading_postscan1_df()
+
+postscan1_sub_tmp = postscan1_batch %>% group_by(sub,npic,correct, conf) %>% summarize(n=n()/16) %>% mutate(n = ifelse(sub < 46, n * 2, n))
+  
+postscan1_sub_tmp$conf = factor(postscan1_sub_tmp$conf,
+                                labels = c('0' = 'unsure',
+                                           '1' = 'prob',
+                                           '2' = 'def'))
+  
+postscan1_sub_tmp = postscan1_sub_tmp %>% pivot_wider(names_from = c(correct, conf), values_from = n, values_fill = 0) %>% ungroup() %>%  select(-`sub`)
+
+for (npic in c(30,45,60,75)){
+  tmp = postscan1_sub_table %>% filter(npic == npic)
+  print(sapply(tmp, mean))
+  print(sapply(tmp, sd))
+}
+
+postscan1_sub = postscan1_batch %>% 
+  mutate(conf_cor = ifelse(correct == 1 & conf == 2, 1, 0)) %>% 
+  group_by(sub, npic) %>% 
+  summarise(m = mean(correct),
+            conf = mean(conf_cor))
+
+summary_fig2 = postscan1_sub %>% group_by(npic) %>% 
+  summarise(
+    m_cor = mean(m)*100, sd_cor = sd(m)*100,
+    m_conf = mean(conf)*100, sd_conf = sd(conf)*100, n = n())
+  
+postscan1_sub$npic = factor(postscan1_sub$npic)
+```
+
+
+```{r}
+anova(lmer(m ~ npic + (1 | sub), postscan1_sub))
+anova(lmer(conf ~ npic + (1 | sub), postscan1_sub))
+
+postscan1_sub = postscan1_batch %>% 
+  mutate(conf_cor = ifelse(correct == 1 & conf == 2, 1, 0)) %>% 
+  mutate(early_late = ifelse(npic < 50, 'early', 'late')) %>%
+  group_by(sub, early_late) %>% 
+  summarise(m = mean(correct),
+            conf = mean(conf_cor))
+
+postscan1_sub$early_late = factor(postscan1_sub$early_late)
+
+t.test(postscan1_sub %>% filter(early_late == 'early') %>% .$m,
+       postscan1_sub %>% filter(early_late == 'late') %>% .$m,
+       paired = TRUE)
+
+t.test(postscan1_sub %>% filter(early_late == 'early') %>% .$conf,
+       postscan1_sub %>% filter(early_late == 'late') %>% .$conf,
+       paired = TRUE)
+
+```
+
+# Post Test 2
+
+```{r include=FALSE}
+postscan2_batch = loading_postscan2_df()
+
+postscan2_batch %>% group_by(sub) %>% 
+  summarise(correct_m = mean(correct)*100) %>% 
+  ungroup() %>% 
+  summarise(m = mean(correct_m),
+            sd = sd(correct_m),
+            n = n())
+
+postscan2_batch %>% 
+  filter(correct == 1) %>%
+  group_by(sub) %>% 
+  summarise(npic = mean(npic)) %>% 
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp)) %>% 
+  ungroup() %>% 
+  summarise(m = mean(tp),
+            sd = sd(tp),
+            max = max(tp),
+            min = min(tp)) 
+
+```
+
+## Figure 1D
+
+```{r}
+
+postscan2_batch_correct = postscan2_batch %>% 
+  filter(correct == 1) %>%
+  #group_by(sub, route) %>% 
+  #summarise(npic = mean(npic)) %>% 
+  mutate(tp = npic * 0.24,
+         tp_int = round(tp)) %>% 
+  mutate(early_late = ifelse(npic >= 25 & npic < 50, 'early-similar', ifelse(npic >= 50 & npic < 75, 'late-similar', 'others')))
+
+postscan_summary = postscan2_batch_correct %>% 
+  group_by(route, sub) %>% 
+  summarize(m = mean(tp),
+            max = round(max(tp)),
+            min = round(min(tp)),
+            range = max - min,
+            n = n())
+
+f2 = postscan_summary %>%
+  ggplot(aes(x = m)) +
+  geom_histogram(bins = 35) +
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+  #labs(title = 'Timepoint for correct trials')+
+  scale_x_continuous(breaks = seq(0,24,3), limit = c(0,25))+
+  xlab("Time (s)")+
+  ylab("Count")
+
+#ggsave(filename = "~/Desktop/monstera/fig1D.png", f2, width = 92, height = 25, dpi = 300, units = "mm", device='png')
+```
+
+# Segmented Scan
+
+```{r include=FALSE}
+rolling = loading_rolling_df() %>% select(-sub_x)
+
+rolling_sub = rolling %>% 
+  group_by(type, valid, within_trial_TR, roi, sub) %>% 
+  summarise(m = mean(cor_z)) %>%
+  filter(valid != 'invalid-invalid') 
+
+sub_p1 = rolling_sub %>%
+  pivot_wider(
+    names_from = type, values_from = m) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same))
+
+sub_p2 = sub_p1 %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  group_by(valid, segment, roi, sub) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p2 = sub_p2 %>% 
+  group_by(valid, segment, roi) %>%
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+sub_p2$segment = factor(sub_p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+sub_p2$roi = factor(sub_p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+sub_p2$valid = factor(sub_p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+```
+
+## Figure 2B
+
+```{r}
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p2 %>% filter(valid == 'valid-valid' & roi == cur_roi), aes(x = segment, y = mean)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette[color_index])+ 
+  scale_color_manual(values = cbPalette[color_index])+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different'))
+  
+  if (indivdual){
+      p = p + geom_point(data = sub_p2 %>% filter(roi == cur_roi), 
+                 alpha = 0.3, size = 1,
+                   aes(x = segment, y = m, color = roi, group = segment), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.4,
+                    dodge.width = 0.75))
+  }
+  p
+}
+
+p2.1 <- drawing_each_roi('ca23dg-body', 1) + ylim(-0.0016, 0.0016) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p2.2 <- drawing_each_roi('ca1-body',2) + ylim(-0.0016, 0.0016)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p2.3 <- drawing_each_roi('ppa',4) + ylim(-0.0065, 0.0065)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p2.4 <- drawing_each_roi('evc',3) + ylim(-0.055, 0.055)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.1.png", p2.1, width = 36, height = 48, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.2.png", p2.2, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.3.png", p2.3, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.4.png", p2.4, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+```
+
+## Stats
+
+```{r}
+anova(lmer(m ~ segment * roi + (1 | sub), sub_p2 %>% filter(valid == 'valid-valid')))
+
+anova(lmer(m ~ segment + (1 | sub), sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid')))
+
+anova(lmer(m ~ segment + (1 | sub), sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid')))
+
+anova(lmer(m ~ segment + (1 | sub), sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid')))
+
+anova(lmer(m ~ segment + (1 | sub), sub_p2 %>% filter(roi %in% c('ca1-body') & valid == 'valid-valid')))
+```
+
+
+```{r}
+sub_p2_early_late = sub_p2 %>% mutate(early_late = ifelse((segment == "same" | segment == "early-similar"), "early", "late")) %>% group_by(valid, early_late, roi, sub) %>% summarize(m = mean(m), n = n())
+
+t.test(sub_p2_early_late %>% filter(roi %in% c('evc') & valid == 'valid-valid' & early_late == 'early') %>% .$m,
+       sub_p2_early_late %>% filter(roi %in% c('evc') & valid == 'valid-valid' & early_late == 'late') %>% .$m, paired = TRUE)
+
+t.test(sub_p2_early_late %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & early_late == 'early') %>% .$m,
+       sub_p2_early_late %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & early_late == 'late') %>% .$m, paired = TRUE)
+
+t.test(sub_p2_early_late %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & early_late == 'early') %>% .$m,
+       sub_p2_early_late %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & early_late == 'late') %>% .$m, paired = TRUE)
+
+t.test(sub_p2_early_late %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & early_late == 'early') %>% .$m)
+```
+
+
+```{r}
+t.test(sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & segment == 'same') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ca23dg-body') & valid == 'valid-valid' & segment == 'different') %>% .$m)
+```
+
+
+```{r}
+
+t.test(sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & segment == 'same') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & segment == 'different') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('ppa') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'same') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'different') %>% .$m)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'different') %>% .$m, paired = TRUE)
+```
+
+
+# Moment of Insight
+
+
+```{r}
+p4 = postscan_summary %>% select(-c(range, n, m))
+
+p4 %>% mutate(diff = max - min) %>% 
+  ungroup() %>% 
+  summarise(min = mean(min),
+            m = mean(diff),
+            max = 24 - mean(max))
+
+p4 = arrange(p4, min, max) %>%
+  group_by(route) %>%
+  mutate(sequence = 1:n())
+```
+
+## Figure 3A
+
+```{r}
+p4.1 = p4 %>% mutate(max = min, min = 0)
+p4.2 = p4 %>% mutate(min = max, max = 24)
+
+p4 = p4 %>% pivot_longer(cols = c(max, min), names_to = 'properties', values_to = 'num')
+p4.1 = p4.1 %>% pivot_longer(cols = c(max, min), names_to = 'properties', values_to = 'num')
+p4.2 = p4.2 %>% pivot_longer(cols = c(max, min), names_to = 'properties', values_to = 'num')
+
+p4$route = factor(p4$route, levels = c('pair1_east', 'pair3_west', 'pair2_north', 'pair4_south'),
+                  labels = c('pair1_east' = 'East pair',
+                             'pair3_west' = 'West pair',
+                             'pair2_north' = 'North pair',
+                  'pair4_south' = 'South pair'))
+p4.1$route = factor(p4.1$route, levels = c('pair1_east', 'pair3_west', 'pair2_north', 'pair4_south'),
+                  labels = c('pair1_east' = 'East pair',
+                             'pair3_west' = 'West pair',
+                             'pair2_north' = 'North pair',
+                  'pair4_south' = 'South pair'))
+p4.2$route = factor(p4.2$route, levels = c('pair1_east', 'pair3_west', 'pair2_north', 'pair4_south'),
+                  labels = c('pair1_east' = 'East pair',
+                             'pair3_west' = 'West pair',
+                             'pair2_north' = 'North pair',
+                  'pair4_south' = 'South pair'))
+
+
+p3 = ggplot(p4, aes(x = num, y = reorder(sequence, -num))) + 
+  geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=18, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+  geom_line(data = p4.1, aes(group = sequence), size = 1, alpha = 1, color = '#328784') +
+  geom_line(data = p4.2, aes(group = sequence), size = 1, alpha = 1, color = '#09524f') +
+  geom_line(data = p4, aes(group = sequence), size = 1, alpha = 1, color = '#F08000') +
+  geom_point(data = p4, color = '#F08000', size = 0.7, alpha = 1, shape = 15) +
+  labs(y = "Participant",
+       x = "Timepoint (second)") + 
+  scale_x_continuous(breaks = seq(0,24,3), limit = c(0,24)) +
+  theme(axis.text.y=element_blank(),
+        strip.background = element_blank(),
+        legend.position="bottom",
+        legend.title=element_blank())+ 
+  facet_wrap(~route)
+
+p3
+
+ggsave(filename = "~/Desktop/monstera/fig3A.png", p3, width = 75, height = 75, dpi = 300, units = "mm", device='png')
+
+```
+
+## Figure 3B
+
+```{r include=FALSE}
+sub_across = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'across') %>% 
+  group_by(sub, roi, within_trial_TR, valid) %>% 
+    summarise(across = mean(cor_z), n = n())
+  
+sub_within = rolling %>% 
+  filter(valid != 'invalid-invalid') %>% 
+  filter(type == 'within') %>% 
+  mutate(pair = pair_x, within = cor_z) %>% 
+  select(-c(pair_x, pair_y, cor_z))
+
+sub_together = left_join(sub_within, sub_across) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(type, within, across, n)) 
+
+sub_p4 =
+left_join(sub_together %>% mutate(sub = as.numeric(sub)), 
+          postscan_summary %>% mutate(sub = as.numeric(sub)), 
+          by = c("sub" = "sub", "pair" = "route")) %>%
+  mutate(segment = ifelse(within_trial_TR < min, 'pre',
+                          ifelse(within_trial_TR > max, 'post', 'MoI'))) %>% 
+  group_by(roi, valid, sub, segment) %>% 
+  summarise(cor = mean(wp_ap), n = n())
+
+p4 = sub_p4 %>% 
+  group_by(roi, valid, segment) %>% 
+  summarise(m = mean(cor), 
+            se = sd(cor)/sqrt(n()),
+            n = n())
+
+p4$segment = factor(p4$segment,levels = c('pre', 'MoI', 'post'))
+p4$roi = factor(p4$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+p4$valid = factor(p4$valid, levels = c('valid-valid', 'valid-invalid'))
+
+sub_p4$segment = factor(sub_p4$segment,levels = c('pre', 'MoI', 'post'))
+sub_p4$roi = factor(sub_p4$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+sub_p4$valid = factor(sub_p4$valid, levels = c('valid-valid', 'valid-invalid'))
+```
+
+
+
+```{r}
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p4 %>% filter(valid == 'valid-valid' & roi == cur_roi), aes(x = segment, y = m)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette[color_index])+ 
+  scale_color_manual(values = cbPalette[color_index])
+
+  p
+}
+
+p4.1 <- drawing_each_roi('CA23DG', 1) + ylim(-0.0025, 0.0025) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p4.1 
+p4.2 <- drawing_each_roi('CA1',2) + ylim(-0.0025, 0.0025)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p4.2 
+p4.3 <- drawing_each_roi('PPA',4) + ylim(-0.001, 0.006)+
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+p4.3 
+p4.4 <- drawing_each_roi('EVC',3) + ylim(-0.01, 0.06)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p4.4
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.1.png", p4.1, width = 40, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.2.png", p4.2, width = 37, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.3.png", p4.3, width = 40, height = 25, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig3B.4.png", p4.4, width = 35, height = 25, dpi = 300, units = "mm", device='png')
+
+
+```
+
+## Stats
+
+CA23DG
+```{r}
+t.test((sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'MoI'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'pre'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'post'))$cor)
+
+anova(lmer(cor ~ segment + (1 | sub), sub_p4 %>% filter(roi %in% c('CA23DG') & valid == 'valid-valid')))
+
+t.test((sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'MoI'))$cor,
+       (sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'post'))$cor, paired = TRUE
+)
+
+t.test((sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'pre'))$cor,
+       (sub_p4 %>% filter(roi == 'CA23DG' & valid == 'valid-valid' & segment == 'MoI'))$cor, paired = TRUE
+)
+```
+
+Visual area
+```{r}
+
+anova(lmer(cor ~ segment + (1 | sub), sub_p4 %>% filter(roi %in% c('EVC') & valid == 'valid-valid')))
+
+anova(lmer(cor ~ segment + (1 | sub), sub_p4 %>% filter(roi %in% c('PPA') & valid == 'valid-valid')))
+
+t.test((sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'MoI'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'pre'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'post'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'MoI'))$cor,
+       (sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'pre'))$cor, paired = TRUE
+)
+
+t.test((sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'MoI'))$cor,
+       (sub_p4 %>% filter(roi == 'PPA' & valid == 'valid-valid' & segment == 'post'))$cor, paired = TRUE
+)
+
+
+t.test((sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'MoI'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'pre'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'post'))$cor)
+
+t.test((sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'MoI'))$cor,
+       (sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'pre'))$cor, paired = TRUE
+)
+
+t.test((sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'MoI'))$cor,
+       (sub_p4 %>% filter(roi == 'EVC' & valid == 'valid-valid' & segment == 'post'))$cor, paired = TRUE
+)
+
+```
+
+```{r}
+anova(lmer(cor ~ segment + (1 | sub), sub_p4 %>% filter(roi %in% c('CA1') & valid == 'valid-valid')))
+```
+
+
+# Cue analysis
+
+## Figure 4B
+
+```{r}
+sub_p5 = sub_p2 %>% 
+  select(-c(se, n)) %>% 
+  pivot_wider(names_from = valid, values_from = m) %>% 
+  mutate(diff = `valid-valid` - `valid-invalid`)
+
+p5 = sub_p5 %>% 
+  group_by(segment, roi) %>%
+  summarise(m = mean(diff),
+            se = sd(diff)/sqrt(n()),
+            n = n())
+
+sub_p5_early_late = sub_p5 %>% mutate(early_late = ifelse((segment == "same" | segment == "early-similar"), "1st half", "2nd half")) %>% select(-diff) %>% pivot_longer(cols = c('valid-valid', 'valid-invalid'), names_to = 'valid') %>% group_by(valid, early_late, roi, sub) %>% summarize(value = mean(value), n = n())
+
+p5_early_late = sub_p5_early_late %>% group_by(valid, early_late, roi) %>% summarize(m = mean(value), se = sd(value)/sqrt(n()))
+
+p5_early_late$valid = factor(p5_early_late$valid, levels = c('valid-valid', 'valid-invalid'))
+
+p5_early_late$roi = factor(p5_early_late$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p5_early_late %>% filter(roi == cur_roi), aes(x = early_late, y = m, fill = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = valid), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = m-se, ymax = m+se),
+                    position = position_dodge(width = 0.8),
+                    width=0.4, size = 0.4
+                    ) +
+    labs(y = expression('Similarity Scores ('~italic('z')~')'))+
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = c(cbPalette[color_index],cbPalette[8]))+ 
+  scale_color_manual(values = c(cbPalette[color_index],cbPalette[8]))
+
+  p
+}
+
+p5.1 <- drawing_each_roi('CA23DG', 1) + ylim(-0.0015, 0.0015) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p5.1 
+
+p5.2 <- drawing_each_roi('CA1',2) + ylim(-0.0015, 0.0015)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p5.2 
+
+p5.3 <- drawing_each_roi('PPA',4) + ylim(-0.0054, 0.0054)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p5.3
+
+p5.4 <- drawing_each_roi('EVC',3) + ylim(-0.043, 0.043)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p5.4
+
+ggsave(filename = "~/Desktop/monstera/fig4B.1.png", p5.1, width = 22, height = 25, dpi = 300, units = "mm", device='png')
+
+ggsave(filename = "~/Desktop/monstera/fig4B.2.png", p5.2, width = 19, height = 25, dpi = 300, units = "mm", device='png')
+
+ggsave(filename = "~/Desktop/monstera/fig4B.3.png", p5.3, width = 19, height = 25, dpi = 300, units = "mm", device='png')
+
+ggsave(filename = "~/Desktop/monstera/fig4B.4.png", p5.4, width = 19, height = 25, dpi = 300, units = "mm", device='png')
+
+```
+
+## Stats
+
+```{r}
+anova(lmer(value ~ early_late * valid + (1 | sub), sub_p5_early_late %>% filter(roi %in% c('ca23dg-body'))))
+
+t.test(sub_p5_early_late %>% filter(roi == 'ca23dg-body' & early_late %in% c('1st half') & valid == 'valid-valid') %>% .$value)
+
+t.test(sub_p5_early_late %>% filter(roi == 'ca23dg-body' & early_late %in% c('early') & valid == 'valid-valid') %>% .$value,
+sub_p5_early_late %>% filter(roi == 'ca23dg-body' & early_late %in% c('early') & valid == 'valid-invalid') %>% .$value,
+paired = TRUE)
+
+t.test(sub_p5_early_late %>% filter(roi == 'ca23dg-body' & early_late %in% c('late') & valid == 'valid-valid') %>% .$value,
+sub_p5_early_late %>% filter(roi == 'ca23dg-body' & early_late %in% c('late') & valid == 'valid-invalid') %>% .$value,
+paired = TRUE)
+
+```
+
+
+```{r}
+anova(lmer(value ~ early_late * valid + (1 | sub), sub_p5_early_late %>% filter(roi %in% c('ca1-body'))))
+
+anova(lmer(value ~ early_late * valid + (1 | sub), sub_p5_early_late %>% filter(roi %in% c('ppa'))))
+
+anova(lmer(value ~ early_late * valid + (1 | sub), sub_p5_early_late %>% filter(roi %in% c('evc'))))
+
+t.test(sub_p5_early_late %>% filter(roi == 'ca1-body' & early_late %in% c('early') & valid == 'valid-valid') %>% .$value,
+sub_p5_early_late %>% filter(roi == 'ca1-body' & early_late %in% c('early') & valid == 'valid-invalid') %>% .$value,
+paired = TRUE)
+
+t.test(sub_p5_early_late %>% filter(roi == 'ppa' & early_late %in% c('early') & valid == 'valid-valid') %>% .$value,
+sub_p5_early_late %>% filter(roi == 'ppa' & early_late %in% c('early') & valid == 'valid-invalid') %>% .$value,
+paired = TRUE)
+
+
+t.test(sub_p5_early_late %>% filter(roi == 'evc' & early_late %in% c('early') & valid == 'valid-valid') %>% .$value,
+sub_p5_early_late %>% filter(roi == 'evc' & early_late %in% c('early') & valid == 'valid-invalid') %>% .$value,
+paired = TRUE)
+
+```
+
+## Figure 4C
+
+```{r echo=FALSE}
+p6 = sub_p1 %>% 
+  group_by(valid, within_trial_TR, roi) %>%
+  summarise(mean = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p6$roi = factor(p6$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc'))
+p6$valid = factor(p6$valid, levels = c('valid-invalid', 'valid-valid', 'invalid-invalid'))
+```
+
+```{r fig.width=unit(11,"cm"), fig.height=unit(6,"cm")}
+f6 = p6 %>% filter(roi %in% c('ca23dg-body')) %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = valid)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = valid),
+                alpha = 0.4,
+                color = NA) +
+    geom_line(linewidth = 1)+
+    labs(y = 'Similarity Scores',
+         x = element_blank()) + 
+    theme(legend.position = 'none',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_fill_manual(values = c(cbPalette[8], cbPalette[1]),
+                    labels = c('Valid-invalid', 'Valid-valid'))+ 
+  scale_color_manual(values = c(cbPalette[8], cbPalette[1]),
+                     labels = c('Valid-invalid', 'Valid-valid'))+
+  scale_x_continuous(breaks = seq(0,24,3), limit = c(0,25))
+
+#ggsave(filename = "~/Desktop/monstera/fig4C.png", f6, width = 82, height = 30, dpi = 300, units = "mm", device='png')
+```
+
+## Stats
+
+```{r}
+ca23dg = sub_p1 %>% filter(roi == 'ca23dg-body')
+
+t = ca23dg %>% 
+  pivot_wider(names_from = valid,
+              values_from = wp_ap) %>% 
+  group_by(within_trial_TR) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$p.value) %>%
+  mutate(pvalue = output %>% unlist()) %>% 
+  broadcast(~t.test(.$`valid-valid`, .$`valid-invalid`, 
+                    paired = TRUE)$statistic[[1]]) %>%
+  mutate(paired_t = output %>% unlist()) %>%
+  broadcast(~t.test(.$`valid-valid`)$p.value) %>%
+  mutate(valid = output %>% unlist()) %>% 
+  broadcast(~t.test(.$`valid-valid`)$statistic[[1]]) %>%
+  mutate(t_valid = output %>% unlist()) %>% 
+  broadcast(~t.test(.$`valid-invalid`)$p.value) %>%
+  mutate(invalid = output %>% unlist()) %>% 
+  unnest(output) %>%
+  select(-c(data, output)) 
+
+t %>% View()
+```
+
+# Reviewers
+
+## segments
+
+```{r}
+rolling_sub = rolling %>% 
+  group_by(type, valid, within_trial_TR, roi, sub) %>% 
+  summarise(m = mean(cor_z)) %>%
+  filter(valid != 'invalid-invalid')
+
+sub_p1 = rolling_sub %>%
+  pivot_wider(
+    names_from = type, values_from = m) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same))
+
+sub_p2 = sub_p1 %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  group_by(valid, segment, roi, sub) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p2 = sub_p2 %>% 
+  group_by(valid, segment, roi) %>%
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+sub_p2$segment = factor(sub_p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+sub_p2$roi = factor(sub_p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'))
+sub_p2$valid = factor(sub_p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+p2$roi = factor(p2$roi, levels = c('ca23dg-body', 'ca1-body', 'ppa', 'evc'), labels = c('ca23dg-body' = 'CA3/DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+
+r1 = ggplot(p2, aes(x = segment, y = mean, group = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different')) + 
+  facet_wrap(~roi, scales = 'free_y', ncol = 2)
+
+r1
+
+
+
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p2 %>% filter(roi == cur_roi), aes(x = segment, y = mean, group = valid)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = valid), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se),
+                    position = position_dodge(width = 0.8),
+                    width=0.4, size = 0.4
+                    ) +
+    labs(y = expression('Similarity Scores ('~italic('z')~')'))+
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = c(cbPalette[color_index],cbPalette[8]))+ 
+  scale_color_manual(values = c(cbPalette[color_index],cbPalette[8]))+
+    ggtitle(cur_roi)+
+    theme(plot.title = element_text(hjust = 0.5))
+
+  p
+}
+
+r1.1 <- drawing_each_roi('CA3/DG', 1) + ylim(-0.002, 0.002)
+r1.1
+
+r1.2 <- drawing_each_roi('CA1',2) + ylim(-0.002, 0.002)+
+  theme(axis.title.y=element_blank())
+r1.2 
+
+r1.3 <- drawing_each_roi('PPA',4) + ylim(-0.006, 0.006)+
+  theme(axis.title.y=element_blank())
+r1.3
+
+r1.4 <- drawing_each_roi('EVC',3) + ylim(-0.05, 0.05)+
+  theme(axis.title.y=element_blank())
+r1.4
+
+
+ggsave(filename = "~/Desktop/monstera/r1.1.pdf", r1.1, width = 64, height = 50, dpi = 300, units = "mm", device='pdf')
+
+ggsave(filename = "~/Desktop/monstera/r1.2.pdf", r1.2, width = 60, height = 50, dpi = 300, units = "mm", device='pdf')
+
+ggsave(filename = "~/Desktop/monstera/r1.3.pdf", r1.3, width = 60, height = 50, dpi = 300, units = "mm", device='pdf')
+
+ggsave(filename = "~/Desktop/monstera/r1.4.pdf", r1.4, width = 60, height = 50, dpi = 300, units = "mm", device='pdf')
+# ggsave(filename = "~/Desktop/monstera/reviewer1.png", r1, width = 100, height = 75, dpi = 300, units = "mm", device='png')
+```
+
+```{r}
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'same') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'same') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'same') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'different') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'early-similar') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'different') %>% .$m, paired = TRUE)
+
+t.test(sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'different') %>% .$m,
+       sub_p2 %>% filter(roi %in% c('evc') & valid == 'valid-valid' & segment == 'late-similar') %>% .$m, paired = TRUE)
+```
+
+
+## Cues analysis
+
+```{r}
+rolling_sub = rolling %>% 
+  group_by(type, valid, within_trial_TR, roi, sub) %>% 
+  summarise(m = mean(cor_z))
+
+sub_p1 = rolling_sub %>%
+  pivot_wider(
+    names_from = type, values_from = m) %>% 
+  mutate(wp_ap = within - across) %>% 
+  mutate(wi_ap = same - across) %>% 
+  select(-c(across, within, same)) %>% 
+  pivot_longer(cols = c('wp_ap', 'wi_ap'), names_to = 'type')
+
+new_df = sub_p1 %>% 
+  filter(within_trial_TR <= 6)
+
+same_cue = new_df %>% filter(
+  (type == 'wi_ap' & valid != 'valid-invalid') |
+  (type == 'wp_ap' & valid == 'valid-invalid')
+) %>% group_by(sub, within_trial_TR, roi) %>% 
+  summarise(value = mean(value)) %>% ungroup() %>% 
+  group_by(within_trial_TR, roi) %>% 
+  summarise(mean = mean(value),
+            se = sd(value)/sqrt(n()),
+            n = n()) %>% 
+  mutate(type = 'same cue')
+  
+
+diff_cues = new_df %>% filter(
+  (type == 'wi_ap' & valid == 'valid-invalid') |
+  (type == 'wp_ap' & valid != 'valid-invalid')
+) %>% group_by(sub, within_trial_TR, roi) %>% 
+  summarise(value = mean(value)) %>% ungroup() %>% 
+  group_by(within_trial_TR, roi) %>% 
+  summarise(mean = mean(value),
+            se = sd(value)/sqrt(n()),
+            n = n())%>% 
+  mutate(type = 'different cues')
+
+p7 = rbind(same_cue, diff_cues)
+
+
+p7$roi = factor(p7$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc'), labels = c('ca23dg-body' = 'CA23DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+p7$type = factor(p7$type, levels = c('same cue', 'different cues'))
+
+r2 = p7 %>% filter(roi %in% c('CA23DG')) %>% 
+    ggplot(aes(x = within_trial_TR, y = mean, color = type)) +
+    geom_hline(yintercept = 0, linetype="longdash") +
+    geom_vline(xintercept=6, linetype="longdash") +
+  geom_vline(xintercept=12, linetype="longdash") +
+    geom_vline(xintercept=18, linetype="longdash") +
+    geom_ribbon(aes(ymin = mean-se, 
+                    ymax = mean+se,
+                    fill = type),
+                alpha = 0.4,
+                color = NA) +
+    geom_line(linewidth = 1)+
+    labs(y = 'Similarity Scores',
+         x = element_blank()) + 
+  scale_fill_manual(values = c(cbPalette[8], cbPalette[1]))+ 
+  scale_color_manual(values = c(cbPalette[8], cbPalette[1]))+
+    theme(legend.position = 'top',
+          legend.title = element_blank(),
+          strip.background = element_blank())+ 
+  scale_x_continuous(breaks = seq(1,6,1), limit = c(0.5,6.5))
+
+ggsave(filename = "~/Desktop/monstera/reviewer2.pdf", r2, width = 75, height = 50, dpi = 300, units = "mm", device='pdf')
+```
+
+```{r}
+
+same_cue = new_df %>% filter(
+  (type == 'wi_ap' & valid != 'valid-invalid') |
+  (type == 'wp_ap' & valid == 'valid-invalid')
+) %>% group_by(sub, within_trial_TR, roi) %>% 
+  summarise(value = mean(value)) %>% 
+  mutate(type = 'same cue')
+
+diff_cues = new_df %>% filter(
+  (type == 'wi_ap' & valid == 'valid-invalid') |
+  (type == 'wp_ap' & valid != 'valid-invalid')
+) %>% group_by(sub, within_trial_TR, roi) %>% 
+  summarise(value = mean(value)) %>% 
+  mutate(type = 'diff cues')
+
+stat7 = rbind(same_cue, diff_cues)
+
+ca23dg = stat7 %>% filter(roi == 'ca23dg-body')
+
+t = ca23dg %>% 
+  pivot_wider(names_from = type,
+              values_from = value) %>% 
+  group_by(within_trial_TR) %>% 
+  nest() %>% 
+  broadcast(~t.test(.$`same cue`, .$`diff cues`, 
+                    paired = TRUE)$p.value) %>%
+  mutate(pvalue = output %>% unlist()) %>% 
+  broadcast(~t.test(.$`same cue`, .$`diff cues`, 
+                    paired = TRUE)$statistic[[1]]) %>%
+  mutate(paired_t = output %>% unlist()) %>%
+  broadcast(~t.test(.$`diff cues`)$p.value) %>%
+  mutate(diff = output %>% unlist()) %>% 
+  broadcast(~t.test(.$`diff cues`)$statistic[[1]]) %>%
+  mutate(diff_t = output %>% unlist()) %>% 
+  broadcast(~t.test(.$`same cue`)$p.value) %>%
+  mutate(same = output %>% unlist()) %>% 
+  unnest(output) %>%
+  select(-c(data, output)) 
+
+t %>% View()
+```
+
+## Scan behav
+
+```{r}
+scan_behav = loading_scan_behav_df()
+
+scan_behav_sub = scan_behav %>% group_by(sub) %>% summarise(correct = mean(correct),
+                                           cor_conf = mean(cor_conf))
+scan_behav_sub %>% summarise(cor_m = mean(correct),
+                             sd = sd(correct),
+                             cor_conf_m = mean(cor_conf),
+                             conf_sd = sd(cor_conf)) %>% View()
+```
+
+## Other MTL subfields
+
+### Segmented Scan
+
+```{r include=FALSE}
+rolling = loading_rolling_df_extra_rois() %>% select(-sub_x)
+
+rolling_sub = rolling %>% 
+  group_by(type, valid, within_trial_TR, roi, sub) %>% 
+  summarise(m = mean(cor_z)) %>%
+  filter(valid != 'invalid-invalid' & valid != 'valid-invalid') 
+
+sub_p1 = rolling_sub %>%
+  pivot_wider(
+    names_from = type, values_from = m) %>% 
+  mutate(wp_ap = within - across) %>% 
+  select(-c(across, within, same))
+
+sub_p2 = sub_p1 %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  group_by(valid, segment, roi, sub) %>% 
+  summarise(m = mean(wp_ap),
+            se = sd(wp_ap)/sqrt(n()),
+            n = n())
+
+p2 = sub_p2 %>% 
+  group_by(valid, segment, roi) %>%
+  summarise(mean = mean(m),
+            se = sd(m)/sqrt(n()),
+            n = n())
+
+p2$segment = factor(p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+p2$roi = factor(p2$roi, levels = c('erc', 'prc', 'phc', 'sub'), labels = c('erc' = 'ERC', 'prc'='PRC','phc'='PHC', 'sub'='Subiculum'))
+
+p2$valid = factor(p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+
+sub_p2$segment = factor(sub_p2$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+sub_p2$roi = factor(sub_p2$roi, levels = c('erc', 'prc', 'phc', 'sub'), labels = c('erc' = 'ERC', 'prc'='PRC', 'phc'='PHC','sub'='Subiculum'))
+sub_p2$valid = factor(sub_p2$valid, levels = c('valid-valid', 'valid-invalid', 'invalid-invalid'))
+```
+
+### Stats
+
+```{r}
+anova(lmer(m ~ segment + (1 | sub), sub_p2 %>% filter(valid == 'valid-valid' & roi == 'ERC')))
+
+t.test(sub_p2 %>% filter(valid == 'valid-valid' & roi == 'Subiculum' & segment == 'same') %>% .$m)
+
+t.test(sub_p2 %>% filter(valid == 'valid-valid' & roi == 'Subiculum' & segment == 'early-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(valid == 'valid-valid' & roi == 'Subiculum' & segment == 'late-similar') %>% .$m)
+
+t.test(sub_p2 %>% filter(valid == 'valid-valid' & roi == 'Subiculum' & segment == 'different') %>% .$m)
+
+
+```
+
+```{r}
+r3 = ggplot(p2, aes(x = segment, y = mean, fill = roi)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different'))+
+  facet_wrap(~roi, ncol = 2)
+
+ggsave(filename = "~/Desktop/monstera/reviewer3.pdf", r3, width = 100, height = 75, dpi = 300, units = "mm", device='pdf')
+```
+
+
+```{r}
+drawing_each_roi <- function(cur_roi, color_index, indivdual = FALSE){
+  p = ggplot(p2 %>% filter(valid == 'valid-valid' & roi == cur_roi), aes(x = segment, y = mean)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = roi), alpha = 0.6, stat = 'identity', position = position_dodge()) + 
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Similarity Scores')+ 
+      theme(legend.position = 'none',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette[color_index])+ 
+  scale_color_manual(values = cbPalette[color_index])+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different'))
+  
+  if (indivdual){
+      p = p + geom_point(data = sub_p2 %>% filter(roi == cur_roi), 
+                 alpha = 0.3, size = 1,
+                   aes(x = segment, y = m, color = roi, group = segment), 
+                  position=position_jitterdodge(
+                    jitter.width = 0.4,
+                    dodge.width = 0.75))
+  }
+  p
+}
+
+p2.1 <- drawing_each_roi('erc', 1) + ylim(-0.0016, 0.0016) + theme( plot.margin = unit(c(0,0,0,0), "cm"))
+p2.2 <- drawing_each_roi('ca1-body',2) + ylim(-0.0016, 0.0016)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p2.3 <- drawing_each_roi('ppa',4) + ylim(-0.0065, 0.0065)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+p2.4 <- drawing_each_roi('evc',3) + ylim(-0.055, 0.055)+
+  theme(axis.title.y=element_blank(),
+        plot.margin = unit(c(0,0,0,0), "cm"))
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.1.png", p2.1, width = 36, height = 48, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.2.png", p2.2, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.3.png", p2.3, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+#ggsave(filename = "~/Desktop/monstera/fig2B.4.png", p2.4, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+
+```
+
+## separated bins
+
+```{r fig.width=unit(11,"cm"), fig.height=unit(6,"cm")}
+rolling = loading_rolling_df() %>% select(-sub_x)
+
+rolling_sub = rolling %>% 
+  group_by(type, valid, within_trial_TR, roi, sub) %>% 
+  summarise(m = mean(cor_z)) %>%
+  filter(valid != 'invalid-invalid') 
+
+sub_bins = rolling_sub %>%
+  filter(valid == 'valid-valid') %>% 
+  mutate('segment' = ifelse(within_trial_TR <= 6, 'same',
+                            ifelse(within_trial_TR <= 12, 'early-similar',
+                                   ifelse(within_trial_TR <= 18, 'late-similar',
+                                          'different')
+                                   ))) %>% 
+  filter(within_trial_TR <= 24) %>% 
+  group_by(segment, roi, type, sub) %>%
+  summarise(value = mean(m))
+
+sub_p1 = sub_bins %>% group_by(segment, roi, type) %>% 
+  summarise(mean = mean(value),
+            se = sd(value)/sqrt(n()),
+            n = n())
+
+sub_p1 %>% select(-se) %>%  pivot_wider(names_from = type, values_from = mean) %>% mutate(wp_ap = within-across) %>% View()
+
+sub_p1$roi = factor(sub_p1$roi, levels = c('ca23dg-body','ca1-body', 'ppa',  'evc'), labels = c('ca23dg-body' = 'CA3/DG', 'ca1-body'='CA1','ppa'='PPA', 'evc'='EVC'))
+sub_p1$type = factor(sub_p1$type, levels = c('same', 'within', 'across'), labels = c('same'='same route', 'within' = 'within pair', 'across' = 'across pair'))
+sub_p1$segment = factor(sub_p1$segment, levels = c('same', 'early-similar', 'late-similar', 'different'))
+
+r4 = ggplot(sub_p1, aes(x = segment, y = mean, group = type)) +
+      geom_hline(yintercept = 0, linetype="longdash") +
+  geom_bar(aes(fill = type), alpha = 0.6, stat = 'identity', position = position_dodge()) +
+      geom_errorbar(aes(ymin = mean-se, ymax = mean+se), position = position_dodge(width = 0.8), width=0.4, size = 0.4) +
+      labs(y = 'Pattern Similarity')+ 
+      theme(legend.position = 'top',
+            legend.title = element_blank(),
+            strip.background = element_blank(),
+            axis.title.x=element_blank()
+            )+ 
+  scale_fill_manual(values = cbPalette)+ 
+  scale_color_manual(values = cbPalette)+
+  scale_x_discrete(labels = c('same', 'early\nsimilar', 'late\nsimilar','different')) + 
+  facet_wrap(~roi, scales = 'free_y', ncol = 2)
+
+# ggsave(filename = "~/Desktop/monstera/reviewer4.pdf", r4, width = 150, height = 100, dpi = 300, units = "mm", device='pdf')
+```
+
+### Stats
+
+```{r}
+tmp = sub_bins %>% pivot_wider(names_from = type, values_from = value) %>% group_by(roi, segment) %>% nest() %>% 
+  broadcast(~t.test(.$across, .$same, 
+                    paired = TRUE)$p.value) %>%
+  mutate(across_same = output %>% unlist() %>% round(digits = 4)) %>% 
+select(-output) %>% 
+  broadcast(~t.test(.$across, .$within, 
+                    paired = TRUE)$p.value) %>%
+  mutate(across_within = output %>% unlist() %>% round(digits = 4)) %>% 
+select(-output) %>% 
+  broadcast(~t.test(.$within, .$same, 
+                    paired = TRUE)$p.value) %>%
+  mutate(within_same = output %>% unlist() %>% round(digits = 4)) %>% 
+  select(-c(data, output)) 
+
+
+anova(lmer(value ~ segment * type + (1 | sub), sub_bins %>% filter(roi == 'ca23dg-body')))
+
+
+tmp = sub_bins %>% group_by(roi) %>% nest()
+
+```
+

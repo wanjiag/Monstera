@@ -1,5 +1,5 @@
 ---
-title: "Figures with individual subject points"
+title: "Paper stats and figures"
 author: "Wanjia Guo"
 date: '2024-08-15'
 output: html_document
@@ -156,7 +156,7 @@ f1 = ggplot(summary_fig1, aes(x = type, y = m*100, fill = nquestion, color = nqu
         strip.placement = "outside")+
   facet_wrap(~nquestion,strip.position="bottom")
 
-ggsave(filename = "~/Desktop/monstera/fig1C.png", f1, width = 66, height = 30, dpi = 300, units = "mm", device='png')
+#ggsave(filename = "~/Desktop/monstera/fig1C.png", f1, width = 66, height = 30, dpi = 300, units = "mm", device='png')
 
 ```
 
@@ -213,7 +213,7 @@ f2 = postscan_summary %>%
   xlab("Time (s)")+
   ylab("Count")
 
-ggsave(filename = "~/Desktop/monstera/fig1D.png", f2, width = 92, height = 25, dpi = 300, units = "mm", device='png')
+#ggsave(filename = "~/Desktop/monstera/fig1D.png", f2, width = 92, height = 25, dpi = 300, units = "mm", device='png')
 ```
 
 # Figure 2B
@@ -332,16 +332,13 @@ p2.4 <- drawing_each_roi('evc',3) + ylim(-0.037, 0.05)+
   theme(axis.title.y=element_blank(),
         plot.margin = unit(c(0,0,0,0), "cm"))
 
-#f4 = cowplot::plot_grid(p2.1, p2.2, p2.3, p2.4, align = 'hv', ncol = 4)
-#f4
+#ggsave(filename = "~/Desktop/monstera/fig2B.1.png", p2.1, width = 36, height = 48, dpi = 300, units = "mm", device='png')
 
-ggsave(filename = "~/Desktop/monstera/fig2B.1.png", p2.1, width = 36, height = 48, dpi = 300, units = "mm", device='png')
+#ggsave(filename = "~/Desktop/monstera/fig2B.2.png", p2.2, width = 33, height = 48, dpi = 300, units = "mm", device='png')
 
-ggsave(filename = "~/Desktop/monstera/fig2B.2.png", p2.2, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+#ggsave(filename = "~/Desktop/monstera/fig2B.3.png", p2.3, width = 33, height = 48, dpi = 300, units = "mm", device='png')
 
-ggsave(filename = "~/Desktop/monstera/fig2B.3.png", p2.3, width = 33, height = 48, dpi = 300, units = "mm", device='png')
-
-ggsave(filename = "~/Desktop/monstera/fig2B.4.png", p2.4, width = 33, height = 48, dpi = 300, units = "mm", device='png')
+#ggsave(filename = "~/Desktop/monstera/fig2B.4.png", p2.4, width = 33, height = 48, dpi = 300, units = "mm", device='png')
 
 ```
 
@@ -400,7 +397,7 @@ p3 = ggplot(p4, aes(x = num, y = reorder(sequence, -num))) +
 
 p3
 
-ggsave(filename = "~/Desktop/monstera/fig3A.png", p3, width = 75, height = 75, dpi = 300, units = "mm", device='png')
+#ggsave(filename = "~/Desktop/monstera/fig3A.png", p3, width = 75, height = 75, dpi = 300, units = "mm", device='png')
 
 ```
 
@@ -411,13 +408,13 @@ sub_across = rolling %>%
   filter(valid != 'invalid-invalid') %>% 
   filter(type == 'across') %>% 
   group_by(sub, roi, within_trial_TR, valid) %>% 
-    summarise(across = mean(cor), n = n())
+    summarise(across = mean(cor_z), n = n())
   
 sub_within = rolling %>% 
   filter(valid != 'invalid-invalid') %>% 
   filter(type == 'within') %>% 
-  mutate(pair = pair_x, within = cor) %>% 
-  select(-c(pair_x, pair_y, cor))
+  mutate(pair = pair_x, within = cor_z) %>% 
+  select(-c(pair_x, pair_y, cor_z))
 
 sub_together = left_join(sub_within, sub_across) %>% 
   mutate(wp_ap = within - across) %>% 
@@ -498,6 +495,11 @@ p4.4 <- drawing_each_roi('EVC',3) + ylim(-0.01, 0.05)+
 
 
 ```
+
+```{r}
+sub_p4 %>% 
+```
+
 
 # Permutation
 ```{r}

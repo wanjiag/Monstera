@@ -9,6 +9,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 source("./utils.R")
+load("./permutations.Rda")
 ```
 
 ```{r}

@@ -47,12 +47,9 @@ sub_behav_dir = dir_ls(here::here("./csv_files/behavior"))
 
 rois_names = c('ca23dg-body', 'ca1-body', 
                'evc', 'ppa')
-extra_rois_names = c('sub', 'erc', 'prc', 'phc')
 
 bad = c('13', '14', '20', '23', '24', '27', '30', '34')
-# Exclude subject 14: squeezed emergency ball while in the scanner. 
-# Exclude subject 30: subject wanted to discontinue after round 7 because of discomfort caused by glasses 
-# Exclude subject 34: the participant perceived the peripheral nerve stimulation to be uncomfortable, so stopped the scan after Round 2.
+# 14 30 34 for behav files
 # 13 20 23 24 27 30 for scan and behav files
 
 # loading data functions
@@ -60,20 +57,9 @@ loading_rolling_df <- function(){
 files <- map(sub_dir, dir_ls, glob = '*/*rolling3_*summary_with_destination.csv') %>% unlist()
 rolling <- map_dfr(files, converting_read)
 rolling = rolling %>% 
-  filter(!(sub %in% bad)) %>% 
-  filter(roi %in% rois_names)
+  filter(!(sub %in% bad))
 print(length(unique(rolling$sub)))
 rolling
-}
-
-loading_rolling_df_extra_rois <- function(){
-  files <- map(sub_dir, dir_ls, glob = '*/*rolling3_*summary_with_destination.csv') %>% unlist()
-  rolling <- map_dfr(files, converting_read)
-  extra_rois_rolling = rolling %>% 
-    filter(!(sub %in% bad)) %>% 
-    filter(roi %in% extra_rois_names)
-  print(length(unique(extra_rois_rolling$sub)))
-  extra_rois_rolling
 }
 
 loading_rolling_rounds_df <- function(){
